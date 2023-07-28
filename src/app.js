@@ -2,43 +2,68 @@ import express from "express";
 import superAdminRoutes from "./Routes/superAdminRoutes.js";
 import studentRoutes from "./Routes/studentRoutes.js";
 import centerRoutes from "./Routes/centerRoutes.js";
-import categoryRoutes from "./Routes/categoryRoutes.js"
+import categoryRoutes from "./Routes/categoryRoutes.js";
 import multer from "multer";
-import cors from 'cors';
+import cors from "cors";
+import xss from "xss-clean";
+import hpp from "hpp";
+import helmet from "helmet";
+import compression from "compression";
+import mongoSanitize from "express-mongo-sanitize";
+import rateLimit from "express-rate-limit";
 import courseRoutes from "./Routes/courseRoutes.js";
+import qualificationRoutes from "./Routes/qualificationRotes.js";
+import centerAdminRoutes from "./Routes/centerAdminRoutes.js";
 export const app = express();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(multer().any())
+app.use(multer().any());
 
-export const upload = multer({ dest: 'public/' })
+export const upload = multer({ dest: "public/" });
 
-app.use(cors({
-    origin: "*",
-    methods:["GET","PUT","DELETE","POST"],
-    credentials:true,
-}))
+app.use(cors());
+app.options("*", cors());
+// app.options('/api/v1/tours/:id', cors());
+// Serving static files
+// Set security HTTP headers
+app.use(helmet());
+// Development logging
+// if (process.env.NODE_ENV === 'development') {
+//   app.use(morgan('dev'));
+// }
+// Limit requests from same API
+const limiter = rateLimit({
+  max: 1000,
+  windowMs: 60 * 60 * 1000,
+  message: "Too many requests from this IP, please try again in an hour!",
+});
+app.use("/api", limiter);
+// Stripe webhook, BEFORE body-parser, because stripe needs the body as stream
+// Body parser, reading data from body into req.body
+app.use(express.json({ limit: "10kb" }));
+app.use(express.urlencoded({ extended: true, limit: "10kb" }));
+app.use(mongoSanitize());
+app.use(xss());
+app.use(compression());
 
-// app.use(expressCors({
-//     allowedOrigins: ["*"]
-//   }));
-  
+app.use((req, res, next) => {
+  req.requestTime = new Date().toISOString();
+  next();
+});
 
-// app.use(function (req, res, next) {
-//     res.setHeader('Access-Control-Allow-Origin', '*');
-//     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
-//     res.setHeader("Access-Control-Allow-Headers", "Cache-Control, Pragma, Origin, Authorization, Content-Type, X-Requested-With");
-//     res.setHeader('Access-Control-Allow-Credentials', true);
-//     next();
-//     });
+app.use("/api", studentRoutes);
+app.use("/api", courseRoutes);
+app.use("/api", categoryRoutes);
+app.use("/api", superAdminRoutes);
+app.use("/api", centerRoutes);
+app.use("/api", qualificationRoutes);
+app.use("/api", centerAdminRoutes);
 
-app.use("/api", studentRoutes)
-app.use("/api", courseRoutes)
-app.use("/api", categoryRoutes)
+app.use("/public", express.static("public"));
 
-app.use("/api", superAdminRoutes)
-app.use("/api", centerRoutes)
-app.use("/public", express.static('public'))
+app.all("*", (req, res, next) => {
+  next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));
+});
 
 export default app;
