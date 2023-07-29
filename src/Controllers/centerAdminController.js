@@ -11,12 +11,29 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const appDir = dirname(`${import.meta.filename}`);
 import sendMessage from "../Twilio/twilio.js";
 
+export const loginCenteradmin = async (req, res, next) => {
+  try {
+    const { email, password } = req.body;
+    console.log(password);
+    const centerAdmin = await centerAdminModel.findOne({email:email}).populate("centers");
+    console.log("hi", centerAdmin);
+    const isCorrectPassword = await bcrypt.compare(password, centerAdmin.password);
+    const token = generateToken(centerAdmin._id);
+
+    return res
+      .status(200)
+      .send({ data: centerAdmin, token: token, status: "ok" });
+  } catch (err) {
+    return res.status(500).send({ message: err.message, status: "fail" });
+  }
+};
+
 export const createcenterAdmin = async (req, res, next) => {
   try {
     const baseUrl = process.env.baseUrl;
     const {
       nameHoi,
-      mobile,
+      alternateNumber,
       email,
       address,
       landmark,
@@ -24,30 +41,35 @@ export const createcenterAdmin = async (req, res, next) => {
       state,
       district,
       password,
+      whatsApp,
+      houseNumber,
     } = req.body;
     const saltRounds = 10;
     const salt = await bcrypt.genSalt(saltRounds);
     const encryptedPassword = await bcrypt.hash(password, salt);
     const data = {
       nameHoi,
-      mobile,
+      alternateNumber,
       email,
       address,
       landmark,
+      houseNumber,
       pinCode,
       state,
       district,
+      whatsApp,
       password: encryptedPassword,
     };
     let user = await centerAdminModel.create(data);
-    delete user.password;
+    user.password = null;
     const text = `centerAdmin created successfully. please login using your email ${email} and password ${password}`;
-    sendMessage(text, mobile);
+    // sendMessage(text, whatsApp);
     return res.status(200).send({ data: user, status: "ok" });
   } catch (err) {
     return res.status(500).send({ message: err.message, status: "fail" });
   }
 };
+
 export const getcenterAdmin = async (req, res, next) => {
   try {
     const user = await centerAdminModel.findOne({ _id: req.id });
@@ -93,12 +115,10 @@ export const deletecenterAdmin = async (req, res, next) => {
     const { id, password } = requestBody;
     const user = await superAdminModel.findById(req.id);
     if (user.password != password) {
-      return res
-        .status(400)
-        .send({
-          data: { message: "please enter correct password" },
-          status: "fail",
-        });
+      return res.status(400).send({
+        data: { message: "please enter correct password" },
+        status: "fail",
+      });
     }
     const userdeleted = await centerAdminModel.updateOne(
       { _id: id },

@@ -63,7 +63,6 @@ app.use("/api", centerAdminRoutes);
 app.use("/public", express.static("public"));
 
 app.all("*", (req, res, next) => {
-  next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));
+  return res.status(404).send({message:`Can't find ${req.originalUrl} on this server!`});
 });
-
 export default app;

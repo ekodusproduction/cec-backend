@@ -10,27 +10,13 @@ import { fileURLToPath } from "url";
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const appDir = dirname(`${import.meta.filename}`);
 
-export const loginCenter = async (req, res, next) => {
-  try {
-    const { centerId, password } = req.body;
-    const center = await centerModel.findOne(centerId);
-    const isCorrectPassword = await bcrypt.compare(password, center.password);
-    const token = generateToken(center._id);
-
-    return res
-      .status(200)
-      .send({ data: centerAdmin, token: token, status: "ok" });
-  } catch (err) {
-    return res.status(500).send({ message: err.message, status: "fail" });
-  }
-};
-
 export const getCenter = async (req, res, next) => {
   try {
-    const centerId = req.params;
-    const center = await centerModel
-      .findById(centerId.centerId)
-      .populate("headOfInstitute");
+    const {cadmin} = req.params;
+    console.log(cadmin)
+    const center = await centerAdminModel
+      .findById(cadmin)
+      .populate("centers").select("centers");
     return res.status(200).send({ data: center, status: "ok" });
   } catch (err) {
     return res.status(500).send({ message: err.message, status: "fail" });
@@ -55,32 +41,54 @@ export const getAllCenter = async (req, res, next) => {
 
 export const createcenter = async (req, res, next) => {
   try {
-    const requestBody = req.body;
-    const centerAdmin = JSON.parse(requestBody.centerAdminInfo);
-    const file = req.files[0];
-    console.log(file.originalname);
-    const imgBuffer = Buffer.from(file.buffer, "utf-8");
-    const user = await centerAdminModel.create(centerAdmin.centerAdminInfo);
-    const profilePic = `/public/center/${user.id.slice(-6)}${
-      file.originalname
-    }`;
-    await centerAdminModel.updateOne(
-      { _id: user.id },
-      { $set: { profilePic: profilePic } }
-    );
-    if (!user) {
+    let {
+      firmName,
+      dateofReg,
+      firmType,
+      address,
+      landmark,
+      pinCode,
+      district,
+      state,
+      alternateNumber,
+      whatsApp,
+      email,
+      landline,
+    } = req.body;
+    dateofReg = new Date(dateofReg)
+    console.log(dateofReg)
+    let data = {
+      firmName,
+      dateofReg,
+      firmType,
+      address,
+      landmark,
+      pinCode,
+      district,
+      state,
+      alternateNumber,
+      whatsApp,
+      email,
+      landline,
+    };
+    const { whatsAppCenterAdmin } = req.body;
+    if (!whatsAppCenterAdmin) {
       return res
         .status(400)
-        .send({ message: "centerAdmin creation failed", status: "ok" });
+        .send({ data: { message: "provide whatsapp" }, status: "fail" });
     }
-    const center = JSON.parse(requestBody.centerInfo).centerInfo;
-    let { dateofReg } = center;
-    dateofReg = new Date(dateofReg).toLocaleString("en", {
-      dateStyle: "short",
-    });
-    const centerInfo = { ...center, dateofReg, headOfInstitute: user._id };
-    const centerCreated = await centerModel.create(centerInfo);
-    return res.status(200).send({ data: centerCreated, status: "ok" });
+    const cadmin = await centerAdminModel.findById(req.id);
+    const count = await centerModel.countDocuments();
+    data["centerId"] = `${(count+1).toString().padStart(3,"0")}`;
+    const center = await centerModel.create(data);
+    const user = await centerAdminModel.findOneAndUpdate(
+      {
+        whatsApp: whatsAppCenterAdmin,
+      },
+      { $addToSet: { centers: center._id } }
+    );
+
+    return res.status(200).send({ data: center, status: "ok" });
   } catch (err) {
     return res.status(500).send({ message: err.message, status: "fail" });
   }
@@ -122,12 +130,10 @@ export const deletecenter = async (req, res, next) => {
     if (
       !(email == user.email && (await bcrypt.compare(password, user.password)))
     ) {
-      return res
-        .status(400)
-        .send({
-          message: "please enter correct password or email",
-          status: "ok",
-        });
+      return res.status(400).send({
+        message: "please enter correct password or email",
+        status: "ok",
+      });
     }
     const userdeleted = await centerModel.updateOne(
       { _id: centerId.centerId },

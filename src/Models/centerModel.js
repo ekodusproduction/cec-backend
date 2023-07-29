@@ -35,11 +35,11 @@ const centerSchema = new Schema(
       type: Date,
       required: "franchise date of registration required",
     },
-    password: {
-      type: String,
-      required: "center admin password required",
-      cast: "{VALUE} is not a String",
-    },
+    // password: {
+    //   type: String,
+    //   required: "center admin password required",
+    //   cast: "{VALUE} is not a String",
+    // },
 
     firmName: {
       type: String,
@@ -52,19 +52,18 @@ const centerSchema = new Schema(
       required: "franchise type required",
       cast: "{VALUE} is not a String",
     },
-    typeOfInstitution: {
-      type: String,
-      required: "franchise type of institute required",
-      cast: "{VALUE} is not a String",
-    },
+    // typeOfInstitution: {
+    //   type: String,
+    //   required: "franchise type of institute required",
+    //   cast: "{VALUE} is not a String",
+    // },
     courses: {
       type: [
         {
           type: mongoose.Schema.Types.ObjectId,
           ref: "courses",
         },
-      ],
-      unique: true,
+      ]
     },
     categories: {
       type: [
@@ -72,10 +71,9 @@ const centerSchema = new Schema(
           type: mongoose.Schema.Types.ObjectId,
           ref: "categories",
         },
-      ],
-      unique: true,
+      ]
     },
-    stdCode: { type: Number, required: "stdCode required" },
+    //stdCode: { type: Number, required: "stdCode required" },
     landlineNumber: {
       type: Number,
       validate: {
@@ -102,10 +100,10 @@ const centerSchema = new Schema(
     email: { type: String, required: "center email required" },
     address: { type: String, required: "center address required" },
     landmark: { type: String, required: "center lanmark required" },
-    policeStaion: { type: String, required: "center policeStation required" },
-    postOffice: { type: String, required: "center postOffice required" },
+    //policeStaion: { type: String, required: "center policeStation required" },
+    //postOffice: { type: String, required: "center postOffice required" },
     district: { type: String, required: "center district required" },
-    pinCode: { type: String, required: "center pincode required" },
+    pinCode: { type: Number, required: "center pincode required" },
     state: { type: String, required: "center state required" },
   },
   {
@@ -114,4 +112,6 @@ const centerSchema = new Schema(
 );
 
 const courseModel = mongoose.model("centers", centerSchema);
+
+courseModel.create
 export default courseModel;
