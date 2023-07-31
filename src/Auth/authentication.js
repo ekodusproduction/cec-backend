@@ -9,7 +9,7 @@ export const generateToken = (data) => {
       id: data,
     },
     jwtSecretKey,
-    { expiresIn: process.env.JWT_EXP }
+    { expiresIn: process.env.JWT_EXP|| `1d` }
   );
   return token;
 };
