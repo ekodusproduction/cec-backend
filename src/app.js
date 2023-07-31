@@ -14,7 +14,7 @@ import rateLimit from "express-rate-limit";
 import courseRoutes from "./Routes/courseRoutes.js";
 import qualificationRoutes from "./Routes/qualificationRotes.js";
 import centerAdminRoutes from "./Routes/centerAdminRoutes.js";
-import paymentsRoutes from "./Routes/paymentsRoutes.js"
+import paymentsRoutes from "./Routes/paymentsRoutes.js";
 export const app = express();
 
 app.use(express.json());
@@ -52,9 +52,9 @@ app.use((req, res, next) => {
   req.requestTime = new Date().toISOString();
   next();
 });
-app.use("/",(req,res)=>{
-  res.send("server working")
-})
+app.use("/", (req, res) => {
+  res.send("server working");
+});
 
 app.use("/api", studentRoutes);
 app.use("/api", courseRoutes);
@@ -68,6 +68,8 @@ app.use("/api", paymentsRoutes);
 app.use("/public", express.static("public"));
 
 app.all("*", (req, res, next) => {
-  return res.status(404).send({message:`Can't find ${req.originalUrl} on this server!`});
+  return res
+    .status(404)
+    .send({ message: `Can't find ${req.originalUrl} on this server!` });
 });
 export default app;

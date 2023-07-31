@@ -5,7 +5,7 @@ import mongoose from "mongoose";
 dotenv.config();
 import { app } from "./app.js";
 
-const uri = process.env.MONGODB_URI || "mongodb+srv://jay:jay123123@cluster0.v42bh6e.mongodb.net/?retryWrites=true&w=majority";
+const uri = process.env.MONGODB_URI ;
 
 mongoose
   .connect(uri, {
@@ -19,5 +19,5 @@ mongoose
   )
   .catch((err) => console.log(err));
 
-const port = process.env.NODE_PORT || 3000;
+const port = process.env.NODE_PORT ;
 app.listen(port, () => console.log("server running on " + port));
