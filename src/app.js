@@ -63,9 +63,7 @@ app.use("/api", qualificationRoutes);
 app.use("/api", centerAdminRoutes);
 app.use("/api", paymentsRoutes);
 
-app.use("/", (req, res) => {
-  res.send("server working");
-});
+
 app.use("/public", express.static("public"));
 
 app.all("*", (req, res, next) => {
