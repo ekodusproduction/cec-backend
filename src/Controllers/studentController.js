@@ -32,29 +32,36 @@ export const studentRegister = async (req, res, next) => {
       houseNumberPermanent,
       cityPermanent,
       pinCodePermanent,
+      centerId,
     } = req.body;
     const baseUrl = process.env.BASE_URL;
-
-    const center = await centerModel.findOne({ headOfInstitute: req.id });
+    console.log(req.id);
+    const center = await centerModel.findById(centerId);
+    console.log(center);
     const count = await studentModel.find({
-      center: center._id,
+      center: center.id,
       regYear: new Date().getFullYear,
       course,
     }).length;
-    const rollNumber = `${count + 1}${`${new Date().getFullYear}`.slice(-2)}${
-      center.franchiseCode
-    }`;
+    // const rollNumber = `${count + 1}${`${new Date().getFullYear}`.slice(-2)}${
+    //   center.franchiseCode
+    // }`;
 
     const data = {
       firstName,
       lastName,
-      Gender,
+      DOB,
       mobile,
-      email,
-      highestQualification,
-      center: center._id,
       course,
+      highestQualification,
+      pinCodePresent,
       presentAddress,
+      cityPresent,
+      houseNumberPresent,
+      permanentAddress,
+      houseNumberPermanent,
+      cityPermanent,
+      pinCodePermanent,
     };
 
     const student = await studentModel.create(data);
@@ -68,11 +75,11 @@ export const studentRegister = async (req, res, next) => {
 
 export const generateRollNumber = async (req, res, next) => {
   try {
-    const { paymentId, orderId } = req.body;
+    const { paymentId, orderId, centerId } = req.body;
 
-    const center = await centerModel.findOne({ headOfInstitute: req.id });
+    const center = await centerModel.findById(centerId);
     const count = await studentModel.find({
-      center: center._id,
+      center:centerId,
       regYear: new Date().getFullYear,
       course,
     }).length;
@@ -90,7 +97,7 @@ export const generateRollNumber = async (req, res, next) => {
 
 export const getStudent = async (req, res, next) => {
   try {
-    const center = await studentModel.find({ center: req.params.center_id });
+    const center = await studentModel.find({ center: req.params.centerid });
     return res.status(200).send({ data: center, token: token, status: "ok" });
   } catch (err) {
     return res.status(500).send({ message: err.message, status: "fail" });
@@ -100,7 +107,9 @@ export const getStudent = async (req, res, next) => {
 export const updateStudent = async (req, res, next) => {
   try {
     const { id, updateField, updateValue } = req.body;
-    return res.status(200).send({ data: "HI", token: token, status: "ok" });
+    const student = await studentModel.findByIdAndUpdate(id, {$set:{updateField:updateValue}});
+
+    return res.status(200).send({ data: student, status: "ok" });
   } catch (err) {
     return res.status(500).send({ message: err.message, status: "fail" });
   }
@@ -108,7 +117,7 @@ export const updateStudent = async (req, res, next) => {
 
 export const fileUploads = async (req, res, next) => {
   try {
-    const { rollNumber } = req.body;
+    const { id,rollNumber } = req.body;
 
     await fs.mkdir(appDir + `../../public/student/${rollNumber}`, {
       recursive: true,

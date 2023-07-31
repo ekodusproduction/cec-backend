@@ -4,6 +4,8 @@ const Schema = mongoose.Schema;
 const paymentSchema = new Schema(
   {
     id: { type: String, required: true },
+    courseId: [{ type: Schema.ObjectId, required: true }],
+    studentId : [{ type: Schema.ObjectId, required: true }],
     amount: { type: Number, required: true },
     status: { type: String, required: true },
     order_id: { type: String, required: true },

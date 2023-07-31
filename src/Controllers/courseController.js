@@ -13,7 +13,7 @@ export const createCourse = async (req, res, next) => {
       courseCode,
       category,
       duration,
-      qualification,
+      qualificationType,
       courseFee,
       courseType,
     } = req.body;
@@ -22,18 +22,20 @@ export const createCourse = async (req, res, next) => {
       courseCode,
       category,
       duration,
-      qualification,
+      qualificationType,
       courseFee,
       courseType,
     };
     const course = await courseModel.create(createCourse);
-    return res
-      .status(201)
-      .send({
-        data: course,
-        message: "course Created succesfully",
-        status: "ok",
-      });
+    const DATA = await courseModel
+      .findById(course._id)
+      .populate("qualificationType");
+
+    return res.status(201).send({
+      data: DATA,
+      message: "course Created succesfully",
+      status: "ok",
+    });
   } catch (err) {
     return res.status(500).send({ message: err.message, status: "fail" });
   }
@@ -49,9 +51,12 @@ export const getCourse = async (req, res, next) => {
 
 export const updateCourse = async (req, res, next) => {
   try {
-    const requestBody = req.body;
+    const { updateField, updateValue } = req.body;
     const courseId = req.params;
-    const course = await courseModel.update({ _id: courseId }, requestBody);
+    const course = await courseModel.findByIdAndUpdate(
+      { _id: courseId.courseId },
+      { $set: { [updateField]: updateValue } , new:true}
+    );
     return res.status(200).send({ data: course, status: "ok" });
   } catch (err) {
     return res.status(500).send({ message: err.message, status: "fail" });
@@ -62,7 +67,7 @@ export const deleteCourse = async (req, res, next) => {
   try {
     const requestBody = req.body;
     const courseId = req.params;
-    const course = await courseModel.delete({ _id: courseId });
+    const course = await courseModel.deleteOne({ _id: courseId.courseId });
     return res.status(202).send({ data: course, status: "ok" });
   } catch (err) {
     return res.status(500).send({ message: err.message, status: "fail" });

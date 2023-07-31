@@ -29,16 +29,10 @@ const courseSchema = new Schema(
     qualificationType: {
       type: Schema.Types.ObjectId,
       ref: "qualification",
-      enum: ["below HSLC", "HSLC", "HS", "Degree"],
-      cast: "{VALUE} is not a allowed",
-    },
-    qualification: {
-      type: String,
-      required: "course qualification required",
-      cast: "{VALUE} is not a String",
+      required:true
     },
     courseFee: {
-      type: String,
+      type: Number,
       required: "course fee required",
       cast: "{VALUE} is not a number",
     },

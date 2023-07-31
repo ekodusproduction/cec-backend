@@ -12,7 +12,7 @@ import { isCenterAdmin } from "../Auth/isCenterAdmin.js";
 const router = Router();
 
 router.route("/student").post(verifyToken, studentRegister);
-router.route("/student").get(verifyToken, getStudent);
+router.route("/student/:centerid").get(verifyToken, getStudent);
 router.route("/student").put(verifyToken, isSuperAdmin, updateStudent);
 router.route("/student").delete(verifyToken, deleteStudent);
 

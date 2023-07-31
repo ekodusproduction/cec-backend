@@ -10,11 +10,14 @@ import {
 
 const router = Router();
 router
-  .route("/qualificatio")
+  .route("/qualification")
   .post(verifyToken, createQualification)
-  .put(verifyToken, updateQualification)
-  .delete(verifyToken, deleteQualification)
   .get(verifyToken, getQualification);
+
+router
+  .route("/qualification/:qualificationId")
+  .put(verifyToken, updateQualification)
+  .delete(verifyToken, deleteQualification);
 
 const qualificationRoutes = router;
 export default qualificationRoutes;

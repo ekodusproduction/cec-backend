@@ -19,7 +19,7 @@ export const loginCenteradmin = async (req, res, next) => {
     console.log("hi", centerAdmin);
     const isCorrectPassword = await bcrypt.compare(password, centerAdmin.password);
     const token = generateToken(centerAdmin._id);
-
+    centerAdmin.password = null;
     return res
       .status(200)
       .send({ data: centerAdmin, token: token, status: "ok" });
