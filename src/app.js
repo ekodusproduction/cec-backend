@@ -52,9 +52,7 @@ app.use((req, res, next) => {
   req.requestTime = new Date().toISOString();
   next();
 });
-app.use("/", (req, res) => {
-  res.send("server working");
-});
+
 
 app.use("/api", studentRoutes);
 app.use("/api", courseRoutes);
@@ -65,6 +63,9 @@ app.use("/api", qualificationRoutes);
 app.use("/api", centerAdminRoutes);
 app.use("/api", paymentsRoutes);
 
+app.use("/", (req, res) => {
+  res.send("server working");
+});
 app.use("/public", express.static("public"));
 
 app.all("*", (req, res, next) => {
