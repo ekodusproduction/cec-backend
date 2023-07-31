@@ -1,6 +1,12 @@
 import jsonwebtoken from "jsonwebtoken";
 import dotenv from "dotenv";
-dotenv.config();
+import path from "path"
+import { dirname } from "path";
+import { fileURLToPath } from "url";
+const __dirname = dirname(fileURLToPath(import.meta.url));
+// const appDir = dirname(`${import.meta.filename}`);
+
+dotenv.config({path:path.join(__dirname,"../.env") });
 const jwtSecretKey =  process.env.JWT_SECRET ;
 console.log(jwtSecretKey)
 export const generateToken = (data) => {
