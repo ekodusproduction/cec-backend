@@ -5,10 +5,12 @@ import {
   updatecenter,
   deletecenter,
   getCenter,
+  getAllCenter,
 } from "../Controllers/centerController.js";
 import { isSuperAdmin } from "../Auth/isSuperAdmin.js";
 const router = Router();
 
+router.route("/centerall").get(verifyToken, getAllCenter);
 router.route("/center/:cadmin").get(verifyToken, getCenter);
 router
   .route("/center")

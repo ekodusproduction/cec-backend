@@ -25,13 +25,7 @@ export const getCenter = async (req, res, next) => {
 
 export const getAllCenter = async (req, res, next) => {
   try {
-    const centerId = req.query;
-    if (centerId.centerId) {
-      const center = await centerModel
-        .find({ centerId: centerId.centerId, isActive: true })
-        .populate("headOfInstitute");
-      return res.status(200).send({ data: center, status: "ok" });
-    }
+
     const center = await centerModel.find({});
     return res.status(200).send({ data: center, status: "ok" });
   } catch (err) {

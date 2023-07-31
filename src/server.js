@@ -2,7 +2,13 @@ import { MongoClient, ServerApiVersion } from "mongodb";
 import dotenv from "dotenv";
 import mongoose from "mongoose";
 
-dotenv.config();
+import path from "path"
+import { dirname } from "path";
+import { fileURLToPath } from "url";
+const __dirname = dirname(fileURLToPath(import.meta.url));
+// const appDir = dirname(`${import.meta.filename}`);
+
+dotenv.config({path:path.join(__dirname,".env") });
 import { app } from "./app.js";
 
 const uri = process.env.MONGODB_URI ||  "mongodb+srv://jay:jay123123@cluster0.v42bh6e.mongodb.net/?retryWrites=true&w=majority";
