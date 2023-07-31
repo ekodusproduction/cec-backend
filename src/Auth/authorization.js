@@ -1,7 +1,9 @@
 import jsonwebtoken from "jsonwebtoken";
 import dotenv from "dotenv";
+import { env } from 'node:process';
 dotenv.config();
-const jwtSecretKey =  process.env.JWT_SECRET;
+const jwtSecretKey =  process.env.JWT_SECRET ||  "ZXNEASPOFEWYHICSADB_9QW974FEW17@#%&$%&";
+console.log(jwtSecretKey)
 
 export const verifyToken = async (req, res, next) => {
   try {
