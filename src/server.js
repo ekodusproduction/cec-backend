@@ -5,7 +5,7 @@ import mongoose from "mongoose";
 dotenv.config();
 import { app } from "./app.js";
 
-const uri = process.env.MONGODB_URI ;
+const uri = process.env.MONGODB_URI ||  "mongodb+srv://jay:jay123123@cluster0.v42bh6e.mongodb.net/?retryWrites=true&w=majority";
 
 mongoose
   .connect(uri, {
