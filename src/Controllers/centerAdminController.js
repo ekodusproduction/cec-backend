@@ -73,7 +73,7 @@ export const createcenterAdmin = async (req, res, next) => {
 export const getcenterAdmin = async (req, res, next) => {
   try {
     const user = await centerAdminModel.findById( req.id );
-    return res.status(200).send({ data: userdeleted, status: "ok" });
+    return res.status(200).send({ data: user, status: "ok" });
   } catch (err) {
     res.status(500).send({ message: err.message, status: "fail" });
   }
@@ -81,8 +81,8 @@ export const getcenterAdmin = async (req, res, next) => {
 
 export const getAllcenterAdmin = async (req, res, next) => {
   try {
-    const user = await centerAdminModel.findById( req.id );
-    return res.status(200).send({ data: userdeleted, status: "ok" });
+    const user = await centerAdminModel.find({});
+    return res.status(200).send({ data: user, status: "ok" });
   } catch (err) {
     res.status(500).send({ message: err.message, status: "fail" });
   }
