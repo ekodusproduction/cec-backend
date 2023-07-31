@@ -79,6 +79,16 @@ export const getcenterAdmin = async (req, res, next) => {
   }
 };
 
+export const getAllcenterAdmin = async (req, res, next) => {
+  try {
+    const user = await centerAdminModel.findById( req.id );
+    return res.status(200).send({ data: userdeleted, status: "ok" });
+  } catch (err) {
+    res.status(500).send({ message: err.message, status: "fail" });
+  }
+};
+
+
 export const updatecenterAdmin = async (req, res, next) => {
   try {
     const requestBody = req.body;

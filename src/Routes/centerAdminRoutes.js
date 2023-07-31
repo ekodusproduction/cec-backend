@@ -6,6 +6,7 @@ import {
   getcenterAdmin,
   updatecenterAdmin,
   deletecenterAdmin,
+  getAllcenterAdmin,
 } from "../Controllers/centerAdminController.js";
 import { loginCenteradmin } from "../Controllers/centerAdminController.js";
 
@@ -16,6 +17,9 @@ router
   .put(verifyToken, updatecenterAdmin)
   .delete(verifyToken, deletecenterAdmin)
   .get(verifyToken, getcenterAdmin);
+
+router.route("/centeradminsall").get(verifyToken, getAllcenterAdmin);
+
 router.route("/centeradmin/login").post(loginCenteradmin);
 const centerAdminRoutes = router;
 export default centerAdminRoutes;
