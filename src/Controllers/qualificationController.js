@@ -11,7 +11,7 @@ import { fileURLToPath } from "url";
 import { sendMessage } from "../Twilio/twilio.js";
 import { generateToken } from "../Auth/authentication.js";
 import upload from "../app.js";
-import qualificationModel from "../Models/qualificationMode.js";
+import qualificationModel from "../Models/qualificationModel.js";
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const appDir = dirname(`${import.meta.filename}`);
 dotenv.config();
