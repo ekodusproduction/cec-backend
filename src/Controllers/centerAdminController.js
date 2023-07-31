@@ -72,7 +72,7 @@ export const createcenterAdmin = async (req, res, next) => {
 
 export const getcenterAdmin = async (req, res, next) => {
   try {
-    const user = await centerAdminModel.findOne({ _id: req.id });
+    const user = await centerAdminModel.findById( req.id );
     return res.status(200).send({ data: userdeleted, status: "ok" });
   } catch (err) {
     res.status(500).send({ message: err.message, status: "fail" });
