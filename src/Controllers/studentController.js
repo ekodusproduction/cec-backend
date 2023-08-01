@@ -36,7 +36,7 @@ export const studentRegister = async (req, res, next) => {
 
     const center = await centerModel.findById(centerId);
     if(!center){
-      return res.status(404).send()
+      return res.status(404).send({data:{message:"center not found"}, status:"fail"})
     }
     // const count = await studentModel.find({
     //   center: centerId,
@@ -61,6 +61,7 @@ export const studentRegister = async (req, res, next) => {
       houseNumberPermanent,
       cityPermanent,
       pinCodePermanent,
+      centerId
     };
 
     const student = await studentModel.create(data);
