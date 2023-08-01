@@ -11,5 +11,9 @@ const qualificaitonSchema = new Schema(
   }
 );
 
-const qualificationModel = mongoose.model("qualification", qualificaitonSchema);
+const qualificationModel = mongoose.model(
+  "qualification",
+  qualificaitonSchema,
+  "payment"
+);
 export default qualificationModel;

@@ -110,11 +110,13 @@ const studentSchema = new Schema(
     regYear: { type: String, cast: "{VALUE} is not a date" },
 
     stdCode: { type: Number, cast: "{VALUE} is not a number" },
-    course: {
-      type: Schema.Types.ObjectId,
-      ref: "courses",
-      cast: "{VALUE} is not a valid object id",
-    },
+    course: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "courses",
+        cast: "{VALUE} is not a valid object id",
+      },
+    ],
     hasActiveCourse: { type: Boolean, default: false },
     emergencyContact: {
       type: Number,
@@ -156,5 +158,5 @@ studentSchema.pre(/^find/, function(next) {
   next();
 });
 
-const studentModel = mongoose.model("students", studentSchema);
+const studentModel = mongoose.model("students", studentSchema, "student");
 export default studentModel;

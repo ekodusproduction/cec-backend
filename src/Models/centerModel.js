@@ -30,7 +30,7 @@ const centerSchema = new Schema(
       unique: true,
       cast: "{VALUE} is not a String",
     },
-    headOfInstitute: { type: Schema.Types.ObjectId, ref: "centerAdmins" },
+    headOfInstitute: { type: Schema.Types.ObjectId, ref: "centerAdmin" },
     dateofReg: {
       type: Date,
       required: "franchise date of registration required",
@@ -63,7 +63,7 @@ const centerSchema = new Schema(
           type: mongoose.Schema.Types.ObjectId,
           ref: "courses",
         },
-      ]
+      ],
     },
     categories: {
       type: [
@@ -71,7 +71,7 @@ const centerSchema = new Schema(
           type: mongoose.Schema.Types.ObjectId,
           ref: "categories",
         },
-      ]
+      ],
     },
     //stdCode: { type: Number, required: "stdCode required" },
     landlineNumber: {
@@ -111,7 +111,7 @@ const centerSchema = new Schema(
   }
 );
 
-const courseModel = mongoose.model("centers", centerSchema);
+const courseModel = mongoose.model("centers", centerSchema, "center");
 
-courseModel.create
+courseModel.create;
 export default courseModel;

@@ -15,5 +15,5 @@ const orderSchema = new Schema(
   }
 );
 
-const orderModel = mongoose.model("courses", orderSchema);
+const orderModel = mongoose.model("order", orderSchema, "order");
 export default orderModel;

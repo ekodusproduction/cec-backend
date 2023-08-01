@@ -6,13 +6,11 @@ import path from "path"
 import { dirname } from "path";
 import { fileURLToPath } from "url";
 const __dirname = dirname(fileURLToPath(import.meta.url));
-// const appDir = dirname(`${import.meta.filename}`);
 
 dotenv.config({path:path.join(__dirname,"../.env") });
 import { app } from "./app.js";
 
 const uri = process.env.MONGODB_URI 
-console.log("uri -------------",process.env.MONGODB_URI)
 mongoose
   .connect(uri, {
     useNewUrlParser: true,

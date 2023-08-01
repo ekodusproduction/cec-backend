@@ -29,11 +29,16 @@ const courseSchema = new Schema(
     qualificationType: {
       type: Schema.Types.ObjectId,
       ref: "qualification",
-      required:true
+      required: true,
     },
     courseFee: {
       type: Number,
       required: "course fee required",
+      cast: "{VALUE} is not a number",
+    },
+    registrationFees: {
+      type: Number,
+      required: "registrationFees required",
       cast: "{VALUE} is not a number",
     },
     isActive: { type: Boolean, default: true },
@@ -43,5 +48,5 @@ const courseSchema = new Schema(
   }
 );
 
-const courseModel = mongoose.model("courses", courseSchema);
+const courseModel = mongoose.model("courses", courseSchema, "course");
 export default courseModel;
