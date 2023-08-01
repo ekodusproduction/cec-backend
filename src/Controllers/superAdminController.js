@@ -11,7 +11,7 @@ import { generateToken } from "../Auth/authentication.js";
 import upload from "../app.js";
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const appDir = dirname(`${import.meta.filename}`);
-
+   console.log("appDir", appDir)
 export const createSuperAdmin = async (req, res, next) => {
   try {
     const baseUrl = `139.59.83.187`;
@@ -37,7 +37,15 @@ export const createSuperAdmin = async (req, res, next) => {
       return res
         .status(200)
         .send({ data: { message: "superadmin exist already" }, status: "ok" });
-    }
+    }    
+    
+ 
+    await fs.writeFile(
+        `../../public/superadmin/${user.id.slice(-6)}${file.originalname}`,
+      imgBuffer,
+      "utf-8"
+    );
+
     const user = await superAdminModel.create(data);
     if (user == null) {
       return res
@@ -52,12 +60,7 @@ export const createSuperAdmin = async (req, res, next) => {
       { _id: user._id },
       { $set: { profilePic: profilePic } }
     );
-    await fs.writeFile(
-      appDir +
-        `../../public/superadmin/${user.id.slice(-6)}${file.originalname}`,
-      imgBuffer,
-      "utf-8"
-    );
+
     return res.status(201).send({
       data: { message: "superadmin created successfully" },
       status: "ok",
