@@ -93,10 +93,14 @@ export const updatecenterAdmin = async (req, res, next) => {
   try {
     const requestBody = req.body;
     const { id, updateField, updateValue } = requestBody;
-    const update = await centerAdminModel.findByIdAndUpdate(
-      { _id: id },
-      {  [updateField]: updateValue } , {new:true}
+    const updateObject = { [updateField]: updateValue };
+
+    const updatedAdmin = await centerAdminModel.findByIdAndUpdate(
+      id,
+      updateObject,
+      { new: true }
     );
+
 
     const file = req.files[0];
 
