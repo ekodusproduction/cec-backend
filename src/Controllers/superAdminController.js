@@ -14,6 +14,7 @@ const appDir = dirname(`${import.meta.filename}`);
 
 export const createSuperAdmin = async (req, res, next) => {
   try {
+    const baseUrl = "http://139.59.83.187/"
     const requestBody = req.body;
     const { firstName, lastName, mobile, email, password } = requestBody;
     const file = req.files[0];
@@ -44,7 +45,7 @@ export const createSuperAdmin = async (req, res, next) => {
         .send({ message: "failed to create superadmin", status: "fail" });
     }
     user.password = null;
-    const profilePic = `/public/superadmin/${user.id.slice(-6)}${
+    const profilePic = `${baseUrl}/public/superadmin/${user.id.slice(-6)}${
       file.originalname
     }`;
     const uploadPic = await superAdminModel.findByIdAndUpdate(
@@ -52,7 +53,7 @@ export const createSuperAdmin = async (req, res, next) => {
       { $set: { profilePic: profilePic } }
     );
     await fs.writeFile(
-      appDir +
+      
         `/public/superadmin/${user.id.slice(-6)}${file.originalname}`,
       imgBuffer,
       "utf-8"
