@@ -53,7 +53,7 @@ export const createSuperAdmin = async (req, res, next) => {
     );
     await fs.writeFile(
       appDir +
-        `../../public/superadmin/${user.id.slice(-6)}${file.originalname}`,
+        `/public/superadmin/${user.id.slice(-6)}${file.originalname}`,
       imgBuffer,
       "utf-8"
     );
