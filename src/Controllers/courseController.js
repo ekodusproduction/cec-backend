@@ -16,7 +16,8 @@ export const createCourse = async (req, res, next) => {
       qualificationType,
       courseFee,
       courseType,
-      registrationFees
+      registrationFees,
+      courseDescription
     } = req.body;
     const createCourse = {
       courseName,
@@ -26,7 +27,8 @@ export const createCourse = async (req, res, next) => {
       qualificationType,
       courseFee,
       courseType,
-      registrationFees
+      registrationFees,
+      courseDescription
     };
     const course = await courseModel.create(createCourse);
     const DATA = await courseModel
@@ -42,6 +44,7 @@ export const createCourse = async (req, res, next) => {
     return res.status(500).send({ message: err.message, status: "fail" });
   }
 };
+
 export const getCourse = async (req, res, next) => {
   try {
     const courses = await courseModel.find({}).populate("qualificationType").populate("category")

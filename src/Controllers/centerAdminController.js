@@ -101,7 +101,6 @@ export const updatecenterAdmin = async (req, res, next) => {
       { new: true }
     );
 
-
     const file = req.files[0];
 
     if (file) {

@@ -75,21 +75,21 @@ export const studentRegister = async (req, res, next) => {
 
 export const generateRollNumber = async (req, res, next) => {
   try {
-    const { paymentId, orderId, centerId } = req.body;
-
+    const { paymentId, orderId, centerId, studentId } = req.body;
+    
     const center = await centerModel.findById(centerId);
-    const count = await studentModel.find({
+    const count = await studentModel.countDocuments({
       center:centerId,
       regYear: new Date().getFullYear,
-      course,
-    }).length;
-    const rollNumber = `${count + 1}${`${new Date().getFullYear}`.slice(-2)}${
+    });
+    const rollNumber = `${(count % 1000) + 1}${`${new Date().getFullYear}`.slice(-2)}${
       center.franchiseCode
     }`;
-
+    const updateStudent = await studentModel.findByIdAndUpdate(studentId, {$set:{rollNumber:rollNumber}});
+    
     const text = `Payment succesfull. Your roll number is ${rollNumber} `;
     sendMessage(text, mobile);
-    return res.status(200).send({ data: student, status: "ok" });
+    return res.status(200).send({ data: updateStudent, status: "ok" });
   } catch (err) {
     return res.status(500).send({ message: err.message, status: "fail" });
   }
@@ -106,8 +106,23 @@ export const getallStudent = async (req, res, next) => {
 
 export const getStudent = async (req, res, next) => {
   try {
+    if(!req.params.centerId){
+      return res.status(400).send({ data: {message:"invalid request"},  status: "fail" })
+    }
     const center = await studentModel.find({ center: req.params.centerid });
-    return res.status(200).send({ data: center, token: token, status: "ok" });
+    return res.status(200).send({ data: center, status: "ok" });
+  } catch (err) {
+    return res.status(500).send({ message: err.message, status: "fail" });
+  }
+};
+
+
+export const addNewCourse = async (req, res, next) => {
+  try {
+    const { id, course, paymentId, orderId, centerId } = req.body;
+
+    const student = await studentModel.findByIdAndUpdate(id, {$addToSet:{course}});
+    return res.status(200).send({ data: student, status: "ok" });
   } catch (err) {
     return res.status(500).send({ message: err.message, status: "fail" });
   }
