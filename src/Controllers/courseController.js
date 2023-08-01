@@ -31,7 +31,7 @@ export const createCourse = async (req, res, next) => {
     const course = await courseModel.create(createCourse);
     const DATA = await courseModel
       .findById(course._id)
-      .populate("qualificationType");
+      .populate("qualificationType").populate("category");
 
     return res.status(201).send({
       data: DATA,
