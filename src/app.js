@@ -53,8 +53,8 @@ app.use(mongoSanitize());
 app.use(xss());
 app.use(compression());
 
-app.use('/static', express.static(path.join(__dirname, 'public')))
-
+app.use('/static', express.static(path.join(__dirname, '../public')))
+console.log("path-------------------",path.join(__dirname, '../public'))
 app.use((req, res, next) => {
   req.requestTime = new Date().toISOString();
   next();
