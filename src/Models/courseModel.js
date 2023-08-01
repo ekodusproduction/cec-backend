@@ -36,11 +36,6 @@ const courseSchema = new Schema(
       required: "course fee required",
       cast: "{VALUE} is not a number",
     },
-    registrationFees: {
-      type: Number,
-      required: "registrationFees required",
-      cast: "{VALUE} is not a number",
-    },
     isActive: { type: Boolean, default: true },
   },
   {
