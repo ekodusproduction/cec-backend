@@ -13,9 +13,9 @@ import sendMessage from "../Twilio/twilio.js";
 
 export const loginCenteradmin = async (req, res, next) => {
   try {
-    const { email, password } = req.body;
+    const { whatsApp, password } = req.body;
     console.log(password);
-    const centerAdmin = await centerAdminModel.findOne({email:email}).populate("centers");
+    const centerAdmin = await centerAdminModel.findOne(whatsApp).populate("centers");
     console.log("hi", centerAdmin);
     const isCorrectPassword = await bcrypt.compare(password, centerAdmin.password);
     const token = generateToken(centerAdmin._id);

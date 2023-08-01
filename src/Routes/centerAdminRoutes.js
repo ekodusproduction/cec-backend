@@ -11,6 +11,7 @@ import {
 import { loginCenteradmin } from "../Controllers/centerAdminController.js";
 
 const router = Router();
+router.route("/centeradmin/login").post(loginCenteradmin);
 router
   .route("/centeradmin")
   .post(verifyToken, createcenterAdmin)
@@ -20,6 +21,6 @@ router
 
 router.route("/centeradminsall").get(verifyToken, getAllcenterAdmin);
 
-router.route("/centeradmin/login").post(loginCenteradmin);
+
 const centerAdminRoutes = router;
 export default centerAdminRoutes;

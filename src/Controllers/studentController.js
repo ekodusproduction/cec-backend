@@ -95,6 +95,15 @@ export const generateRollNumber = async (req, res, next) => {
   }
 };
 
+export const getallStudent = async (req, res, next) => {
+  try {
+    const center = await studentModel.find({});
+    return res.status(200).send({ data: center, token: token, status: "ok" });
+  } catch (err) {
+    return res.status(500).send({ message: err.message, status: "fail" });
+  }
+};
+
 export const getStudent = async (req, res, next) => {
   try {
     const center = await studentModel.find({ center: req.params.centerid });
