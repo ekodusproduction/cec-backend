@@ -13,7 +13,6 @@ import { generateToken } from "../Auth/authentication.js";
 import upload from "../app.js";
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const appDir = dirname(`${import.meta.filename}`);
-dotenv.config();
 
 export const studentRegister = async (req, res, next) => {
   try {
@@ -22,7 +21,7 @@ export const studentRegister = async (req, res, next) => {
       lastName,
       DOB,
       mobile,
-      highestQualification,
+      qualification,
       pinCodePresent,
       presentAddress,
       cityPresent,
@@ -33,15 +32,17 @@ export const studentRegister = async (req, res, next) => {
       pinCodePermanent,
       centerId,
     } = req.body;
-    const baseUrl = process.env.BASE_URL;
-    console.log(req.id);
+
+
     const center = await centerModel.findById(centerId);
-    console.log(center);
-    const count = await studentModel.find({
-      center: center.id,
-      regYear: new Date().getFullYear,
-      course,
-    }).length;
+    if(!center){
+      return res.status(404).send()
+    }
+    // const count = await studentModel.find({
+    //   center: centerId,
+    //   regYear: new Date().getFullYear,
+    //   course,
+    // }).length;
     // const rollNumber = `${count + 1}${`${new Date().getFullYear}`.slice(-2)}${
     //   center.franchiseCode
     // }`;
@@ -51,7 +52,7 @@ export const studentRegister = async (req, res, next) => {
       lastName,
       DOB,
       mobile,
-      highestQualification,
+      qualification,
       pinCodePresent,
       presentAddress,
       cityPresent,

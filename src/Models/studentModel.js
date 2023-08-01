@@ -37,7 +37,6 @@ const studentSchema = new Schema(
     },
     rollNumber: {
       type: String,
-      required: "please provide rollNumber",
       minLength: 3,
       maxLength: 20,
       unique: true,
@@ -85,12 +84,10 @@ const studentSchema = new Schema(
     Gender: {
       type: String,
       enum: ["Female", "Male", "other"],
-      required: "please provide gender",
       cast: "{VALUE} is not valid",
     },
     email: {
       type: String,
-      required: "please provide email",
       minLength: 11,
       maxLength: 30,
       cast: "{VALUE} is not a string",
@@ -124,7 +121,7 @@ const studentSchema = new Schema(
       cast: "{VALUE} is not a number",
     },
 
-    center: {
+    centerId: {
       type: Schema.Types.ObjectId,
       ref: "courses",
       required: "please provide center",
