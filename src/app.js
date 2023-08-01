@@ -11,10 +11,15 @@ import helmet from "helmet";
 import compression from "compression";
 import mongoSanitize from "express-mongo-sanitize";
 import rateLimit from "express-rate-limit";
+import { dirname } from "path";
+import { fileURLToPath } from "url";
+import path from "path";
 import courseRoutes from "./Routes/courseRoutes.js";
 import qualificationRoutes from "./Routes/qualificationRotes.js";
 import centerAdminRoutes from "./Routes/centerAdminRoutes.js";
 import paymentsRoutes from "./Routes/paymentsRoutes.js";
+const __dirname = dirname(fileURLToPath(import.meta.url));
+const appDir = dirname(`${import.meta.filename}`);
 export const app = express();
 
 app.use(express.json());
@@ -48,7 +53,8 @@ app.use(mongoSanitize());
 app.use(xss());
 app.use(compression());
 
-app.use(express.static("public"));
+app.use('/static', express.static(path.join(__dirname, 'public')))
+
 app.use((req, res, next) => {
   req.requestTime = new Date().toISOString();
   next();
