@@ -18,8 +18,8 @@ dotenv.config();
 
 export const createQualification = async (req, res, next) => {
   try {
-    const { qualification, value } = req.body;
-    const data = await qualificationModel.create({ qualification, value });
+    const { qualification, value , registrationFees} = req.body;
+    const data = await qualificationModel.create({ qualification, value, registrationFees });
     return res.status(200).send({ data: data, status: "ok" });
   } catch (err) {
     return res.status(500).send({ message: err.message, status: "fail" });
