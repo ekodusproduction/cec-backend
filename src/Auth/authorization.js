@@ -9,7 +9,6 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 
 dotenv.config({path:path.join(__dirname,"../../.env") });
 const jwtSecretKey =  process.env.JWT_SECRET ;
-console.log(jwtSecretKey)
 
 export const verifyToken = async (req, res, next) => {
   try {

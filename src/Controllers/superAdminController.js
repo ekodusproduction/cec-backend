@@ -14,7 +14,7 @@ const appDir = dirname(`${import.meta.filename}`);
 
 export const createSuperAdmin = async (req, res, next) => {
   try {
-    const baseUrl = "http://139.59.83.187/"
+    const baseUrl = `139.59.83.187`;
     const requestBody = req.body;
     const { firstName, lastName, mobile, email, password } = requestBody;
     const file = req.files[0];
@@ -53,18 +53,15 @@ export const createSuperAdmin = async (req, res, next) => {
       { $set: { profilePic: profilePic } }
     );
     await fs.writeFile(
-      
-        `/public/superadmin/${user.id.slice(-6)}${file.originalname}`,
+      appDir +
+        `../../public/superadmin/${user.id.slice(-6)}${file.originalname}`,
       imgBuffer,
       "utf-8"
     );
-
-    return res
-      .status(201)
-      .send({
-        data: { message: "superadmin created successfully" },
-        status: "ok",
-      });
+    return res.status(201).send({
+      data: { message: "superadmin created successfully" },
+      status: "ok",
+    });
   } catch (err) {
     res.status(500).send({ message: err.message, status: "fail" });
   }
@@ -76,21 +73,17 @@ export const loginSuperAdmin = async (req, res, next) => {
     const { email, password } = requestBody;
     const user = await superAdminModel.findOne({ email: email });
     if (user == null) {
-      return res
-        .status(400)
-        .send({
-          data: { message: "email doesnt exist. Please register" },
-          status: "fail",
-        });
+      return res.status(400).send({
+        data: { message: "email doesnt exist. Please register" },
+        status: "fail",
+      });
     }
     const isPasswordCorrect = await bcrypt.compare(password, user.password);
     if (!isPasswordCorrect) {
-      return res
-        .status(400)
-        .send({
-          data: { message: "Incorrect password. Please try again" },
-          status: "fail",
-        });
+      return res.status(400).send({
+        data: { message: "Incorrect password. Please try again" },
+        status: "fail",
+      });
     }
     const data = {
       firstName: user.firstName,
@@ -147,12 +140,10 @@ export const resetPassword = async (req, res, next) => {
     const { email, newPassword } = requestBody;
     const user = await superAdminModel.findOne({ email: email });
     if (user == null) {
-      return res
-        .status(400)
-        .send({
-          data: { message: "email doesnt exist. Please register" },
-          status: "fail",
-        });
+      return res.status(400).send({
+        data: { message: "email doesnt exist. Please register" },
+        status: "fail",
+      });
     }
     const saltRounds = 10;
     const salt = await bcrypt.genSalt(saltRounds);

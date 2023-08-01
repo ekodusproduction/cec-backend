@@ -48,11 +48,11 @@ app.use(mongoSanitize());
 app.use(xss());
 app.use(compression());
 
+app.use(express.static("public"));
 app.use((req, res, next) => {
   req.requestTime = new Date().toISOString();
   next();
 });
-
 
 app.use("/api", studentRoutes);
 app.use("/api", courseRoutes);
@@ -64,7 +64,7 @@ app.use("/api", centerAdminRoutes);
 app.use("/api", paymentsRoutes);
 
 
-app.use("/public", express.static("public"));
+
 
 app.all("*", (req, res, next) => {
   return res
