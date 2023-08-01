@@ -9,22 +9,22 @@ import courseModel from "../Models/centerModel.js";
 
 export const createCategory = async (req, res, next) => {
   try {
-    let { category, centerId } = req.body;
+    let { category } = req.body;
     const data = await categoryModel.create({ category });
-    const isSuperAdmin = await superAdminModel.findById(req.id);
+    // const isSuperAdmin = await superAdminModel.findById(req.id);
 
-    if (centerId != undefined) {
-      const categories = await centerModel.findByIdAndUpdate(centerId, {
-        $push: { categories: data.id },
-      });
-      return res
-        .status(201)
-        .send({
-          data: data,
-          message: "course Created succesfully",
-          status: "ok",
-        });
-    }
+    // if (centerId != undefined) {
+    //   const categories = await centerModel.findByIdAndUpdate(centerId, {
+    //     $push: { categories: data.id },
+    //   });
+    //   return res
+    //     .status(201)
+    //     .send({
+    //       data: data,
+    //       message: "course Created succesfully",
+    //       status: "ok",
+    //     });
+    // }
     return res
       .status(201)
       .send({
