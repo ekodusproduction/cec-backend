@@ -8,7 +8,7 @@ import courseModel from "../Models/centerModel.js";
 import { dirname } from "path";
 import dotenv from "dotenv";
 import { fileURLToPath } from "url";
-import { sendMessage } from "../Twilio/twilio.js";
+import { sendMessage } from "../Airtel/airtel.js";
 import { generateToken } from "../Auth/authentication.js";
 import upload from "../app.js";
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -33,10 +33,11 @@ export const studentRegister = async (req, res, next) => {
       centerId,
     } = req.body;
 
-
     const center = await centerModel.findById(centerId);
-    if(!center){
-      return res.status(404).send({data:{message:"center not found"}, status:"fail"})
+    if (!center) {
+      return res
+        .status(404)
+        .send({ data: { message: "center not found" }, status: "fail" });
     }
     // const count = await studentModel.find({
     //   center: centerId,
@@ -61,7 +62,7 @@ export const studentRegister = async (req, res, next) => {
       houseNumberPermanent,
       cityPermanent,
       pinCodePermanent,
-      centerId
+      centerId,
     };
 
     const student = await studentModel.create(data);
@@ -76,17 +77,19 @@ export const studentRegister = async (req, res, next) => {
 export const generateRollNumber = async (req, res, next) => {
   try {
     const { paymentId, orderId, centerId, studentId } = req.body;
-    
+
     const center = await centerModel.findById(centerId);
     const count = await studentModel.countDocuments({
-      center:centerId,
+      center: centerId,
       regYear: new Date().getFullYear,
     });
-    const rollNumber = `${(count % 1000) + 1}${`${new Date().getFullYear}`.slice(-2)}${
-      center.franchiseCode
-    }`;
-    const updateStudent = await studentModel.findByIdAndUpdate(studentId, {$set:{rollNumber:rollNumber}});
-    
+    const rollNumber = `${(count % 1000) + 1}${`${
+      new Date().getFullYear
+    }`.slice(-2)}${center.franchiseCode}`;
+    const updateStudent = await studentModel.findByIdAndUpdate(studentId, {
+      $set: { rollNumber: rollNumber },
+    });
+
     const text = `Payment succesfull. Your roll number is ${rollNumber} `;
     sendMessage(text, mobile);
     return res.status(200).send({ data: updateStudent, status: "ok" });
@@ -106,8 +109,10 @@ export const getallStudent = async (req, res, next) => {
 
 export const getStudent = async (req, res, next) => {
   try {
-    if(!req.params.centerId){
-      return res.status(400).send({ data: {message:"invalid request"},  status: "fail" })
+    if (!req.params.centerId) {
+      return res
+        .status(400)
+        .send({ data: { message: "invalid request" }, status: "fail" });
     }
     const center = await studentModel.find({ center: req.params.centerid });
     return res.status(200).send({ data: center, status: "ok" });
@@ -116,12 +121,13 @@ export const getStudent = async (req, res, next) => {
   }
 };
 
-
 export const addNewCourse = async (req, res, next) => {
   try {
     const { id, course, paymentId, orderId, centerId } = req.body;
 
-    const student = await studentModel.findByIdAndUpdate(id, {$addToSet:{course}});
+    const student = await studentModel.findByIdAndUpdate(id, {
+      $addToSet: { course },
+    });
     return res.status(200).send({ data: student, status: "ok" });
   } catch (err) {
     return res.status(500).send({ message: err.message, status: "fail" });
@@ -131,7 +137,9 @@ export const addNewCourse = async (req, res, next) => {
 export const updateStudent = async (req, res, next) => {
   try {
     const { id, updateField, updateValue } = req.body;
-    const student = await studentModel.findByIdAndUpdate(id, {$set:{updateField:updateValue}});
+    const student = await studentModel.findByIdAndUpdate(id, {
+      $set: { updateField: updateValue },
+    });
 
     return res.status(200).send({ data: student, status: "ok" });
   } catch (err) {
@@ -141,7 +149,7 @@ export const updateStudent = async (req, res, next) => {
 
 export const fileUploads = async (req, res, next) => {
   try {
-    const { id,rollNumber } = req.body;
+    const { id, rollNumber } = req.body;
 
     await fs.mkdir(appDir + `../../public/student/${rollNumber}`, {
       recursive: true,

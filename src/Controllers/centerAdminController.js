@@ -9,15 +9,20 @@ import { dirname } from "path";
 import { fileURLToPath } from "url";
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const appDir = dirname(`${import.meta.filename}`);
-import sendMessage from "../Twilio/twilio.js";
+import sendMessage from "../Airtel/airtel.js";
 
 export const loginCenteradmin = async (req, res, next) => {
   try {
     const { whatsApp, password } = req.body;
     console.log(password);
-    const centerAdmin = await centerAdminModel.findOne({whatsApp}).populate("centers");
+    const centerAdmin = await centerAdminModel
+      .findOne({ whatsApp })
+      .populate("centers");
     console.log("hi", centerAdmin);
-    const isCorrectPassword = await bcrypt.compare(password, centerAdmin.password);
+    const isCorrectPassword = await bcrypt.compare(
+      password,
+      centerAdmin.password
+    );
     const token = generateToken(centerAdmin._id);
     centerAdmin.password = null;
     return res
@@ -72,7 +77,7 @@ export const createcenterAdmin = async (req, res, next) => {
 
 export const getcenterAdmin = async (req, res, next) => {
   try {
-    const user = await centerAdminModel.findById( req.id );
+    const user = await centerAdminModel.findById(req.id);
     return res.status(200).send({ data: user, status: "ok" });
   } catch (err) {
     res.status(500).send({ message: err.message, status: "fail" });
@@ -87,7 +92,6 @@ export const getAllcenterAdmin = async (req, res, next) => {
     res.status(500).send({ message: err.message, status: "fail" });
   }
 };
-
 
 export const updatecenterAdmin = async (req, res, next) => {
   try {

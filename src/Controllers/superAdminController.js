@@ -6,12 +6,12 @@ import bcrypt from "bcrypt";
 import fs from "fs/promises";
 import { dirname } from "path";
 import { fileURLToPath } from "url";
-import { sendMessage } from "../Twilio/twilio.js";
+import { sendMessage } from "../Airtel/airtel.js";
 import { generateToken } from "../Auth/authentication.js";
 import upload from "../app.js";
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const appDir = dirname(`${import.meta.filename}`);
-   console.log("appDir", appDir)
+console.log("appDir", appDir);
 export const createSuperAdmin = async (req, res, next) => {
   try {
     const baseUrl = `139.59.83.187`;
@@ -37,11 +37,10 @@ export const createSuperAdmin = async (req, res, next) => {
       return res
         .status(200)
         .send({ data: { message: "superadmin exist already" }, status: "ok" });
-    }    
-    
- 
+    }
+
     await fs.writeFile(
-        `../../public/superadmin/${mobile.slice(-6)}${file.originalname}`,
+      `../../public/superadmin/${mobile.slice(-6)}${file.originalname}`,
       imgBuffer,
       "utf-8"
     );

@@ -8,7 +8,7 @@ import courseModel from "../Models/centerModel.js";
 import { dirname } from "path";
 import dotenv from "dotenv";
 import { fileURLToPath } from "url";
-import { sendMessage } from "../Twilio/twilio.js";
+import { sendMessage } from "../Airtel/airtel.js";
 import { generateToken } from "../Auth/authentication.js";
 import upload from "../app.js";
 import qualificationModel from "../Models/qualificationModel.js";
@@ -18,8 +18,12 @@ dotenv.config();
 
 export const createQualification = async (req, res, next) => {
   try {
-    const { qualification, value , registrationFees} = req.body;
-    const data = await qualificationModel.create({ qualification, value, registrationFees });
+    const { qualification, value, registrationFees } = req.body;
+    const data = await qualificationModel.create({
+      qualification,
+      value,
+      registrationFees,
+    });
     return res.status(200).send({ data: data, status: "ok" });
   } catch (err) {
     return res.status(500).send({ message: err.message, status: "fail" });
