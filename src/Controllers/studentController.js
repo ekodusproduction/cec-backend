@@ -22,7 +22,6 @@ export const studentRegister = async (req, res, next) => {
       lastName,
       DOB,
       mobile,
-      course,
       highestQualification,
       pinCodePresent,
       presentAddress,
@@ -52,7 +51,6 @@ export const studentRegister = async (req, res, next) => {
       lastName,
       DOB,
       mobile,
-      course,
       highestQualification,
       pinCodePresent,
       presentAddress,
@@ -66,7 +64,7 @@ export const studentRegister = async (req, res, next) => {
 
     const student = await studentModel.create(data);
     const text = `Student registered succesfully with CEC. To generate rollnumber please pay for the course`;
-    sendMessage(text, mobile);
+    // sendMessage(text, mobile);
     return res.status(200).send({ data: student, status: "ok" });
   } catch (err) {
     return res.status(500).send({ message: err.message, status: "fail" });
