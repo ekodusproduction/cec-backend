@@ -44,7 +44,7 @@ export const createCourse = async (req, res, next) => {
 };
 export const getCourse = async (req, res, next) => {
   try {
-    const courses = await courseModel.find({}).populate("qualificationType")
+    const courses = await courseModel.find({}).populate("qualificationType").populate("category")
     return res.status(200).send({ data: courses, status: "ok" });
   } catch (err) {
     return res.status(500).send({ message: err.message, status: "fail" });
