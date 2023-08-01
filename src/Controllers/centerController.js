@@ -12,10 +12,10 @@ const appDir = dirname(`${import.meta.filename}`);
 
 export const getCenter = async (req, res, next) => {
   try {
-    const {cadmin} = req.params;
-    console.log(cadmin)
-    const center = await centerAdminModel
-      .findById(cadmin)
+    const {centerId} = req.params;
+    console.log(centerId)
+    const center = await centerModel
+      .findById(centerId)
       .populate("centers").select("centers");
     return res.status(200).send({ data: center, status: "ok" });
   } catch (err) {

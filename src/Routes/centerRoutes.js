@@ -11,7 +11,7 @@ import { isSuperAdmin } from "../Auth/isSuperAdmin.js";
 const router = Router();
 
 router.route("/centerall").get(verifyToken, getAllCenter);
-router.route("/center/:cadmin").get(verifyToken, getCenter);
+router.route("/center/:centerId").get(verifyToken, getCenter);
 router
   .route("/center")
   .post(verifyToken, isSuperAdmin, createcenter)
