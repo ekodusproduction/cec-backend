@@ -51,8 +51,8 @@ export const studentRegister = async (req, res, next) => {
         .min(3)
         .required(),
       pinCodePresent: Joi.number()
-        .min(5)
-        .max(6)
+        .min(100000)
+        .max(999999)
         .required(),
       presentAddress: Joi.string()
         .min(1)
@@ -70,8 +70,8 @@ export const studentRegister = async (req, res, next) => {
         .min(1)
         .required(),
       pinCodePermanent: Joi.number()
-        .min(5)
-        .max(5)
+        .min(100000)
+        .max(999999)
         .required(),
       centerId: Joi.string()
         .min(3)
