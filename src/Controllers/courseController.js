@@ -101,10 +101,12 @@ export const getCourse = async (req, res, next) => {
 export const updateCourse = async (req, res, next) => {
   try {
     const { updateField, updateValue } = req.body;
-    const courseId = req.params;
+    const {courseId} = req.params;
+    console.log("tyyype",typeof(courseId))
+    console.log("updateField",typeof(updateField))
 
     const schema = Joi.object({
-      courseId: Joi.number()
+      courseId: Joi.string()
         .min(3)
         .required(),
       updateField: Joi.string()
@@ -132,7 +134,7 @@ export const updateCourse = async (req, res, next) => {
 
     const dynamicUpdate = { [updateField]: updateValue };
     const course = await courseModel.findByIdAndUpdate(
-      { _id: courseId.courseId },
+      { _id: courseId },
       { $set: dynamicUpdate },
       { new: true }
     );
