@@ -33,22 +33,49 @@ export const studentRegister = async (req, res, next) => {
       centerId,
     } = req.body;
 
-    const center = await centerModel.findById(centerId);
-    if (!center) {
-      return res
-        .status(404)
-        .send({ data: { message: "center not found" }, status: "fail" });
-    }
-    // const count = await studentModel.find({
-    //   center: centerId,
-    //   regYear: new Date().getFullYear,
-    //   course,
-    // }).length;
-    // const rollNumber = `${count + 1}${`${new Date().getFullYear}`.slice(-2)}${
-    //   center.franchiseCode
-    // }`;
+    const schema = Joi.object({
+      firstName: Joi.string()
+        .min(3)
+        .required(),
+      lastName: Joi.string()
+        .min(3)
+        .required(),
+      DOB: Joi.string()
+        .min(3)
+        .required(),
+      mobile: Joi.string()
+        .min(9)
+        .required(),
+      qualification: Joi.string()
+        .min(3)
+        .required(),
+      pinCodePresent: Joi.number()
+        .min(3)
+        .required(),
+      presentAddress: Joi.string()
+        .min(3)
+        .required(),
+      cityPresent: Joi.string()
+        .min(3)
+        .required(),
+      houseNumberPresent: Joi.string()
+        .min(3)
+        .required(),
+      cityPermanent: Joi.string()
+        .min(3)
+        .required(),
+      houseNumberPermanent: Joi.string()
+        .min(3)
+        .required(),
+      pinCodePermanent: Joi.number()
+        .min(3)
+        .required(),
+      centerId: Joi.string()
+        .min(3)
+        .required(),
+    });
 
-    const data = {
+    let data = {
       firstName,
       lastName,
       DOB,
@@ -64,6 +91,27 @@ export const studentRegister = async (req, res, next) => {
       pinCodePermanent,
       centerId,
     };
+    const { error, value } = schema.validate(data);
+    if (error) {
+      return res
+        .status(400)
+        .send({ message: error.details[0].message, status: "fail" });
+    }
+
+    const center = await centerModel.findById(centerId);
+    if (!center) {
+      return res
+        .status(404)
+        .send({ data: { message: "center not found" }, status: "fail" });
+    }
+    // const count = await studentModel.find({
+    //   center: centerId,
+    //   regYear: new Date().getFullYear,
+    //   course,
+    // }).length;
+    // const rollNumber = `${count + 1}${`${new Date().getFullYear}`.slice(-2)}${
+    //   center.franchiseCode
+    // }`;
 
     const student = await studentModel.create(data);
     const text = `Student registered succesfully with CEC. To generate rollnumber please pay for the course`;
@@ -77,6 +125,34 @@ export const studentRegister = async (req, res, next) => {
 export const generateRollNumber = async (req, res, next) => {
   try {
     const { paymentId, orderId, centerId, studentId } = req.body;
+
+    const schema = Joi.object({
+      paymentId: Joi.string()
+        .min(3)
+        .required(),
+      orderId: Joi.string()
+        .min(3)
+        .required(),
+      centerId: Joi.string()
+        .min(3)
+        .required(),
+      studentId: Joi.string()
+        .min(9)
+        .required(),
+    });
+
+    let data = {
+      paymentId,
+      orderId,
+      centerId,
+      studentId,
+    };
+    const { error, value } = schema.validate(data);
+    if (error) {
+      return res
+        .status(400)
+        .send({ message: error.details[0].message, status: "fail" });
+    }
 
     const center = await centerModel.findById(centerId);
     const count = await studentModel.countDocuments({
@@ -110,9 +186,10 @@ export const getallStudent = async (req, res, next) => {
 export const getStudent = async (req, res, next) => {
   try {
     if (!req.params.centerId) {
-      return res
-        .status(400)
-        .send({ data: { message: "invalid request" }, status: "fail" });
+      return res.status(400).send({
+        data: { message: "invalid request. please provide centerId" },
+        status: "fail",
+      });
     }
     const center = await studentModel.find({ center: req.params.centerid });
     return res.status(200).send({ data: center, status: "ok" });
@@ -124,6 +201,38 @@ export const getStudent = async (req, res, next) => {
 export const addNewCourse = async (req, res, next) => {
   try {
     const { id, course, paymentId, orderId, centerId } = req.body;
+
+    const schema = Joi.object({
+      id: Joi.string()
+        .min(3)
+        .required(),
+      course: Joi.string()
+        .min(3)
+        .required(),
+      paymentId: Joi.string()
+        .min(3)
+        .required(),
+      orderId: Joi.string()
+        .min(3)
+        .required(),
+      centerId: Joi.string()
+        .min(9)
+        .required(),
+    });
+
+    let data = {
+      id,
+      course,
+      paymentId,
+      orderId,
+      centerId,
+    };
+    const { error, value } = schema.validate(data);
+    if (error) {
+      return res
+        .status(400)
+        .send({ message: error.details[0].message, status: "fail" });
+    }
 
     const student = await studentModel.findByIdAndUpdate(id, {
       $addToSet: { course },
@@ -137,9 +246,27 @@ export const addNewCourse = async (req, res, next) => {
 export const updateStudent = async (req, res, next) => {
   try {
     const { id, updateField, updateValue } = req.body;
-    const student = await studentModel.findByIdAndUpdate(id, {
-      $set: { updateField: updateValue },
+
+    const schema = Joi.object({
+      id: Joi.string().required(),
+      updateField: Joi.string().required(),
+      updateValue: Joi.string().required(),
     });
+    let data = { id, updateField, updateValue };
+    const { error, value } = schema.validate(data);
+    if (error) {
+      return res
+        .status(400)
+        .send({ message: error.details[0].message, status: "fail" });
+    }
+    const updateObject = {};
+    updateObject[updateField] = updateValue;
+
+    const updatedStudent = await studentModel.findByIdAndUpdate(
+      id,
+      { $set: updateObject },
+      { new: true }
+    );
 
     return res.status(200).send({ data: student, status: "ok" });
   } catch (err) {
@@ -189,8 +316,26 @@ export const fileUploads = async (req, res, next) => {
 export const deleteStudent = async (req, res, next) => {
   try {
     const { id, email, password } = req.body;
+
+    const schema = Joi.object({
+      id: Joi.string().required(),
+      email: Joi.string()
+        .min(11)
+        .required(),
+      password: Joi.string()
+        .min(6)
+        .required(),
+    });
+    let data = { id, email, password };
+    const { error, value } = schema.validate(data);
+    if (error) {
+      return res
+        .status(400)
+        .send({ message: error.details[0].message, status: "fail" });
+    }
+
     const deleteStudent = await studentModel.find;
-    return res.status(200).send({ data: center, token: token, status: "ok" });
+    return res.status(200).send({ data: deleteStudent, token: token, status: "ok" });
   } catch (err) {
     return res.status(500).send({ message: err.message, status: "fail" });
   }

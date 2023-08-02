@@ -3,6 +3,8 @@ import request from "request";
 import dotenv from "dotenv";
 dotenv.config();
 
+
+
 export const sendMessage = async (text, mobile) => {
   const url =
     "http://openapi.airtel.in/gateway/airtel-iq-sms-utility/v2/api-docs/sendSingleSms";
@@ -25,4 +27,3 @@ export const sendMessage = async (text, mobile) => {
   await axios.post(url, options);
 };
 
-export default Airtel;

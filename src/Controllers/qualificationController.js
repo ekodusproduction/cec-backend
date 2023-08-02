@@ -11,6 +11,7 @@ import { fileURLToPath } from "url";
 import { sendMessage } from "../Airtel/airtel.js";
 import { generateToken } from "../Auth/authentication.js";
 import upload from "../app.js";
+import Joi from "joi";
 import qualificationModel from "../Models/qualificationModel.js";
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const appDir = dirname(`${import.meta.filename}`);
@@ -19,7 +20,32 @@ dotenv.config();
 export const createQualification = async (req, res, next) => {
   try {
     const { qualification, value, registrationFees } = req.body;
-    const data = await qualificationModel.create({
+
+    const schema = Joi.object({
+      qualification: Joi.string()
+        .min(3)
+        .required(),
+      value: Joi.string()
+        .min(3)
+        .required(),
+      registrationFees: Joi.string()
+        .min(3)
+        .required(),
+    });
+
+    let data = {
+      qualification,
+      value,
+      registrationFees,
+    };
+    const { error, values } = schema.validate(data);
+    if (error) {
+      return res
+        .status(400)
+        .send({ message: error.details[0].message, status: "fail" });
+    }
+
+    data = await qualificationModel.create({
       qualification,
       value,
       registrationFees,
@@ -38,11 +64,36 @@ export const getQualification = async (req, res, next) => {
     return res.status(500).send({ message: err.message, status: "fail" });
   }
 };
+
 export const updateQualification = async (req, res, next) => {
   try {
     const { qualificationId } = req.params;
     const { qualification, value } = req.body;
-    const data = await qualificationModel.findOneAndUpdate(
+    const schema = Joi.object({
+      qualificationId: Joi.string()
+        .min(3)
+        .required(),
+      qualification: Joi.string()
+        .min(3)
+        .required(),
+      value: Joi.string()
+        .min(3)
+        .required(),
+    });
+
+    let data = {
+      qualificationId,
+      qualification,
+      value,
+    };
+    const { error, values } = schema.validate(data);
+    if (error) {
+      return res
+        .status(400)
+        .send({ message: error.details[0].message, status: "fail" });
+    }
+
+    data = await qualificationModel.findOneAndUpdate(
       { _id: qualificationId.qualificationId },
       {
         qualification,
@@ -58,6 +109,9 @@ export const updateQualification = async (req, res, next) => {
 export const deleteQualification = async (req, res, next) => {
   try {
     const { qualificationId } = req.query;
+    if (!qualificationId) {
+      return res.status(400).send({ message: "Please send qualificationId" });
+    }
     const data = await qualificationModel.findOneAndDelete({
       _id: qualificationId,
     });

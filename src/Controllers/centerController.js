@@ -5,6 +5,7 @@ import bcrypt from "bcrypt";
 import { generateToken } from "../Auth/authentication.js";
 import APIFeatures from "../Utils/apiFeatures.js";
 import fs from "fs/promises";
+import Joi from "joi";
 import { dirname } from "path";
 import { fileURLToPath } from "url";
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -12,11 +13,24 @@ const appDir = dirname(`${import.meta.filename}`);
 
 export const getCenter = async (req, res, next) => {
   try {
-    const {centerId} = req.params;
-    console.log(centerId)
+    const { centerId } = req.params;
+
+    const schema = Joi.object({
+      centerId: Joi.string().required(),
+    });
+
+    let data = { centerId };
+    const { error, value } = schema.validate(data);
+    if (error) {
+      return res
+        .status(400)
+        .send({ message: error.details[0].message, status: "fail" });
+    }
+
     const center = await centerModel
       .findById(centerId)
-      .populate("centers").select("centers");
+      .populate("centers")
+      .select("centers");
     return res.status(200).send({ data: center, status: "ok" });
   } catch (err) {
     return res.status(500).send({ message: err.message, status: "fail" });
@@ -25,7 +39,6 @@ export const getCenter = async (req, res, next) => {
 
 export const getAllCenter = async (req, res, next) => {
   try {
-
     const center = await centerModel.find({});
     return res.status(200).send({ data: center, status: "ok" });
   } catch (err) {
@@ -48,9 +61,24 @@ export const createcenter = async (req, res, next) => {
       whatsApp,
       email,
       landline,
+      whatsAppCenterAdmin,
     } = req.body;
-    dateofReg = new Date(dateofReg)
-    console.log(dateofReg)
+    dateofReg = new Date(dateofReg);
+    const schema = Joi.object({
+      firmName: Joi.string().required(),
+      dateofReg: Joi.string().required(),
+      firmType: Joi.string().required(),
+      address: Joi.string().required(),
+      landmark: Joi.string().required(),
+      pinCode: Joi.string().required(),
+      district: Joi.string().required(),
+      state: Joi.string().required(),
+      alternateNumber: Joi.string().required(),
+      whatsApp: Joi.string().required(),
+      email: Joi.string().required(),
+      whatsAppCenterAdmin: Joi.string().required(),
+    });
+
     let data = {
       firmName,
       dateofReg,
@@ -64,16 +92,24 @@ export const createcenter = async (req, res, next) => {
       whatsApp,
       email,
       landline,
+      whatsAppCenterAdmin,
     };
-    const { whatsAppCenterAdmin } = req.body;
+    const { error, value } = schema.validate(data);
+    if (error) {
+      return res
+        .status(400)
+        .send({ message: error.details[0].message, status: "fail" });
+    }
+
     if (!whatsAppCenterAdmin) {
       return res
         .status(400)
         .send({ data: { message: "provide whatsapp" }, status: "fail" });
     }
-    const cadmin = await centerAdminModel.findById(req.id);
+
     const count = await centerModel.countDocuments();
-    data["centerId"] = `${(count+1).toString().padStart(3,"0")}`;
+    data["centerId"] = `${(count + 1).toString().padStart(3, "0")}`;
+    data["headOfInstitute"] = req.id;
     const center = await centerModel.create(data);
     const user = await centerAdminModel.findOneAndUpdate(
       {
@@ -90,9 +126,22 @@ export const createcenter = async (req, res, next) => {
 
 export const updatecenter = async (req, res, next) => {
   try {
-    const requestBody = req.body;
-    const { id, updateField, updateValue } = requestBody;
-    console.log(updateField, updateValue);
+    const { id, updateField, updateValue } = req.body;
+
+    const schema = Joi.object({
+      id: Joi.string().required(),
+      updateField: Joi.string().required(),
+      updateValue: Joi.string().required(),
+    });
+
+    let data = { id, updateField, updateValue };
+    const { error, value } = schema.validate(data);
+    if (error) {
+      return res
+        .status(400)
+        .send({ message: error.details[0].message, status: "fail" });
+    }
+
     const dynamicUpdate = { [updateField]: updateValue };
     if (updateField == "courses" || updateField == "categories") {
       const update = await centerModel.findByIdAndUpdate(
@@ -116,9 +165,22 @@ export const updatecenter = async (req, res, next) => {
 
 export const deletecenter = async (req, res, next) => {
   try {
-    const requestBody = req.body;
+    const { email, password } = req.body;
     const centerId = req.query;
-    const { email, password } = requestBody;
+    const schema = Joi.object({
+      centerId: Joi.string().required(),
+      email: Joi.string().required(),
+      password: Joi.string().required(),
+    });
+
+    let data = { centerId, email, password };
+    const { error, value } = schema.validate(data);
+    if (error) {
+      return res
+        .status(400)
+        .send({ message: error.details[0].message, status: "fail" });
+    }
+
     const user = await superAdminModel.findById({ _id: req.id });
 
     if (
@@ -135,7 +197,7 @@ export const deletecenter = async (req, res, next) => {
       { new: true }
     );
 
-    return res.status(200).send({ data: user, status: "ok" });
+    return res.status(200).send({ data: userdeleted, status: "ok" });
   } catch (err) {
     return res.status(500).send({ message: err.message, status: "fail" });
   }

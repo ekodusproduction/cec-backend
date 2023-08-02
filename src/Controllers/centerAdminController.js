@@ -7,14 +7,28 @@ import APIFeatures from "../Utils/apiFeatures.js";
 import fs from "fs/promises";
 import { dirname } from "path";
 import { fileURLToPath } from "url";
+import Joi from "joi";
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const appDir = dirname(`${import.meta.filename}`);
-import sendMessage from "../Airtel/airtel.js";
+import {sendMessage} from "../Airtel/airtel.js";
 
 export const loginCenteradmin = async (req, res, next) => {
   try {
     const { whatsApp, password } = req.body;
-    console.log(password);
+
+    const schema = Joi.object({
+      whatsApp: Joi.string().required(),
+      password: Joi.string().required(),
+    });
+
+    let data = { whatsApp, password };
+    const { error, value } = schema.validate(data);
+    if (error) {
+      return res
+        .status(400)
+        .send({ message: error.details[0].message, status: "fail" });
+    }
+
     const centerAdmin = await centerAdminModel
       .findOne({ whatsApp })
       .populate("centers");
@@ -49,10 +63,45 @@ export const createcenterAdmin = async (req, res, next) => {
       whatsApp,
       houseNumber,
     } = req.body;
+
+    const schema = Joi.object({
+      nameHoi: Joi.string().required(),
+      alternateNumber: Joi.string().required(),
+      email: Joi.string().required(),
+      address: Joi.string().required(),
+      landmark: Joi.string().required(),
+      pinCode: Joi.string().required(),
+      state: Joi.string().required(),
+      district: Joi.string().required(),
+      password: Joi.string().required(),
+      whatsApp: Joi.string().required(),
+      houseNumber: Joi.string().required(),
+    });
+
+    let data = {
+      nameHoi,
+      alternateNumber,
+      email,
+      address,
+      landmark,
+      pinCode,
+      state,
+      district,
+      password,
+      whatsApp,
+      houseNumber,
+    };
+    const { error, value } = schema.validate(data);
+    if (error) {
+      return res
+        .status(400)
+        .send({ message: error.details[0].message, status: "fail" });
+    }
+
     const saltRounds = 10;
     const salt = await bcrypt.genSalt(saltRounds);
     const encryptedPassword = await bcrypt.hash(password, salt);
-    const data = {
+    data = {
       nameHoi,
       alternateNumber,
       email,
@@ -95,8 +144,21 @@ export const getAllcenterAdmin = async (req, res, next) => {
 
 export const updatecenterAdmin = async (req, res, next) => {
   try {
-    const requestBody = req.body;
-    const { id, updateField, updateValue } = requestBody;
+    const { id, updateField, updateValue } = req.body;
+    const schema = Joi.object({
+      id: Joi.string().required(),
+      updateField: Joi.string().required(),
+      updateValue: Joi.string().required(),
+    });
+
+    let data = { id, updateField, updateValue };
+    const { error, value } = schema.validate(data);
+    if (error) {
+      return res
+        .status(400)
+        .send({ message: error.details[0].message, status: "fail" });
+    }
+
     const updateObject = { [updateField]: updateValue };
 
     const updatedAdmin = await centerAdminModel.findByIdAndUpdate(
@@ -129,8 +191,21 @@ export const updatecenterAdmin = async (req, res, next) => {
 
 export const deletecenterAdmin = async (req, res, next) => {
   try {
-    const requestBody = req.body;
-    const { id, password } = requestBody;
+    const { id, password } = req.body;
+
+    const schema = Joi.object({
+      id: Joi.string().required(),
+      password: Joi.string().required(),
+    });
+
+    let data = { id, password };
+    const { error, value } = schema.validate(data);
+    if (error) {
+      return res
+        .status(400)
+        .send({ message: error.details[0].message, status: "fail" });
+    }
+
     const user = await superAdminModel.findById(req.id);
     if (user.password != password) {
       return res.status(400).send({

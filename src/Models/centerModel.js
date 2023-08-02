@@ -30,7 +30,11 @@ const centerSchema = new Schema(
       unique: true,
       cast: "{VALUE} is not a String",
     },
-    headOfInstitute: { type: Schema.Types.ObjectId, ref: "centerAdmin" },
+    headOfInstitute: {
+      type: Schema.Types.ObjectId,
+      ref: "centerAdmin",
+      required: true,
+    },
     dateofReg: {
       type: Date,
       required: "franchise date of registration required",

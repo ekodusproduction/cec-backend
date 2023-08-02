@@ -7,12 +7,14 @@ const courseSchema = new Schema(
       type: String,
       required: "course name required",
       unique: true,
+      minlength:3,
       maxlength:50,
       cast: "{VALUE} is not a String",
     },
     courseDescription: {
       type: String,
       required: "course description required",
+      minlength:5,
       maxlength:200,
       cast: "{VALUE} is not a String",
     },
@@ -20,7 +22,8 @@ const courseSchema = new Schema(
       type: String,
       required: "course code required",
       unique: true,
-      maxlength:5,
+      minlength:3,
+      maxlength:6,
       cast: "{VALUE} is not a String",
     },
     category: {
@@ -31,6 +34,7 @@ const courseSchema = new Schema(
     },
     duration: {
       type: String,
+      minlength:2,
       required: "course duration required",
       cast: "{VALUE} is not a String",
     },

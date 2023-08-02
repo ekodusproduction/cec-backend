@@ -7,11 +7,11 @@ const centerAdminSchema = new Schema(
       type: String,
       required: "center admin name required",
       cast: "{VALUE} is not a String",
-      minlength:3,
+      minlength: 3,
     },
     profilePic: {
       type: String,
-      default: `public/defaultAvatar.jpeg`,
+      default: `public/defaultAvatar.png`,
       cast: "{VALUE} is not a String",
     },
     email: {
