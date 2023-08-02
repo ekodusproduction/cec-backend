@@ -8,6 +8,7 @@ import courseModel from "../Models/centerModel.js";
 import { dirname } from "path";
 import dotenv from "dotenv";
 import { fileURLToPath } from "url";
+import Joi from "joi";
 import { sendMessage } from "../Airtel/airtel.js";
 import { generateToken } from "../Auth/authentication.js";
 import upload from "../app.js";
@@ -335,7 +336,9 @@ export const deleteStudent = async (req, res, next) => {
     }
 
     const deleteStudent = await studentModel.find;
-    return res.status(200).send({ data: deleteStudent, token: token, status: "ok" });
+    return res
+      .status(200)
+      .send({ data: deleteStudent, token: token, status: "ok" });
   } catch (err) {
     return res.status(500).send({ message: err.message, status: "fail" });
   }
