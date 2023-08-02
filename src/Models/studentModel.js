@@ -1,23 +1,6 @@
 import mongoose from "mongoose";
 const Schema = mongoose.Schema;
 
-// const addressSchema = mongoose.Schema({
-//     address: String,
-//     street: String,
-//     district: String,
-//     houseNumber: Number,
-//     pin: Number,
-//     state: String,
-//     country: String,
-// });
-
-// const academicSchema = mongoose.Schema({
-//     qualification: String,
-//     year: String,
-//     university: String,
-//     grade: String,
-//     percentage: Number,
-// });
 
 const studentSchema = new Schema(
   {
@@ -107,13 +90,29 @@ const studentSchema = new Schema(
     regYear: { type: String, cast: "{VALUE} is not a date" },
 
     stdCode: { type: Number, cast: "{VALUE} is not a number" },
+
     course: [
       {
-        type: Schema.Types.ObjectId,
-        ref: "courses",
-        cast: "{VALUE} is not a valid object id",
+        courseId: {
+          type: Schema.Types.ObjectId,
+          ref: "courses",
+          validate: {
+            validator: (value) => mongoose.Types.ObjectId.isValid(value),
+            message: "{VALUE} is not a valid ObjectId",
+          },
+        },
+        paymentStatus: {
+          type: String,
+          enum: ["paid", "unpaid"],
+          default:"unpaid",
+          validate: {
+            validator: (value) => ["paid", "unpaid"].includes(value),
+            message: "{VALUE} is not a valid payment status",
+          },
+        },
       },
     ],
+    
     hasActiveCourse: { type: Boolean, default: false },
     emergencyContact: {
       type: Number,
