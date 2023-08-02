@@ -51,25 +51,27 @@ export const studentRegister = async (req, res, next) => {
         .min(3)
         .required(),
       pinCodePresent: Joi.number()
-        .min(3)
+        .min(5)
+        .max(6)
         .required(),
       presentAddress: Joi.string()
-        .min(3)
+        .min(1)
         .required(),
       cityPresent: Joi.string()
         .min(3)
         .required(),
       houseNumberPresent: Joi.string()
-        .min(3)
+        .min(1)
         .required(),
       cityPermanent: Joi.string()
         .min(3)
         .required(),
       houseNumberPermanent: Joi.string()
-        .min(3)
+        .min(1)
         .required(),
       pinCodePermanent: Joi.number()
-        .min(3)
+        .min(5)
+        .max(5)
         .required(),
       centerId: Joi.string()
         .min(3)
