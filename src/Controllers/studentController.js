@@ -56,6 +56,11 @@ export const studentRegister = async (req, res, next) => {
         .required(),
       presentAddress: Joi.string()
         .min(1)
+        .max(100)
+        .required(),
+      permanentAddress: Joi.string()
+        .min(1)
+        .max(100)
         .required(),
       cityPresent: Joi.string()
         .min(3)
