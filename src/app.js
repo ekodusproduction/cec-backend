@@ -11,7 +11,7 @@ import helmet from "helmet";
 import compression from "compression";
 import mongoSanitize from "express-mongo-sanitize";
 import rateLimit from "express-rate-limit";
-import { dirname } from "path";
+import { dirname, join } from "path";
 import { fileURLToPath } from "url";
 import path from "path";
 import courseRoutes from "./Routes/courseRoutes.js";
@@ -34,7 +34,7 @@ app.options("*", cors());
 // Serving static files
 // Set security HTTP headers
 app.use(helmet());
-app.set('trust proxy', false)
+app.set("trust proxy", false);
 // Development logging
 // if (process.env.NODE_ENV === 'development') {
 //   app.use(morgan('dev'));
@@ -54,8 +54,23 @@ app.use(mongoSanitize());
 app.use(xss());
 app.use(compression());
 
-app.use('/static', express.static(path.join(__dirname, '../public')))
-console.log("path-------------------",path.join(__dirname, '../public'))
+const __filename = fileURLToPath(import.meta.url);
+console.log("pppp",__filename)
+// Get the current directory's path
+// const __dirname = dirname(__filename);
+// console.log("dddd",__dirname)
+
+// // Set the path to the public folder
+// const publicFolderPath = join(__dirname, "../public");
+// console.log("dduu",publicFolderPath)
+
+// // Serve static files from the public folder
+// app.use(express.static(publicFolderPath));
+
+app.use("/public", express.static(path.join(__dirname, "../public")));
+
+
+
 app.use((req, res, next) => {
   req.requestTime = new Date().toISOString();
   next();
@@ -69,9 +84,6 @@ app.use("/api", centerRoutes);
 app.use("/api", qualificationRoutes);
 app.use("/api", centerAdminRoutes);
 app.use("/api", paymentsRoutes);
-
-
-
 
 app.all("*", (req, res, next) => {
   return res

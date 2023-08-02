@@ -4,7 +4,7 @@ import centerAdminModel from "../Models/centerAdminModel.js";
 import multer from "multer";
 import bcrypt from "bcrypt";
 import fs from "fs/promises";
-import { dirname } from "path";
+import { dirname,join } from "path";
 import { fileURLToPath } from "url";
 import Joi from "joi";
 import { sendMessage } from "../Airtel/airtel.js";
@@ -64,17 +64,19 @@ export const createSuperAdmin = async (req, res, next) => {
         .status(200)
         .send({ data: { message: "superadmin exist already" }, status: "ok" });
     }
-
+    console.log(
+      "path--------path",
+      join(__dirname +
+        `/../../public/superadmin/${mobile.slice(-6)}${file.originalname}`)
+    );
     await fs.writeFile(
-   `./../../public/superadmin/${mobile.slice(-6)}${file.originalname}`,
+      join(__dirname +
+        `/../../public/superadmin/${mobile.slice(-6)}${file.originalname}`),
       imgBuffer,
-      { flag: 'a' },
+      { flag: "a" },
       "utf-8"
     );
-    console.log(
-      "path--------",
-      appDir + `../../public/superadmin/${mobile.slice(-6)}${file.originalname}`
-    );
+
     const user = await superAdminModel.create(data);
     if (user == null) {
       return res
