@@ -64,11 +64,7 @@ export const createSuperAdmin = async (req, res, next) => {
         .status(200)
         .send({ data: { message: "superadmin exist already" }, status: "ok" });
     }
-    console.log(
-      "path--------path",
-      join(__dirname +
-        `/../../public/superadmin/${mobile.slice(-6)}${file.originalname}`)
-    );
+
     await fs.writeFile(
       join(__dirname +
         `/../../public/superadmin/${mobile.slice(-6)}${file.originalname}`),

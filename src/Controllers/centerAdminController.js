@@ -10,7 +10,7 @@ import { fileURLToPath } from "url";
 import Joi from "joi";
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const appDir = dirname(`${import.meta.filename}`);
-import {sendMessage} from "../Airtel/airtel.js";
+import { sendMessage } from "../Airtel/airtel.js";
 
 export const loginCenteradmin = async (req, res, next) => {
   try {
@@ -173,10 +173,15 @@ export const updatecenterAdmin = async (req, res, next) => {
       const imgBuffer = Buffer.from(file.buffer, "utf-8");
       user = await centerAdminModel.findById(req.id);
       const previousImage = await fs.writeFile(
-        appDir + `../../${user.profilePic}`,
+        join(
+          __dirname +
+            `/../../public/superadmin/${mobile.slice(-6)}${file.originalname}`
+        ),
         imgBuffer,
+        { flag: "a" },
         "utf-8"
       );
+
       const profilePic = `${user.profilePic}`;
       const userupdate = await centerAdminModel.updateOne(
         { _id: req.id },

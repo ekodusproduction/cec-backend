@@ -104,7 +104,7 @@ export const updateCourse = async (req, res, next) => {
     const courseId = req.params;
 
     const schema = Joi.object({
-      courseId: Joi.string()
+      courseId: Joi.number()
         .min(3)
         .required(),
       updateField: Joi.string()
