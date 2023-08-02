@@ -40,6 +40,11 @@ const superAdminSchema = new mongoose.Schema(
   }
 );
 
+superAdminSchema.pre(/^find/, function(next) {
+  this.select("-createdAt -updatedAt -__v");
+  next();
+});
+
 const superAdminModel = mongoose.model(
   "superAdmins",
   superAdminSchema,

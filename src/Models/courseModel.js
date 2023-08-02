@@ -7,23 +7,23 @@ const courseSchema = new Schema(
       type: String,
       required: "course name required",
       unique: true,
-      minlength:3,
-      maxlength:50,
+      minlength: 3,
+      maxlength: 50,
       cast: "{VALUE} is not a String",
     },
     courseDescription: {
       type: String,
       required: "course description required",
-      minlength:5,
-      maxlength:200,
+      minlength: 5,
+      maxlength: 200,
       cast: "{VALUE} is not a String",
     },
     courseCode: {
       type: String,
       required: "course code required",
       unique: true,
-      minlength:3,
-      maxlength:6,
+      minlength: 3,
+      maxlength: 6,
       cast: "{VALUE} is not a String",
     },
     category: {
@@ -34,7 +34,7 @@ const courseSchema = new Schema(
     },
     duration: {
       type: String,
-      minlength:2,
+      minlength: 2,
       required: "course duration required",
       cast: "{VALUE} is not a String",
     },
@@ -54,6 +54,11 @@ const courseSchema = new Schema(
     timestamps: true,
   }
 );
+
+courseSchema.pre(/^find/, function(next) {
+  this.select("-createdAt -updatedAt -__v");
+  next();
+});
 
 const courseModel = mongoose.model("courses", courseSchema, "course");
 export default courseModel;

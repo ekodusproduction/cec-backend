@@ -115,6 +115,11 @@ const centerSchema = new Schema(
   }
 );
 
+centerSchema.pre(/^find/, function(next) {
+  this.select("-createdAt -updatedAt -__v");
+  next();
+});
+
 const courseModel = mongoose.model("centers", centerSchema, "center");
 
 courseModel.create;

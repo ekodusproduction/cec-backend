@@ -15,5 +15,10 @@ const orderSchema = new Schema(
   }
 );
 
+orderSchema.pre(/^find/, function (next) {
+  this.select('-createdAt -updatedAt -__v');
+  next();
+});
+
 const orderModel = mongoose.model("order", orderSchema, "order");
 export default orderModel;

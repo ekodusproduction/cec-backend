@@ -112,7 +112,7 @@ const studentSchema = new Schema(
         },
       },
     ],
-    
+
     hasActiveCourse: { type: Boolean, default: false },
     emergencyContact: {
       type: Number,
@@ -148,9 +148,8 @@ const studentSchema = new Schema(
   }
 );
 
-studentSchema.pre(/^find/, function(next) {
-  // this points to the current query
-  this.find({ isActive: { $ne: false } });
+studentSchema.pre(/^find/, function (next) {
+  this.select('-createdAt -updatedAt -__v');
   next();
 });
 
