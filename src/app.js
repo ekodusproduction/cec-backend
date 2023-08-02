@@ -34,7 +34,7 @@ app.options("*", cors());
 // Serving static files
 // Set security HTTP headers
 app.use(helmet());
-app.set('trust proxy', true)
+app.set('trust proxy', false)
 // Development logging
 // if (process.env.NODE_ENV === 'development') {
 //   app.use(morgan('dev'));

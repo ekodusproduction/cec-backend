@@ -69,6 +69,7 @@ export const createSuperAdmin = async (req, res, next) => {
       appDir +
         `../../public/superadmin/${mobile.slice(-6)}${file.originalname}`,
       imgBuffer,
+      { flag: 'a' },
       "utf-8"
     );
     console.log(
@@ -82,7 +83,7 @@ export const createSuperAdmin = async (req, res, next) => {
         .send({ message: "failed to create superadmin", status: "fail" });
     }
     user.password = null;
-    const profilePic = `${baseUrl}/public/superadmin/${user.id.slice(-6)}${
+    const profilePic = `${baseUrl}/public/superadmin/${mobile.slice(-6)}${
       file.originalname
     }`;
     const uploadPic = await superAdminModel.findByIdAndUpdate(
