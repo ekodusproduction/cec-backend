@@ -63,8 +63,6 @@ export const createCourse = async (req, res, next) => {
       duration,
       qualificationType,
       courseFee,
-      courseType,
-      registrationFees,
       courseDescription,
     };
     const course = await courseModel.create(createCourse);
