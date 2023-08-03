@@ -91,10 +91,9 @@ export const updateQualification = async (req, res, next) => {
     const updateData = { qualification, value, registrationFees };
     data = await qualificationModel.findOneAndUpdate(
       { _id: qualificationId.qualificationId },
-      {
-        qualification,
-        value,
-      }
+      
+        updateData
+      
     );
     return res.status(200).send({ data: data, status: "ok" });
   } catch (err) {
