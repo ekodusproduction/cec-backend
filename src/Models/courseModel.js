@@ -34,7 +34,7 @@ const courseSchema = new Schema(
     },
     duration: {
       type: String,
-      minlength: 2,
+      minlength: 1,
       required: "course duration required",
       cast: "{VALUE} is not a String",
     },
