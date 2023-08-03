@@ -5,7 +5,7 @@ import bcrypt from "bcrypt";
 import { generateToken } from "../Auth/authentication.js";
 import APIFeatures from "../Utils/apiFeatures.js";
 import fs from "fs/promises";
-import { dirname } from "path";
+import { dirname, join } from "path";
 import { fileURLToPath } from "url";
 import Joi from "joi";
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -166,29 +166,43 @@ export const updatecenterAdmin = async (req, res, next) => {
       updateObject,
       { new: true }
     );
+    return res.status(200).send({ data: updatedAdmin, status: "ok" });
+  } catch (err) {
+    return res.status(500).send({ message: err.message, status: "fail" });
+  }
+};
 
+export const fileUpload = async (req, res, next) => {
+  try {
     const file = req.files[0];
 
-    if (file) {
-      const imgBuffer = Buffer.from(file.buffer, "utf-8");
-      user = await centerAdminModel.findById(req.id);
-      const previousImage = await fs.writeFile(
-        join(
-          __dirname +
-            `/../../public/superadmin/${mobile.slice(-6)}${file.originalname}`
-        ),
-        imgBuffer,
-        { flag: "a" },
-        "utf-8"
-      );
-
-      const profilePic = `${user.profilePic}`;
-      const userupdate = await centerAdminModel.updateOne(
-        { _id: req.id },
-        { $set: { profilePic: profilePic } }
-      );
+    if (!file) {
+      return res
+        .status(400)
+        .send({ message: "invalid request. send file", status: "fail" });
     }
-    return res.status(200).send({ data: user, status: "ok" });
+
+    const imgBuffer = Buffer.from(file.buffer, "utf-8");
+    user = await centerAdminModel.findById(req.id);
+    const previousImage = await fs.writeFile(
+      join(
+        __dirname +
+          `/../../public/superadmin/${mobile.slice(-6)}${file.originalname}`
+      ),
+      imgBuffer,
+      "utf-8"
+    );
+
+    const profilePic = `${join(
+      __dirname +
+        `/../../public/superadmin/${mobile.slice(-6)}${file.originalname}`
+    )}`;
+    const userupdate = await centerAdminModel.updateOne(
+      { _id: req.id },
+      { $set: { profilePic: profilePic } }
+    );
+
+    return res.status(200).send({ data: userupdate, status: "ok" });
   } catch (err) {
     return res.status(500).send({ message: err.message, status: "fail" });
   }

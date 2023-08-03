@@ -287,7 +287,15 @@ export const updateStudent = async (req, res, next) => {
 
 export const fileUploads = async (req, res, next) => {
   try {
-    const { id, rollNumber } = req.body;
+    const {  rollNumber } = req.body;
+
+    const file = req.files[0];
+
+    if (!file ) {
+      return res
+        .status(400)
+        .send({ message: "invalid request. send file", status: "fail" });
+    }
 
     await fs.mkdir(appDir + `../../public/student/${rollNumber}`, {
       recursive: true,
