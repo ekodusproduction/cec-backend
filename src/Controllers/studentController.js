@@ -5,13 +5,15 @@ import studentModel from "../Models/studentModel.js";
 import fs from "fs/promises";
 import APIFeatures from "../Utils/apiFeatures.js";
 import courseModel from "../Models/centerModel.js";
-import { dirname } from "path";
+import { dirname, join } from "path";
 import dotenv from "dotenv";
 import { fileURLToPath } from "url";
 import Joi from "joi";
 import { sendMessage } from "../Airtel/airtel.js";
+
 import { generateToken } from "../Auth/authentication.js";
 import upload from "../app.js";
+
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const appDir = dirname(`${import.meta.filename}`);
 
@@ -306,7 +308,7 @@ export const fileUploads = async (req, res, next) => {
         .send({ message: "invalid request. send file", status: "fail" });
     }
 
-    await fs.mkdir(appDir + `../../public/student/${rollNumber}`, {
+    await fs.mkdir(join(__dirname + `/../../public/student/${rollNumber}`), {
       recursive: true,
     });
     let fileNames = {};
@@ -320,10 +322,12 @@ export const fileUploads = async (req, res, next) => {
         req.files[i].fieldname
       }.${req.files[i].mimetype.split("/")[1]}`;
       await fs.writeFile(
-        appDir +
-          `../../public/student/${rollNumber}/${req.files[i].fieldname}.${
-            req.files[i].mimetype.split("/")[1]
-          }`,
+        join(
+          __dirname +
+            `../../public/student/${rollNumber}/${req.files[i].fieldname}.${
+              req.files[i].mimetype.split("/")[1]
+            }`
+        ),
         imgBuffer,
         "utf-8"
       );

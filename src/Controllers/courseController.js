@@ -6,6 +6,7 @@ import fs from "fs/promises";
 import Joi from "joi";
 import APIFeatures from "../Utils/apiFeatures.js";
 import courseModel from "../Models/courseModel.js";
+import qualificationModel from "../Models/qualificationModel.js";
 
 export const createCourse = async (req, res, next) => {
   try {
@@ -87,6 +88,26 @@ export const getCourse = async (req, res, next) => {
       .find({})
       .populate("qualificationType")
       .populate("category");
+    return res.status(200).send({ data: courses, status: "ok" });
+  } catch (err) {
+    return res.status(500).send({ message: err.message, status: "fail" });
+  }
+};
+
+export const filterCourses = async (req, res, next) => {
+  try {
+    const {qualificationId} = req.params
+    if(!qualificationId){
+      return res.status(400).send({message:"invalid request. please send id"})
+    }
+
+    const qualification = await qualificationModel.findById(qualificationId)
+
+    const courses = await courseModel
+      .find({value:{$lte:qualification.value}})
+      .populate("qualificationType")
+      .populate("category");
+      
     return res.status(200).send({ data: courses, status: "ok" });
   } catch (err) {
     return res.status(500).send({ message: err.message, status: "fail" });
