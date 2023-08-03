@@ -20,7 +20,7 @@ export const createCategory = async (req, res, next) => {
         .required(),
     });
 
-    let data = { centerId };
+    let data = { category };
     const { error, value } = schema.validate(data);
     if (error) {
       return res
@@ -52,7 +52,7 @@ export const getCategory = async (req, res, next) => {
 export const updateCateory = async (req, res, next) => {
   try {
     const { category } = req.body;
-    const categoryId = req.params;
+    const {categoryId} = req.params;
 
     const schema = Joi.object({
       category: Joi.string().required(),
@@ -96,13 +96,6 @@ export const deleteCategory = async (req, res, next) => {
         .send({ message: error.details[0].message, status: "fail" });
     }
 
-    if (centerId) {
-      const centerUpdate = await centerModel.updateOne(
-        { _id: categoryId.categoryId },
-        { $pull: { categories: categoryId } }
-      );
-      return res.status(202).send({ data: centerUpdate, status: "ok" });
-    }
     const categories = await categoryModel.deleteOne({
       _id: categoryId.categoryId,
     });
