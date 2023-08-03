@@ -160,12 +160,14 @@ export const updatecenterAdmin = async (req, res, next) => {
     }
 
     const updateObject = { [updateField]: updateValue };
-
+    console.log("updateObject", updateObject);
     const updatedAdmin = await centerAdminModel.findByIdAndUpdate(
       id,
       updateObject,
       { new: true }
     );
+    console.log("updateObject", updatedAdmin);
+
     return res.status(200).send({ data: updatedAdmin, status: "ok" });
   } catch (err) {
     return res.status(500).send({ message: err.message, status: "fail" });
