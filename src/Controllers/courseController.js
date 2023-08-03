@@ -35,7 +35,6 @@ export const createCourse = async (req, res, next) => {
         .required(),
       qualificationType: Joi.string().required(),
       courseFee: Joi.number().required(),
-      registrationFees: Joi.number().required(),
       courseDescription: Joi.string()
         .min(3)
         .max(50)
