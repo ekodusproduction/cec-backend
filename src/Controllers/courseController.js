@@ -16,7 +16,6 @@ export const createCourse = async (req, res, next) => {
       duration,
       qualificationType,
       courseFee,
-      registrationFees,
       courseDescription,
     } = req.body;
 
@@ -48,7 +47,6 @@ export const createCourse = async (req, res, next) => {
       duration,
       qualificationType,
       courseFee,
-      registrationFees,
       courseDescription,
     };
     const { error, value } = schema.validate(data);
