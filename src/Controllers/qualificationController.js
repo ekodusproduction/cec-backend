@@ -68,23 +68,19 @@ export const getQualification = async (req, res, next) => {
 export const updateQualification = async (req, res, next) => {
   try {
     const { qualificationId } = req.params;
-    const { qualification, value } = req.body;
+    const { qualification, value, registrationFees } = req.body;
     const schema = Joi.object({
-      qualificationId: Joi.string()
-        .min(3)
-        .required(),
-      qualification: Joi.string()
-        .min(3)
-        .required(),
-      value: Joi.string()
-        .min(3)
-        .required(),
+      qualificationId: Joi.string().min(3),
+      qualification: Joi.string().min(3),
+      value: Joi.string().min(3),
+      registrationFees: Joi.string().min(3),
     });
 
     let data = {
       qualificationId,
       qualification,
       value,
+      registrationFees,
     };
     const { error, values } = schema.validate(data);
     if (error) {
@@ -92,7 +88,7 @@ export const updateQualification = async (req, res, next) => {
         .status(400)
         .send({ message: error.details[0].message, status: "fail" });
     }
-
+    const updateData = { qualification, value, registrationFees };
     data = await qualificationModel.findOneAndUpdate(
       { _id: qualificationId.qualificationId },
       {
