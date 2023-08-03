@@ -103,11 +103,19 @@ export const filterCourses = async (req, res, next) => {
 
     const qualification = await qualificationModel.findById(qualificationId)
 
-    const courses = await courseModel
-      .find({value:{$lte:qualification.value}})
+    if (!qualification) {
+      return res
+        .status(404)
+        .send({ message: "Qualification not found.", status: "fail" });
+    }
+    console.log(qualification)
+    let courses = await courseModel
+      .find({})
       .populate("qualificationType")
       .populate("category");
-      
+
+    courses = courses.filter(item => item.qualificationType.value <= qualification.value)
+
     return res.status(200).send({ data: courses, status: "ok" });
   } catch (err) {
     return res.status(500).send({ message: err.message, status: "fail" });

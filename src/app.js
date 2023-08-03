@@ -56,7 +56,6 @@ app.use(xss());
 app.use(compression());
 
 const __filename = fileURLToPath(import.meta.url);
-console.log("pppp",__filename)
 // Get the current directory's path
 // const __dirname = dirname(__filename);
 // console.log("dddd",__dirname)

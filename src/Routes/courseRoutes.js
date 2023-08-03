@@ -6,10 +6,13 @@ import {
   getCourse,
   updateCourse,
   deleteCourse,
-  filterCourses
+  filterCourses,
 } from "../Controllers/courseController.js";
 
 const router = Router();
+
+
+
 router
   .route("/course")
   .post(verifyToken, createCourse)
@@ -19,8 +22,8 @@ router
   .route("/course/:courseId")
   .put(verifyToken, updateCourse)
   .delete(verifyToken, deleteCourse);
-
-router.route("/course/qualification/:qualificationId").put(verifyToken, filterCourses);
-
+router
+  .route("/course/qualification/:qualificationId")
+  .get(verifyToken, filterCourses);
 const courseRoutes = router;
 export default courseRoutes;
