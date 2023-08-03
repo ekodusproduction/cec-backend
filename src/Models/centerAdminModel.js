@@ -51,6 +51,7 @@ const centerAdminSchema = new Schema(
     pinCode: { type: Number, required: "Number required" },
     state: { type: String, required: "state required" },
     loggedOut: { type: Date },
+    isActive: { type: Boolean, default: true },
     passwordChangedAt: Date,
     passwordResetToken: String,
     passwordResetExpires: Date,

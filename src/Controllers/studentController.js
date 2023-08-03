@@ -132,7 +132,7 @@ export const studentRegister = async (req, res, next) => {
 
 export const generateRollNumber = async (req, res, next) => {
   try {
-    const { paymentId, orderId, centerId, studentId } = req.body;
+    const { paymentId, orderId, centerId, studentId, mobile } = req.body;
 
     const schema = Joi.object({
       paymentId: Joi.string()
@@ -147,6 +147,10 @@ export const generateRollNumber = async (req, res, next) => {
       studentId: Joi.string()
         .min(9)
         .required(),
+      mobile: Joi.string()
+        .min(10)
+        .max(10)
+        .required(),
     });
 
     let data = {
@@ -154,6 +158,7 @@ export const generateRollNumber = async (req, res, next) => {
       orderId,
       centerId,
       studentId,
+      mobile,
     };
     const { error, value } = schema.validate(data);
     if (error) {
@@ -162,14 +167,12 @@ export const generateRollNumber = async (req, res, next) => {
         .send({ message: error.details[0].message, status: "fail" });
     }
 
-    const center = await centerModel.findById(centerId);
     const count = await studentModel.countDocuments({
       center: centerId,
-      regYear: new Date().getFullYear,
+      regYear: new Date().getFullYear(),
     });
-    const rollNumber = `${(count % 1000) + 1}${`${
-      new Date().getFullYear
-    }`.slice(-2)}${center.franchiseCode}`;
+    const rollNumber = `${(count % 1000) +
+      1}${`${new Date().getFullYear()}`.slice(-2)}${center.franchiseCode}`;
     const updateStudent = await studentModel.findByIdAndUpdate(studentId, {
       $set: { rollNumber: rollNumber },
     });
@@ -185,7 +188,7 @@ export const generateRollNumber = async (req, res, next) => {
 export const getallStudent = async (req, res, next) => {
   try {
     const center = await studentModel.find({});
-    return res.status(200).send({ data: center, token: token, status: "ok" });
+    return res.status(200).send({ data: center, status: "ok" });
   } catch (err) {
     return res.status(500).send({ message: err.message, status: "fail" });
   }
@@ -276,7 +279,7 @@ export const updateStudent = async (req, res, next) => {
       { new: true }
     );
 
-    return res.status(200).send({ data: student, status: "ok" });
+    return res.status(200).send({ data: updatedStudent, status: "ok" });
   } catch (err) {
     return res.status(500).send({ message: err.message, status: "fail" });
   }
@@ -315,7 +318,7 @@ export const fileUploads = async (req, res, next) => {
 
     const center = await studentModel.findOne({ rollNumber });
 
-    return res.status(200).send({ data: center, token: token, status: "ok" });
+    return res.status(200).send({ data: center, status: "ok" });
   } catch (err) {
     return res.status(500).send({ message: err.message, status: "fail" });
   }
@@ -343,9 +346,7 @@ export const deleteStudent = async (req, res, next) => {
     }
 
     const deleteStudent = await studentModel.find;
-    return res
-      .status(200)
-      .send({ data: deleteStudent, token: token, status: "ok" });
+    return res.status(200).send({ data: deleteStudent, status: "ok" });
   } catch (err) {
     return res.status(500).send({ message: err.message, status: "fail" });
   }

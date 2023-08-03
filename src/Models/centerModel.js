@@ -109,6 +109,7 @@ const centerSchema = new Schema(
     district: { type: String, required: "center district required" },
     pinCode: { type: Number, required: "center pincode required" },
     state: { type: String, required: "center state required" },
+    isActive: { type: Boolean, default: true },
   },
   {
     timestamps: true,

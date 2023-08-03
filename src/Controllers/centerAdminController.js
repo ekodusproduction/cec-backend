@@ -212,7 +212,8 @@ export const deletecenterAdmin = async (req, res, next) => {
     }
 
     const user = await superAdminModel.findById(req.id);
-    if (user.password != password) {
+
+    if (await bcrypt.compare(password, user.password)) {
       return res.status(400).send({
         data: { message: "please enter correct password" },
         status: "fail",

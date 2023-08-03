@@ -190,7 +190,7 @@ export const checkOtp = async (req, res, next) => {
         .send({ message: error.details[0].message, status: "fail" });
     }
 
-    const centerAdmin = await centerAdminModel.findOne(mobile);
+    const centerAdmin = await centerAdminModel.findOne({mobile});
     if (otp != centerAdmin.otp) {
       return res
         .status(403)
@@ -207,14 +207,15 @@ export const checkOtp = async (req, res, next) => {
 
 export const resetPassword = async (req, res, next) => {
   try {
-    const { email, newPassword } = req.body;
+    const { mobile, newPassword , otp} = req.body;
 
     const schema = Joi.object({
       otp: Joi.number().required(),
-      mobile: Joi.number().required(),
+      mobile: Joi.number().min(10).max(10).required(),
+      newPassword:Joi.number().min(6).required()
     });
 
-    let data = { mobile, otp };
+    let data = { mobile, otp ,newPassword};
     const { error, value } = schema.validate(data);
     if (error) {
       return res
@@ -328,7 +329,7 @@ export const deleteSuperAdmin = async (req, res, next) => {
     }
 
     const user = await superAdminModel.findById({ _id: req.id });
-    if (!(email == user.email && bcrypt.compare(password, user.password))) {
+    if (!(email == user.email && await bcrypt.compare(password, user.password))) {
       return res
         .status(400)
         .send({ message: "please enter correct password and email" });

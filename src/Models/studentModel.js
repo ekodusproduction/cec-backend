@@ -1,7 +1,6 @@
 import mongoose from "mongoose";
 const Schema = mongoose.Schema;
 
-
 const studentSchema = new Schema(
   {
     firstName: {
@@ -104,7 +103,7 @@ const studentSchema = new Schema(
         paymentStatus: {
           type: String,
           enum: ["paid", "unpaid"],
-          default:"unpaid",
+          default: "unpaid",
           validate: {
             validator: (value) => ["paid", "unpaid"].includes(value),
             message: "{VALUE} is not a valid payment status",
@@ -142,14 +141,15 @@ const studentSchema = new Schema(
     university: { type: String, cast: "{VALUE} is not a valid string" },
     grade: { type: String, cast: "{VALUE} is not a valid string" },
     percentage: { type: Number, cast: "{VALUE} is not a valid number" },
+    isActive: { type: Boolean, default: true },
   },
   {
     timestamps: true,
   }
 );
 
-studentSchema.pre(/^find/, function (next) {
-  this.select('-createdAt -updatedAt -__v');
+studentSchema.pre(/^find/, function(next) {
+  this.select("-createdAt -updatedAt -__v");
   next();
 });
 
