@@ -6,11 +6,14 @@ import {
   deletecenter,
   getCenter,
   getAllCenter,
+  getAllInactiveCenter,
 } from "../Controllers/centerController.js";
 import { isSuperAdmin } from "../Auth/isSuperAdmin.js";
 const router = Router();
 
-router.route("/centerall").get(verifyToken, getAllCenter);
+router.route("/center/all").get(verifyToken, getAllCenter);
+router.route("/center/inactive").get(verifyToken, getAllInactiveCenter);
+
 router.route("/center/:centerId").get(verifyToken, getCenter);
 router
   .route("/center")

@@ -187,7 +187,16 @@ export const generateRollNumber = async (req, res, next) => {
 
 export const getallStudent = async (req, res, next) => {
   try {
-    const center = await studentModel.find({});
+    const center = await studentModel.find({isActive:true});
+    return res.status(200).send({ data: center, status: "ok" });
+  } catch (err) {
+    return res.status(500).send({ message: err.message, status: "fail" });
+  }
+};
+
+export const getallInactiveStudent = async (req, res, next) => {
+  try {
+    const center = await studentModel.find({isActive:false});
     return res.status(200).send({ data: center, status: "ok" });
   } catch (err) {
     return res.status(500).send({ message: err.message, status: "fail" });

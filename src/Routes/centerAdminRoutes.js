@@ -10,6 +10,7 @@ import {
   getAllInactiveCenterAdmin,
 } from "../Controllers/centerAdminController.js";
 import { loginCenteradmin } from "../Controllers/centerAdminController.js";
+import { isSuperAdmin } from "../Auth/isSuperAdmin.js";
 
 const router = Router();
 router.route("/centeradmin/login").post(loginCenteradmin);
@@ -17,7 +18,7 @@ router
   .route("/centeradmin")
   .post(verifyToken, createcenterAdmin)
   .put(verifyToken, updatecenterAdmin)
-  .delete(verifyToken, deletecenterAdmin)
+  .delete(verifyToken,isSuperAdmin, deletecenterAdmin)
   .get(verifyToken, getcenterAdmin);
 
 router.route("/centeradmin/all").get(verifyToken, getAllcenterAdmin);
