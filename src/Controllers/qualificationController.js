@@ -26,7 +26,7 @@ export const createQualification = async (req, res, next) => {
         .min(3)
         .required(),
       value: Joi.string()
-        .min(3)
+        .min(1)
         .required(),
       registrationFees: Joi.string()
         .min(3)
