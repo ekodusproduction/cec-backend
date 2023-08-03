@@ -52,7 +52,7 @@ export const getCategory = async (req, res, next) => {
 export const updateCateory = async (req, res, next) => {
   try {
     const { category } = req.body;
-    const {categoryId} = req.params;
+    const { categoryId } = req.params;
 
     const schema = Joi.object({
       category: Joi.string().required(),

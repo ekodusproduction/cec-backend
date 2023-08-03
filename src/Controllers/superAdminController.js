@@ -4,7 +4,7 @@ import centerAdminModel from "../Models/centerAdminModel.js";
 import multer from "multer";
 import bcrypt from "bcrypt";
 import fs from "fs/promises";
-import { dirname,join } from "path";
+import { dirname, join } from "path";
 import { fileURLToPath } from "url";
 import Joi from "joi";
 import { sendMessage } from "../Airtel/airtel.js";
@@ -66,8 +66,10 @@ export const createSuperAdmin = async (req, res, next) => {
     }
 
     await fs.writeFile(
-      join(__dirname +
-        `/../../public/superadmin/${mobile.slice(-6)}${file.originalname}`),
+      join(
+        __dirname +
+          `/../../public/superadmin/${mobile.slice(-6)}${file.originalname}`
+      ),
       imgBuffer,
       { flag: "a" },
       "utf-8"
@@ -190,7 +192,7 @@ export const checkOtp = async (req, res, next) => {
         .send({ message: error.details[0].message, status: "fail" });
     }
 
-    const centerAdmin = await centerAdminModel.findOne({mobile});
+    const centerAdmin = await centerAdminModel.findOne({ mobile });
     if (otp != centerAdmin.otp) {
       return res
         .status(403)
@@ -207,15 +209,20 @@ export const checkOtp = async (req, res, next) => {
 
 export const resetPassword = async (req, res, next) => {
   try {
-    const { mobile, newPassword , otp} = req.body;
+    const { mobile, newPassword, otp } = req.body;
 
     const schema = Joi.object({
       otp: Joi.number().required(),
-      mobile: Joi.number().min(10).max(10).required(),
-      newPassword:Joi.number().min(6).required()
+      mobile: Joi.number()
+        .min(10)
+        .max(10)
+        .required(),
+      newPassword: Joi.number()
+        .min(6)
+        .required(),
     });
 
-    let data = { mobile, otp ,newPassword};
+    let data = { mobile, otp, newPassword };
     const { error, value } = schema.validate(data);
     if (error) {
       return res
@@ -329,7 +336,9 @@ export const deleteSuperAdmin = async (req, res, next) => {
     }
 
     const user = await superAdminModel.findById({ _id: req.id });
-    if (!(email == user.email && await bcrypt.compare(password, user.password))) {
+    if (
+      !(email == user.email && (await bcrypt.compare(password, user.password)))
+    ) {
       return res
         .status(400)
         .send({ message: "please enter correct password and email" });

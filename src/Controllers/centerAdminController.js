@@ -117,7 +117,7 @@ export const createcenterAdmin = async (req, res, next) => {
     let user = await centerAdminModel.create(data);
     user.password = null;
     const text = `centerAdmin created successfully. please login using your email ${email} and password ${password}`;
-    // sendMessage(text, whatsApp);
+    sendMessage(text, whatsApp);
     return res.status(200).send({ data: user, status: "ok" });
   } catch (err) {
     return res.status(500).send({ message: err.message, status: "fail" });
@@ -135,7 +135,7 @@ export const getcenterAdmin = async (req, res, next) => {
 
 export const getAllcenterAdmin = async (req, res, next) => {
   try {
-    const user = await centerAdminModel.find({isActive:true});
+    const user = await centerAdminModel.find({ isActive: true });
     return res.status(200).send({ data: user, status: "ok" });
   } catch (err) {
     res.status(500).send({ message: err.message, status: "fail" });
@@ -144,7 +144,7 @@ export const getAllcenterAdmin = async (req, res, next) => {
 
 export const getAllInactiveCenterAdmin = async (req, res, next) => {
   try {
-    const user = await centerAdminModel.find({isActive:false});
+    const user = await centerAdminModel.find({ isActive: false });
     return res.status(200).send({ data: user, status: "ok" });
   } catch (err) {
     res.status(500).send({ message: err.message, status: "fail" });
@@ -169,13 +169,11 @@ export const updatecenterAdmin = async (req, res, next) => {
     }
 
     const updateObject = { [updateField]: updateValue };
-    console.log("updateObject", updateObject);
     const updatedAdmin = await centerAdminModel.findByIdAndUpdate(
       id,
       updateObject,
       { new: true }
     );
-    console.log("updateObject", updatedAdmin);
 
     return res.status(200).send({ data: updatedAdmin, status: "ok" });
   } catch (err) {

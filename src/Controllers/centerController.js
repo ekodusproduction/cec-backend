@@ -39,17 +39,16 @@ export const getCenter = async (req, res, next) => {
 
 export const getAllCenter = async (req, res, next) => {
   try {
-    const center = await centerModel.find({isActive:true});
+    const center = await centerModel.find({ isActive: true });
     return res.status(200).send({ data: center, status: "ok" });
   } catch (err) {
     return res.status(500).send({ message: err.message, status: "fail" });
   }
 };
 
-
 export const getAllInactiveCenter = async (req, res, next) => {
   try {
-    const center = await centerModel.find({isActive:false});
+    const center = await centerModel.find({ isActive: false });
     return res.status(200).send({ data: center, status: "ok" });
   } catch (err) {
     return res.status(500).send({ message: err.message, status: "fail" });

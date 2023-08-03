@@ -187,7 +187,7 @@ export const generateRollNumber = async (req, res, next) => {
 
 export const getallStudent = async (req, res, next) => {
   try {
-    const center = await studentModel.find({isActive:true});
+    const center = await studentModel.find({ isActive: true });
     return res.status(200).send({ data: center, status: "ok" });
   } catch (err) {
     return res.status(500).send({ message: err.message, status: "fail" });
@@ -196,7 +196,7 @@ export const getallStudent = async (req, res, next) => {
 
 export const getallInactiveStudent = async (req, res, next) => {
   try {
-    const center = await studentModel.find({isActive:false});
+    const center = await studentModel.find({ isActive: false });
     return res.status(200).send({ data: center, status: "ok" });
   } catch (err) {
     return res.status(500).send({ message: err.message, status: "fail" });
@@ -296,11 +296,11 @@ export const updateStudent = async (req, res, next) => {
 
 export const fileUploads = async (req, res, next) => {
   try {
-    const {  rollNumber } = req.body;
+    const { rollNumber } = req.body;
 
     const file = req.files[0];
 
-    if (!file ) {
+    if (!file) {
       return res
         .status(400)
         .send({ message: "invalid request. send file", status: "fail" });

@@ -96,9 +96,9 @@ export const getCourse = async (req, res, next) => {
 export const updateCourse = async (req, res, next) => {
   try {
     const { updateField, updateValue } = req.body;
-    const {courseId} = req.params;
-    console.log("tyyype",typeof(courseId))
-    console.log("updateField",typeof(updateField))
+    const { courseId } = req.params;
+    console.log("tyyype", typeof courseId);
+    console.log("updateField", typeof updateField);
 
     const schema = Joi.object({
       courseId: Joi.string()
@@ -145,7 +145,10 @@ export const deleteCourse = async (req, res, next) => {
     if (!courseId) {
       return res
         .status(400)
-        .send({ message: "invalid request please provide courseId", status: "fail" });
+        .send({
+          message: "invalid request please provide courseId",
+          status: "fail",
+        });
     }
     const course = await courseModel.deleteOne({ _id: courseId.courseId });
     return res.status(202).send({ data: course, status: "ok" });

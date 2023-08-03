@@ -18,8 +18,9 @@ router
   .route("/centeradmin")
   .post(verifyToken, createcenterAdmin)
   .put(verifyToken, updatecenterAdmin)
-  .delete(verifyToken,isSuperAdmin, deletecenterAdmin)
+  .delete(verifyToken, isSuperAdmin, deletecenterAdmin)
   .get(verifyToken, getcenterAdmin);
+
 
 router.route("/centeradmin/all").get(verifyToken, getAllcenterAdmin);
 router
