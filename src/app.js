@@ -34,7 +34,7 @@ app.options("*", cors());
 // Serving static files
 // Set security HTTP headers
 app.use(helmet());
-app.set("trust proxy", false);
+app.set("trust proxy", true);
 // Development logging
 // if (process.env.NODE_ENV === 'development') {
 //   app.use(morgan('dev'));
@@ -45,6 +45,7 @@ const limiter = rateLimit({
   max: 1000,
   windowMs: 60 * 60 * 1000,
   message: "Too many requests from this IP, please try again in an hour!",
+  keyGenerator: (req) => req.headers["x-forwarded-for"] || req.connection.remoteAddress,
 });
 app.use("/api", limiter);
 
