@@ -102,7 +102,7 @@ export const updateQualification = async (req, res, next) => {
 
 export const deleteQualification = async (req, res, next) => {
   try {
-    const { qualificationId } = req.query;
+    const { qualificationId } = req.params;
     if (!qualificationId) {
       return res.status(400).send({ message: "Please send qualificationId" });
     }
