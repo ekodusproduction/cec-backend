@@ -7,6 +7,7 @@ import {
   updatecenterAdmin,
   deletecenterAdmin,
   getAllcenterAdmin,
+  getAllInactiveCenterAdmin,
 } from "../Controllers/centerAdminController.js";
 import { loginCenteradmin } from "../Controllers/centerAdminController.js";
 
@@ -19,8 +20,10 @@ router
   .delete(verifyToken, deletecenterAdmin)
   .get(verifyToken, getcenterAdmin);
 
-router.route("/centeradminsall").get(verifyToken, getAllcenterAdmin);
-
+router.route("/centeradmin/all").get(verifyToken, getAllcenterAdmin);
+router
+  .route("/centeradmin/inactive")
+  .get(verifyToken, getAllInactiveCenterAdmin);
 
 const centerAdminRoutes = router;
 export default centerAdminRoutes;
