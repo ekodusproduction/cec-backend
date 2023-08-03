@@ -70,7 +70,7 @@ export const updateQualification = async (req, res, next) => {
     const { qualificationId } = req.params;
     const { qualification, value, registrationFees } = req.body;
     const schema = Joi.object({
-      qualificationId: Joi.string().min(3),
+      qualificationId: Joi.string().min(3).required(),
       qualification: Joi.string().min(3),
       value: Joi.string().min(3),
       registrationFees: Joi.string().min(3),
@@ -89,11 +89,10 @@ export const updateQualification = async (req, res, next) => {
         .send({ message: error.details[0].message, status: "fail" });
     }
     const updateData = { qualification, value, registrationFees };
-    data = await qualificationModel.findOneAndUpdate(
-      { _id: qualificationId.qualificationId },
-      
-        updateData
-      
+    const updatedQualification = await qualificationModel.findOneAndUpdate(
+      { _id: qualificationId },
+      updateData,
+      { new: true }
     );
     return res.status(200).send({ data: data, status: "ok" });
   } catch (err) {
