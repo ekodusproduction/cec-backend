@@ -11,7 +11,7 @@ import Joi from "joi";
 import { sendMessage } from "../Airtel/airtel.js";
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const appDir = dirname(`${import.meta.filename}`);
-const baseUrl = `139.59.83.187`;
+var baseUrl = `139.59.83.187`;
 
 export const loginCenteradmin = async (req, res, next) => {
   try {
