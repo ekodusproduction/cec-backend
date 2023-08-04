@@ -31,5 +31,6 @@ router
   .post(verifyToken, isSuperAdmin, createcenter)
   .put(verifyToken, updatecenter);
 router.route("/center").delete(verifyToken, isSuperAdmin, deletecenter);
+
 const centerRoutes = router;
 export default centerRoutes;

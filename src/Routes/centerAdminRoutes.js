@@ -8,7 +8,7 @@ import {
   deletecenterAdmin,
   getAllcenterAdmin,
   getAllInactiveCenterAdmin,
-  
+  fileUpload,
 } from "../Controllers/centerAdminController.js";
 import { loginCenteradmin } from "../Controllers/centerAdminController.js";
 import { isSuperAdmin } from "../Auth/isSuperAdmin.js";
@@ -22,7 +22,7 @@ router
   .delete(verifyToken, isSuperAdmin, deletecenterAdmin)
   .get(verifyToken, getcenterAdmin);
 
-
+router.route("/centeradmin/fileuploads").put(verifyToken, fileUpload);
 router.route("/centeradmin/all").get(verifyToken, getAllcenterAdmin);
 router
   .route("/centeradmin/inactive")

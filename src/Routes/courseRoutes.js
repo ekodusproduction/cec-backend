@@ -11,8 +11,6 @@ import {
 
 const router = Router();
 
-
-
 router
   .route("/course")
   .post(verifyToken, createCourse)
@@ -25,5 +23,6 @@ router
 router
   .route("/course/qualification/:qualificationId")
   .get(verifyToken, filterCourses);
+  
 const courseRoutes = router;
 export default courseRoutes;

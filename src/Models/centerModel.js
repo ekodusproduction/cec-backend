@@ -41,7 +41,7 @@ const orderSchema = Schema({
     ref: "center",
     required: "center id required",
     cast: "{VALUE} is not a object id",
-  }
+  },
 });
 const centerSchema = new Schema(
   {
@@ -60,11 +60,6 @@ const centerSchema = new Schema(
       type: Date,
       required: "franchise date of registration required",
     },
-    // password: {
-    //   type: String,
-    //   required: "center admin password required",
-    //   cast: "{VALUE} is not a String",
-    // },
 
     firmName: {
       type: String,
@@ -77,13 +72,7 @@ const centerSchema = new Schema(
       required: "franchise type required",
       cast: "{VALUE} is not a String",
     },
-    // typeOfInstitution: {
-    //   type: String,
-    //   required: "franchise type of institute required",
-    //   cast: "{VALUE} is not a String",
-    // },
 
-    //stdCode: { type: Number, required: "stdCode required" },
     landlineNumber: {
       type: Number,
       validate: {
@@ -116,7 +105,7 @@ const centerSchema = new Schema(
     pinCode: { type: Number, required: "center pincode required" },
     state: { type: String, required: "center state required" },
     isActive: { type: Boolean, default: true },
-    cart: {type:orderSchema},
+    cart: { type: orderSchema },
   },
   {
     timestamps: true,
