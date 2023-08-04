@@ -44,6 +44,11 @@ export const createSuperAdmin = async (req, res, next) => {
         .send({ message: error.details[0].message, status: "fail" });
     }
     const file = req.files[0];
+    if(!file){
+      return res
+      .status(400)
+      .send({ message: "Invalid request. Send profile pic", status: "fail" });
+    }
     const imgBuffer = Buffer.from(file.buffer, "utf-8");
     const saltRounds = 10;
     const salt = await bcrypt.genSalt(saltRounds);

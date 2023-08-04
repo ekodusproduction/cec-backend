@@ -257,7 +257,7 @@ export const addToCart = async (req, res, next) => {
         .status(404)
         .send({ message: "Center admin not found", status: "fail" });
     }
-    
+
     if (!center.cart) {
       center.cart = data;
     } else {
@@ -288,7 +288,7 @@ export const getCart = async (req, res, next) => {
         .send({ message: error.details[0].message, status: "fail" });
     }
 
-    const center = await centerModel.findById(req.id);
+    const center = await centerModel.findById(req.id).populate("cart");
 
     return res.status(200).send({ data: center.cart, status: "ok" });
   } catch (err) {
