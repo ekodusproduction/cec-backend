@@ -210,7 +210,7 @@ export const fileUpload = async (req, res, next) => {
       "utf-8"
     );
 
-    const profilePic = `${baseUrl}/public/superadmin/${mobile.slice(-6)}${
+    const profilePic = `${baseUrl}/public/superadmin/${user.whatsApp.toString().slice(-6)}${
       file.originalname
     }`;
     console.log("profilePic", __dirname);
