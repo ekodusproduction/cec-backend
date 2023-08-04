@@ -61,22 +61,7 @@ const centerSchema = new Schema(
     //   required: "franchise type of institute required",
     //   cast: "{VALUE} is not a String",
     // },
-    courses: {
-      type: [
-        {
-          type: mongoose.Schema.Types.ObjectId,
-          ref: "courses",
-        },
-      ],
-    },
-    categories: {
-      type: [
-        {
-          type: mongoose.Schema.Types.ObjectId,
-          ref: "categories",
-        },
-      ],
-    },
+
     //stdCode: { type: Number, required: "stdCode required" },
     landlineNumber: {
       type: Number,
