@@ -3,6 +3,7 @@ import superAdminRoutes from "./Routes/superAdminRoutes.js";
 import studentRoutes from "./Routes/studentRoutes.js";
 import centerRoutes from "./Routes/centerRoutes.js";
 import categoryRoutes from "./Routes/categoryRoutes.js";
+import homeRoutes from "./Routes/homeRoutes.js";
 import multer from "multer";
 import cors from "cors";
 import xss from "xss-clean";
@@ -84,6 +85,7 @@ app.use("/api", centerRoutes);
 app.use("/api", qualificationRoutes);
 app.use("/api", centerAdminRoutes);
 app.use("/api", paymentsRoutes);
+app.use("/api", homeRoutes);
 
 app.all("*", (req, res, next) => {
   return res

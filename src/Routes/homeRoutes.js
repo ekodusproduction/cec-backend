@@ -10,5 +10,5 @@ const router = Router();
 router.route("/home/center").get(verifyToken, getHomeCenter);
 router.route("/home/super").get(verifyToken, getHomeSuper);
 
-const centerRoutes = router;
-export default centerRoutes;
+const homeRoutes = router;
+export default homeRoutes;
