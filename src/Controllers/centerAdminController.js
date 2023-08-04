@@ -210,7 +210,7 @@ export const fileUpload = async (req, res, next) => {
       __dirname +
         `/public/superadmin/${user.whatsApp.toString().slice(-6)}${file.originalname}`
     )}`;
-    console.log("profilePic", profilePic)
+    console.log("profilePic", __dirname)
     const userupdate = await centerAdminModel.updateOne(
       { _id: req.id },
       {  profilePic: profilePic } 
