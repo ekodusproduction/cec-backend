@@ -61,7 +61,7 @@ export const getAllCentersUnderAdmin = async (req, res, next) => {
     if(!centeradminId){
       return res.status(400).send({message:"invalid request", status:"fail"})
     }
-    const center = await centerModel.find({ isActive: true, _id:centeradminId });
+    const center = await centerModel.find({ isActive: true, headOfInstitute:centeradminId });
     return res.status(200).send({ data: center, status: "ok" });
   } catch (err) {
     return res.status(500).send({ message: err.message, status: "fail" });
