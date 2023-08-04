@@ -74,7 +74,7 @@ export const createcenter = async (req, res, next) => {
     dateofReg = new Date(dateofReg);
     const schema = Joi.object({
       firmName: Joi.string().required(),
-      dateofReg: Joi.string().required(),
+      dateofReg: Joi.number().required(),
       firmType: Joi.string().required(),
       address: Joi.string().required(),
       landmark: Joi.string().required(),
