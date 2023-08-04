@@ -71,7 +71,6 @@ export const createcenter = async (req, res, next) => {
       landline,
       whatsAppCenterAdmin,
     } = req.body;
-    dateofReg = new Date(dateofReg);
     const schema = Joi.object({
       firmName: Joi.string().required(),
       dateofReg: Joi.number().required(),
@@ -86,6 +85,7 @@ export const createcenter = async (req, res, next) => {
       email: Joi.string().required(),
       whatsAppCenterAdmin: Joi.string().required(),
     });
+    dateofReg = new Date(dateofReg);
 
     let data = {
       firmName,
