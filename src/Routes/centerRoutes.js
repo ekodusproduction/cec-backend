@@ -7,6 +7,7 @@ import {
   getCenter,
   getAllCenter,
   getAllInactiveCenter,
+  getAllCentersUnderAdmin
 } from "../Controllers/centerController.js";
 import { isSuperAdmin } from "../Auth/isSuperAdmin.js";
 const router = Router();
