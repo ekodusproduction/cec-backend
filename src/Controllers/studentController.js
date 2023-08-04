@@ -16,6 +16,7 @@ import upload from "../app.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const appDir = dirname(`${import.meta.filename}`);
+const baseUrl = `139.59.83.187`;
 
 export const studentRegister = async (req, res, next) => {
   try {

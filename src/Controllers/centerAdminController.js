@@ -8,10 +8,10 @@ import fs from "fs/promises";
 import { dirname, join } from "path";
 import { fileURLToPath } from "url";
 import Joi from "joi";
-
 import { sendMessage } from "../Airtel/airtel.js";
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const appDir = dirname(`${import.meta.filename}`);
+const baseUrl = `139.59.83.187`;
 
 export const loginCenteradmin = async (req, res, next) => {
   try {
@@ -50,7 +50,6 @@ export const loginCenteradmin = async (req, res, next) => {
 
 export const createcenterAdmin = async (req, res, next) => {
   try {
-    const baseUrl = process.env.baseUrl;
     const {
       nameHoi,
       alternateNumber,
