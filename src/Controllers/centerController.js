@@ -85,7 +85,7 @@ export const createcenter = async (req, res, next) => {
       email: Joi.string().required(),
       whatsAppCenterAdmin: Joi.string().required(),
     });
-    dateofReg = new Date(dateofReg);
+    
 
     let data = {
       firmName,
@@ -114,7 +114,7 @@ export const createcenter = async (req, res, next) => {
         .status(400)
         .send({ data: { message: "provide whatsapp" }, status: "fail" });
     }
-
+    data.dateofReg = new Date(dateofReg);
     const count = await centerModel.countDocuments();
     data["centerId"] = `${(count + 1).toString().padStart(3, "0")}`;
     data["headOfInstitute"] = req.id;
