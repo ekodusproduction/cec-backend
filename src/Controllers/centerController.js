@@ -82,6 +82,7 @@ export const createcenter = async (req, res, next) => {
       state: Joi.string().required(),
       alternateNumber: Joi.string().required(),
       whatsApp: Joi.string().required(),
+      landline: Joi.string().required(),
       email: Joi.string().required(),
       whatsAppCenterAdmin: Joi.string().required(),
     });
