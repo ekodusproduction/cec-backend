@@ -11,7 +11,7 @@ import { fileURLToPath } from "url";
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const appDir = dirname(`${import.meta.filename}`);
 
-import studentModel from "./path/to/studentModel"; // Adjust the path to the studentModel file
+import studentModel from "../Models/studentModel.js"
 
 export const getHomeCenter = async (req, res, next) => {
   try {
