@@ -200,16 +200,17 @@ export const fileUpload = async (req, res, next) => {
     const previousImage = await fs.writeFile(
       join(
         __dirname +
-          `/../../public/superadmin/${user.whatsApp.toString().slice(-6)}${file.originalname}`
+          `./../../public/superadmin/${user.whatsApp.toString().slice(-6)}${file.originalname}`
       ),
       imgBuffer,
       "utf-8"
     );
-
+        
     const profilePic = `${join(
       __dirname +
         `/../../public/superadmin/${user.whatsApp.toString().slice(-6)}${file.originalname}`
     )}`;
+    console.log("profilePic", profilePic)
     const userupdate = await centerAdminModel.updateOne(
       { _id: req.id },
       {  profilePic: profilePic } 
