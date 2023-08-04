@@ -54,6 +54,19 @@ export const getAllInactiveCenter = async (req, res, next) => {
   }
 };
 
+
+export const getAllCentersUnderAdmin = async (req, res, next) => {
+  try {
+    const {centeradminId} = req.params
+    if(!centeradminId){
+      return res.status(400).send({message:"invalid request", status:"fail"})
+    }
+    const center = await centerModel.find({ isActive: true, _id:centeradminId });
+    return res.status(200).send({ data: center, status: "ok" });
+  } catch (err) {
+    return res.status(500).send({ message: err.message, status: "fail" });
+  }
+};
 export const createcenter = async (req, res, next) => {
   try {
     let {
