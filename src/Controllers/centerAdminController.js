@@ -212,7 +212,7 @@ export const fileUpload = async (req, res, next) => {
     )}`;
     const userupdate = await centerAdminModel.updateOne(
       { _id: req.id },
-      { $set: { profilePic: profilePic } }
+      {  profilePic: profilePic } 
     );
 
     return res.status(200).send({ data: userupdate, status: "ok" });
