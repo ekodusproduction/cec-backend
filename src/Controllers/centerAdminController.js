@@ -194,6 +194,9 @@ export const fileUpload = async (req, res, next) => {
 
     const imgBuffer = Buffer.from(file.buffer, "utf-8");
     user = await centerAdminModel.findById(req.id);
+    if(!user){
+      return res.status(400).send({message:"invalid user id in token. login again"})
+    }
     const previousImage = await fs.writeFile(
       join(
         __dirname +
