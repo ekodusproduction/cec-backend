@@ -202,7 +202,7 @@ export const fileUpload = async (req, res, next) => {
       join(
         __dirname +
           `/../../public/centeradmin/${user.whatsApp.toString().slice(-6)}${
-            file.originalname
+            file.fieldname
           }`
       ),
       imgBuffer,
@@ -211,7 +211,7 @@ export const fileUpload = async (req, res, next) => {
     );
 
     const profilePic = `${baseUrl}/public/superadmin/${user.whatsApp.toString().slice(-6)}${
-      file.originalname
+      file.fieldname
     }`;
     console.log("profilePic", file);
     const userupdate = await centerAdminModel.updateOne(
