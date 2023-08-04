@@ -136,8 +136,12 @@ export const createcenter = async (req, res, next) => {
 
     data.dateofReg = convertToDate(dateofReg);
     const count = await centerModel.countDocuments();
+    const centerAdmin = await centerAdminModel.findOne({whatsApp:whatsAppCenterAdmin})
+    if(!centerAdmin){
+      return res.status(200).send({ data: "Invalid request. Please provide valid whatsapp number", status: "fail" });
+    }
     data["centerId"] = `${(count + 1).toString().padStart(3, "0")}`;
-    data["headOfInstitute"] = req.id;
+    data["headOfInstitute"] = centerAdmin._id;
     const center = await centerModel.create(data);
     const user = await centerAdminModel.findOneAndUpdate(
       {
