@@ -194,26 +194,30 @@ export const fileUpload = async (req, res, next) => {
 
     const imgBuffer = Buffer.from(file.buffer, "utf-8");
     const user = await centerAdminModel.findById(req.id);
-    if(!user){
-      return res.status(400).send({message:"invalid user id in token. login again"})
+    if (!user) {
+      return res
+        .status(400)
+        .send({ message: "invalid user id in token. login again" });
     }
-    const previousImage = await fs.writeFile(
+    await fs.writeFile(
       join(
         __dirname +
-          `./public/superadmin/${user.whatsApp.toString().slice(-6)}${file.originalname}`
+          `/../../public/centeradmin/${user.whatsApp.toString().slice(-6)}${
+            file.originalname
+          }`
       ),
       imgBuffer,
+      { flag: "a" },
       "utf-8"
     );
-        
-    const profilePic = `${join(
-      __dirname +
-        `/public/superadmin/${user.whatsApp.toString().slice(-6)}${file.originalname}`
-    )}`;
-    console.log("profilePic", __dirname)
+
+    const profilePic = `${baseUrl}/public/superadmin/${mobile.slice(-6)}${
+      file.originalname
+    }`;
+    console.log("profilePic", __dirname);
     const userupdate = await centerAdminModel.updateOne(
       { _id: req.id },
-      {  profilePic: profilePic } 
+      { profilePic: profilePic }
     );
 
     return res.status(200).send({ data: userupdate, status: "ok" });
@@ -258,4 +262,3 @@ export const deletecenterAdmin = async (req, res, next) => {
     res.status(500).send({ message: err.message, status: "fail" });
   }
 };
-
