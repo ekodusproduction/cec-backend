@@ -44,10 +44,10 @@ export const createSuperAdmin = async (req, res, next) => {
         .send({ message: error.details[0].message, status: "fail" });
     }
     const file = req.files[0];
-    if(!file){
+    if (!file) {
       return res
-      .status(400)
-      .send({ message: "Invalid request. Send profile pic", status: "fail" });
+        .status(400)
+        .send({ message: "Invalid request. Send profile pic", status: "fail" });
     }
     const imgBuffer = Buffer.from(file.buffer, "utf-8");
     const saltRounds = 10;
@@ -166,7 +166,7 @@ export const sendOtp = async (req, res, next) => {
         .status(400)
         .send({ message: error.details[0].message, status: "fail" });
     }
-    const text = `${Math.random * 10000}`;
+    const text = `${Math.random * 1000}`;
     sendMessage(text, mobile);
     const centerAdmin = await centerAdminModel.findOneAndUpdate(
       { mobile },

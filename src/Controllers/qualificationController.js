@@ -70,7 +70,9 @@ export const updateQualification = async (req, res, next) => {
     const { qualificationId } = req.params;
     const { qualification, value, registrationFees } = req.body;
     const schema = Joi.object({
-      qualificationId: Joi.string().min(3).required(),
+      qualificationId: Joi.string()
+        .regex(/^[0-9a-fA-F]{24}$}/)
+        .required(),
       qualification: Joi.string().min(3),
       value: Joi.string().min(3),
       registrationFees: Joi.string().min(3),

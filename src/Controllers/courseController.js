@@ -96,25 +96,29 @@ export const getCourse = async (req, res, next) => {
 
 export const filterCourses = async (req, res, next) => {
   try {
-    const {qualificationId} = req.params
-    if(!qualificationId){
-      return res.status(400).send({message:"invalid request. please send id"})
+    const { qualificationId } = req.params;
+    if (!qualificationId) {
+      return res
+        .status(400)
+        .send({ message: "invalid request. please send id" });
     }
 
-    const qualification = await qualificationModel.findById(qualificationId)
+    const qualification = await qualificationModel.findById(qualificationId);
 
     if (!qualification) {
       return res
         .status(404)
         .send({ message: "Qualification not found.", status: "fail" });
     }
-    console.log(qualification)
+    console.log(qualification);
     let courses = await courseModel
       .find({})
       .populate("qualificationType")
       .populate("category");
 
-    courses = courses.filter(item => item.qualificationType.value <= qualification.value)
+    courses = courses.filter(
+      (item) => item.qualificationType.value <= qualification.value
+    );
 
     return res.status(200).send({ data: courses, status: "ok" });
   } catch (err) {
@@ -131,7 +135,7 @@ export const updateCourse = async (req, res, next) => {
 
     const schema = Joi.object({
       courseId: Joi.string()
-        .min(3)
+        .regex(/^[0-9a-fA-F]{24}$}/)
         .required(),
       updateField: Joi.string()
         .min(3)
@@ -172,12 +176,10 @@ export const deleteCourse = async (req, res, next) => {
   try {
     const courseId = req.params;
     if (!courseId) {
-      return res
-        .status(400)
-        .send({
-          message: "invalid request please provide courseId",
-          status: "fail",
-        });
+      return res.status(400).send({
+        message: "invalid request please provide courseId",
+        status: "fail",
+      });
     }
     const course = await courseModel.deleteOne({ _id: courseId.courseId });
     return res.status(202).send({ data: course, status: "ok" });

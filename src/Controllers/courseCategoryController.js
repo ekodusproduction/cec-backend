@@ -56,7 +56,7 @@ export const updateCateory = async (req, res, next) => {
 
     const schema = Joi.object({
       category: Joi.string().required(),
-      categoryId: Joi.string().required(),
+      categoryId: Joi.string().regex(/^[0-9a-fA-F]{24}$}/).required(),
     });
 
     let data = { categoryId, category };
@@ -85,7 +85,7 @@ export const deleteCategory = async (req, res, next) => {
 
     const schema = Joi.object({
       category: Joi.string().required(),
-      categoryId: Joi.string().required(),
+      categoryId: Joi.string().regex(/^[0-9a-fA-F]{24}$}/).required(),
     });
 
     let data = { categoryId, category };

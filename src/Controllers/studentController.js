@@ -81,7 +81,7 @@ export const studentRegister = async (req, res, next) => {
         .max(999999)
         .required(),
       centerId: Joi.string()
-        .min(3)
+        .regex(/^[0-9a-fA-F]{24}$}/)
         .required(),
     });
 
@@ -114,14 +114,6 @@ export const studentRegister = async (req, res, next) => {
         .status(404)
         .send({ data: { message: "center not found" }, status: "fail" });
     }
-    // const count = await studentModel.find({
-    //   center: centerId,
-    //   regYear: new Date().getFullYear,
-    //   course,
-    // }).length;
-    // const rollNumber = `${count + 1}${`${new Date().getFullYear}`.slice(-2)}${
-    //   center.franchiseCode
-    // }`;
 
     const student = await studentModel.create(data);
     const text = `Student registered succesfully with CEC. To generate rollnumber please pay for the course`;
@@ -134,27 +126,33 @@ export const studentRegister = async (req, res, next) => {
 
 export const generateRollNumber = async (req, res, next) => {
   try {
-    const { paymentId, orderId, centerId, studentId, mobile, courseId } = req.body;
+    const {
+      paymentId,
+      orderId,
+      centerId,
+      studentId,
+      mobile,
+      courseId,
+    } = req.body;
 
     const schema = Joi.object({
       paymentId: Joi.string()
-        .min(3)
+        .regex(/^[0-9a-fA-F]{24}$}/)
         .required(),
       orderId: Joi.string()
-        .min(3)
+        .regex(/^[0-9a-fA-F]{24}$}/)
         .required(),
       centerId: Joi.string()
-        .min(3)
+        .regex(/^[0-9a-fA-F]{24}$}/)
         .required(),
       studentId: Joi.string()
-        .min(9)
+        .regex(/^[0-9a-fA-F]{24}$}/)
         .required(),
       courseId: Joi.string()
-        .min(9)
+        .regex(/^[0-9a-fA-F]{24}$}/)
         .required(),
       mobile: Joi.string()
-        .min(10)
-        .max(10)
+        .length(10)
         .required(),
     });
 
@@ -164,7 +162,7 @@ export const generateRollNumber = async (req, res, next) => {
       centerId,
       studentId,
       mobile,
-      courseId
+      courseId,
     };
     const { error, value } = schema.validate(data);
     if (error) {
@@ -176,18 +174,20 @@ export const generateRollNumber = async (req, res, next) => {
     const updatedStudent = await studentModel.findOneAndUpdate(
       {
         _id: studentId,
-        'course.courseId': courseId,
-        'course.paymentStatus': 'paid',
+        "course.courseId": courseId,
+        "course.paymentStatus": "paid",
       },
-      { $set: { 'course.$.paymentStatus': 'paid' } },
+      { $set: { "course.$.paymentStatus": "paid" } },
       { new: true }
     );
 
     if (!updatedStudent) {
-      return res.status(400).send({ message: 'Payment not done or invalid data.', status: 'fail' });
+      return res
+        .status(400)
+        .send({ message: "Payment not done or invalid data.", status: "fail" });
     }
 
-    const regCenter = await centerModel.findById(centerId)
+    const regCenter = await centerModel.findById(centerId);
     const count = await studentModel.countDocuments({
       center: centerId,
       regYear: new Date().getFullYear(),
@@ -241,29 +241,29 @@ export const getStudent = async (req, res, next) => {
 
 export const addNewCourse = async (req, res, next) => {
   try {
-    const { id, course, paymentId, orderId, centerId } = req.body;
+    const { id, courseId, paymentId, orderId, centerId } = req.body;
 
     const schema = Joi.object({
       id: Joi.string()
-        .min(3)
+        .regex(/^[0-9a-fA-F]{24}$}/)
         .required(),
       course: Joi.string()
-        .min(3)
+        .regex(/^[0-9a-fA-F]{24}$}/)
         .required(),
       paymentId: Joi.string()
-        .min(3)
+        .regex(/^[0-9a-fA-F]{24}$}/)
         .required(),
       orderId: Joi.string()
-        .min(3)
+        .regex(/^[0-9a-fA-F]{24}$}/)
         .required(),
       centerId: Joi.string()
-        .min(9)
+        .regex(/^[0-9a-fA-F]{24}$}/)
         .required(),
     });
 
     let data = {
       id,
-      course,
+      courseId,
       paymentId,
       orderId,
       centerId,
@@ -276,7 +276,7 @@ export const addNewCourse = async (req, res, next) => {
     }
 
     const student = await studentModel.findByIdAndUpdate(id, {
-      $addToSet: { course },
+      $addToSet: { courseId },
     });
     return res.status(200).send({ data: student, status: "ok" });
   } catch (err) {
@@ -289,7 +289,9 @@ export const updateStudent = async (req, res, next) => {
     const { id, updateField, updateValue } = req.body;
 
     const schema = Joi.object({
-      id: Joi.string().required(),
+      id: Joi.string()
+        .regex(/^[0-9a-fA-F]{24}$}/)
+        .required(),
       updateField: Joi.string().required(),
       updateValue: Joi.string().required(),
     });
@@ -369,7 +371,9 @@ export const deleteStudent = async (req, res, next) => {
     const { id, email, password } = req.body;
 
     const schema = Joi.object({
-      id: Joi.string().required(),
+      id: Joi.string()
+        .regex(/^[0-9a-fA-F]{24}$}/)
+        .required(),
       email: Joi.string()
         .min(11)
         .required(),

@@ -237,9 +237,9 @@ export const addToCart = async (req, res, next) => {
     const { courseId, centerId, studentId } = req.body;
 
     const schema = Joi.object({
-      courseId: myJoiObjectId.required(),
-      centerId: myJoiObjectId.required(),
-      studentId: myJoiObjectId.required(),
+      courseId: Joi.string().regex(/^[0-9a-fA-F]{24}$}/).required(),
+      centerId: Joi.string().regex(/^[0-9a-fA-F]{24}$}/).required(),
+      studentId: Joi.string().regex(/^[0-9a-fA-F]{24}$}/).required(),
     });
 
     let data = { courseId, centerId, studentId };
@@ -277,7 +277,7 @@ export const getCart = async (req, res, next) => {
     const { centerId } = req.body;
 
     const schema = Joi.object({
-      centerId: myJoiObjectId.required(),
+      centerId: Joi.string().regex(/^[0-9a-fA-F]{24}$}/).required(),
     });
 
     let data = { centerId };
@@ -301,7 +301,7 @@ export const deleteCart = async (req, res, next) => {
     const { centerId } = req.body;
 
     const schema = Joi.object({
-      centerId: myJoiObjectId.required(),
+      centerId: Joi.string().regex(/^[0-9a-fA-F]{24}$}/).required(),
     });
 
     let data = { centerId };
