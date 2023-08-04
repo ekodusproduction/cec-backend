@@ -8,6 +8,7 @@ import {
   deletecenterAdmin,
   getAllcenterAdmin,
   getAllInactiveCenterAdmin,
+  
 } from "../Controllers/centerAdminController.js";
 import { loginCenteradmin } from "../Controllers/centerAdminController.js";
 import { isSuperAdmin } from "../Auth/isSuperAdmin.js";
