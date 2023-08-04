@@ -21,7 +21,28 @@ const contactFirmSchema = mongoose.Schema({
   },
   email: { type: String, required: "center email required" },
 });
-
+const orderSchema = Schema({
+  courseId: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: "course",
+      required: "course id required",
+      cast: "{VALUE} is not a object id",
+    },
+  ],
+  studentId: {
+    type: Schema.Types.ObjectId,
+    ref: "student",
+    required: "student required",
+    cast: "{VALUE} is not a object id",
+  },
+  centerId: {
+    type: Schema.Types.ObjectId,
+    ref: "center",
+    required: "center id required",
+    cast: "{VALUE} is not a object id",
+  }
+});
 const centerSchema = new Schema(
   {
     centerId: {
