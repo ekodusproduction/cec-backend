@@ -134,7 +134,7 @@ export const studentRegister = async (req, res, next) => {
 
 export const generateRollNumber = async (req, res, next) => {
   try {
-    const { paymentId, orderId, centerId, studentId, mobile } = req.body;
+    const { paymentId, orderId, centerId, studentId, mobile, courseId } = req.body;
 
     const schema = Joi.object({
       paymentId: Joi.string()
@@ -149,6 +149,9 @@ export const generateRollNumber = async (req, res, next) => {
       studentId: Joi.string()
         .min(9)
         .required(),
+      courseId: Joi.string()
+        .min(9)
+        .required(),
       mobile: Joi.string()
         .min(10)
         .max(10)
@@ -161,6 +164,7 @@ export const generateRollNumber = async (req, res, next) => {
       centerId,
       studentId,
       mobile,
+      courseId
     };
     const { error, value } = schema.validate(data);
     if (error) {
@@ -169,12 +173,27 @@ export const generateRollNumber = async (req, res, next) => {
         .send({ message: error.details[0].message, status: "fail" });
     }
 
+    const updatedStudent = await studentModel.findOneAndUpdate(
+      {
+        _id: studentId,
+        'course.courseId': courseId,
+        'course.paymentStatus': 'paid',
+      },
+      { $set: { 'course.$.paymentStatus': 'paid' } },
+      { new: true }
+    );
+
+    if (!updatedStudent) {
+      return res.status(400).send({ message: 'Payment not done or invalid data.', status: 'fail' });
+    }
+
+    const regCenter = await centerModel.findById(centerId)
     const count = await studentModel.countDocuments({
       center: centerId,
       regYear: new Date().getFullYear(),
     });
     const rollNumber = `${(count % 1000) +
-      1}${`${new Date().getFullYear()}`.slice(-2)}${center.franchiseCode}`;
+      1}${`${new Date().getFullYear()}`.slice(-2)}${regCenter.franchiseCode}`;
     const updateStudent = await studentModel.findByIdAndUpdate(studentId, {
       $set: { rollNumber: rollNumber },
     });

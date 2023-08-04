@@ -8,9 +8,12 @@ import fs from "fs/promises";
 import { dirname, join } from "path";
 import { fileURLToPath } from "url";
 import Joi from "joi";
+
+import { sendMessage } from "../Airtel/airtel.js";
+import JoiObjectId from "joi-objectid";
+const myJoiObjectId = JoiObjectId(Joi);
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const appDir = dirname(`${import.meta.filename}`);
-import { sendMessage } from "../Airtel/airtel.js";
 
 export const loginCenteradmin = async (req, res, next) => {
   try {
@@ -253,3 +256,4 @@ export const deletecenterAdmin = async (req, res, next) => {
     res.status(500).send({ message: err.message, status: "fail" });
   }
 };
+

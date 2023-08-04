@@ -128,7 +128,13 @@ export const createcenter = async (req, res, next) => {
         .status(400)
         .send({ data: { message: "provide whatsapp" }, status: "fail" });
     }
-    data.dateofReg = new Date(dateofReg);
+
+    const convertToDate = (dateString) => {
+      const [day, month, year] = dateString.split('/').map(Number);
+      return new Date(year, month - 1, day); // Month is 0-based in JavaScript Date, so subtract 1 from the month value.
+    };
+
+    data.dateofReg = convertToDate(dateofReg);
     const count = await centerModel.countDocuments();
     data["centerId"] = `${(count + 1).toString().padStart(3, "0")}`;
     data["headOfInstitute"] = req.id;
@@ -222,5 +228,96 @@ export const deletecenter = async (req, res, next) => {
     return res.status(200).send({ data: userdeleted, status: "ok" });
   } catch (err) {
     return res.status(500).send({ message: err.message, status: "fail" });
+  }
+};
+
+
+export const addToCart = async (req, res, next) => {
+  try {
+    const { courseId, centerId, studentId } = req.body;
+
+    const schema = Joi.object({
+      courseId: myJoiObjectId.required(),
+      centerId: myJoiObjectId.required(),
+      studentId: myJoiObjectId.required(),
+    });
+
+    let data = { courseId, centerId, studentId };
+    const { error, value } = schema.validate(data);
+    if (error) {
+      return res
+        .status(400)
+        .send({ message: error.details[0].message, status: "fail" });
+    }
+
+    const center = await centerModel.findById(centerId);
+
+    if (!center) {
+      return res
+        .status(404)
+        .send({ message: "Center admin not found", status: "fail" });
+    }
+    
+    if (!center.cart) {
+      center.cart = data;
+    } else {
+      center.cart.courseId.push(courseId);
+    }
+
+    await center.save();
+
+    return res.status(200).send({ data: center, status: "ok" });
+  } catch (err) {
+    res.status(500).send({ message: err.message, status: "fail" });
+  }
+};
+
+export const getCart = async (req, res, next) => {
+  try {
+    const { centerId } = req.body;
+
+    const schema = Joi.object({
+      centerId: myJoiObjectId.required(),
+    });
+
+    let data = { centerId };
+    const { error, value } = schema.validate(data);
+    if (error) {
+      return res
+        .status(400)
+        .send({ message: error.details[0].message, status: "fail" });
+    }
+
+    const center = await centerModel.findById(req.id);
+
+    return res.status(200).send({ data: center.cart, status: "ok" });
+  } catch (err) {
+    res.status(500).send({ message: err.message, status: "fail" });
+  }
+};
+
+export const deleteCart = async (req, res, next) => {
+  try {
+    const { centerId } = req.body;
+
+    const schema = Joi.object({
+      centerId: myJoiObjectId.required(),
+    });
+
+    let data = { centerId };
+    const { error, value } = schema.validate(data);
+    if (error) {
+      return res
+        .status(400)
+        .send({ message: error.details[0].message, status: "fail" });
+    }
+
+    const center = await centerModel.findById(req.id);
+    center.cart = null;
+    await center.save();
+
+    return res.status(200).send({ data: center, status: "ok" });
+  } catch (err) {
+    res.status(500).send({ message: err.message, status: "fail" });
   }
 };
