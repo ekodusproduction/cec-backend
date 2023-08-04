@@ -116,7 +116,7 @@ const centerSchema = new Schema(
     pinCode: { type: Number, required: "center pincode required" },
     state: { type: String, required: "center state required" },
     isActive: { type: Boolean, default: true },
-    cart: orderSchema,
+    cart: {type:orderSchema},
   },
   {
     timestamps: true,
