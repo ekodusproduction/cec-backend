@@ -29,8 +29,7 @@ export const getCenter = async (req, res, next) => {
 
     const center = await centerModel
       .findById(centerId)
-      .populate("centers")
-      .select("centers");
+    
     return res.status(200).send({ data: center, status: "ok" });
   } catch (err) {
     return res.status(500).send({ message: err.message, status: "fail" });
