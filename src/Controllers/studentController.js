@@ -222,6 +222,7 @@ export const getallStudent = async (req, res, next) => {
     } else {
       center = await studentModel.find({ isActive: true }).populate("centerId");
     }
+    
     return res.status(200).send({ data: center, status: "ok" });
   } catch (err) {
     console.log(err)
