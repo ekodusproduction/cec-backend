@@ -41,12 +41,12 @@ const studentSchema = new Schema(
     },
 
     presentAddress: { type: String, cast: "{VALUE} is not a string" },
-    houseNumberPresent: { type: Number, cast: "{VALUE} is not a number" },
+    statePresent: { type: String, cast: "{VALUE} is not a number" },
     cityPresent: { type: String, cast: "{VALUE} is not a string" },
     pinCodePresent: { type: String, cast: "{VALUE} is not a string" },
 
     permanentAddress: { type: String, cast: "{VALUE} is not a string" },
-    houseNumberPermanent: { type: Number, cast: "{VALUE} is not a number" },
+    statePermanent: { type: String, cast: "{VALUE} is not a number" },
     cityPermanent: { type: String, cast: "{VALUE} is not a string" },
     pinCodePermanent: { type: String, cast: "{VALUE} is not a string" },
 

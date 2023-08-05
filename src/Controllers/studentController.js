@@ -95,9 +95,9 @@ export const studentRegister = async (req, res, next) => {
       pinCodePresent,
       presentAddress,
       cityPresent,
-      houseNumberPresent,
+      statePresent,
       permanentAddress,
-      houseNumberPermanent,
+      statePermanent,
       cityPermanent,
       pinCodePermanent,
       centerId,
@@ -108,6 +108,12 @@ export const studentRegister = async (req, res, next) => {
         .status(400)
         .send({ message: error.details[0].message, status: "fail" });
     }
+    const convertToDate = (dateString) => {
+      const [year,day, month] = dateString.split("-").map(Number);
+      return new Date(year, month - 1, day); // Month is 0-based in JavaScript Date, so subtract 1 from the month value.
+    };
+
+    data.DOB = convertToDate(dateofReg);
 
     const center = await centerModel.findById(centerId);
     if (!center) {
