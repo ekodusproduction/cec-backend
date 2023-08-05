@@ -50,7 +50,6 @@ const studentSchema = new Schema(
     cityPermanent: { type: String, cast: "{VALUE} is not a string" },
     pinCodePermanent: { type: String, cast: "{VALUE} is not a string" },
 
-    paymentDone: { type: String, default: false },
     fathersName: {
       type: String,
       minLength: 3,
