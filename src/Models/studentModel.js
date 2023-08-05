@@ -93,7 +93,7 @@ const studentSchema = new Schema(
     course: [
       {
         courseId: {
-          type: Schema.Types.ObjectId,
+          type: mongoose.Schema.Types.ObjectId,
           ref: "center",
           validate: {
             validator: (value) => mongoose.Types.ObjectId.isValid(value),
@@ -120,7 +120,7 @@ const studentSchema = new Schema(
     },
 
     centerId: {
-      type: Schema.Types.ObjectId,
+      type: mongoose.Schema.Types.ObjectId,
       ref: "center",
       required: "please provide center",
       cast: "{VALUE} is not a valid object id",
