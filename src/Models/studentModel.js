@@ -17,13 +17,13 @@ const studentSchema = new Schema(
       maxLength: 25,
       cast: "{VALUE} is not a string",
     },
-    rollNumber: {
-      type: String,
-      minLength: 3,
-      maxLength: 20,
-      unique: true,
-      cast: "{VALUE} is not a string",
-    },
+    // rollNumber: {
+    //   type: String,
+    //   minLength: 3,
+    //   maxLength: 20,
+    //   unique: true,
+    //   cast: "{VALUE} is not a string",
+    // },
     mobile: {
       type: Number,
       required: "please provide mobile",
