@@ -127,7 +127,7 @@ export const createcenter = async (req, res, next) => {
     }
 
     const convertToDate = (dateString) => {
-      const [year,day, month] = dateString.split("-").map(Number);
+      const [year, day, month] = dateString.split("-").map(Number);
       return new Date(year, month - 1, day); // Month is 0-based in JavaScript Date, so subtract 1 from the month value.
     };
 
@@ -137,12 +137,10 @@ export const createcenter = async (req, res, next) => {
       whatsApp: whatsAppCenterAdmin,
     });
     if (!centerAdmin) {
-      return res
-        .status(200)
-        .send({
-          data: "Invalid request. Please provide valid whatsapp number",
-          status: "fail",
-        });
+      return res.status(200).send({
+        data: "Invalid request. Please provide valid whatsapp number",
+        status: "fail",
+      });
     }
     data["centerId"] = `${(count + 1).toString().padStart(3, "0")}`;
     data["headOfInstitute"] = centerAdmin._id;
@@ -156,7 +154,7 @@ export const createcenter = async (req, res, next) => {
 
     return res.status(200).send({ data: center, status: "ok" });
   } catch (err) {
-    console.log(err)
+    console.log(err);
     return res.status(500).send({ message: err, status: "fail" });
   }
 };
