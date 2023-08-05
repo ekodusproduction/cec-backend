@@ -82,7 +82,6 @@ export const studentRegister = async (req, res, next) => {
         .max(999999)
         .required(),
       centerId: Joi.string()
-        .regex(/^[0-9a-fA-F]{24}$}/)
         .required(),
     });
 
