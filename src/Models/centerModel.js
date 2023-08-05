@@ -117,7 +117,7 @@ centerSchema.pre(/^find/, function(next) {
   next();
 });
 
-const courseModel = mongoose.model("centers", centerSchema, "center");
+const centerModel = mongoose.model("centers", centerSchema, "center");
 
-courseModel.create;
-export default courseModel;
+centerModel.create;
+export default centerModel;
