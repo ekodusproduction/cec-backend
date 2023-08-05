@@ -93,7 +93,7 @@ const studentSchema = new Schema(
       {
         courseId: {
           type: Schema.Types.ObjectId,
-          ref: "courses",
+          ref: "center",
           validate: {
             validator: (value) => mongoose.Types.ObjectId.isValid(value),
             message: "{VALUE} is not a valid ObjectId",
