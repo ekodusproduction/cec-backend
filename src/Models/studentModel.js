@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import centerModel from "./centerModel";
+import centerModel from "./centerModel.js";
 const Schema = mongoose.Schema;
 
 const studentSchema = new Schema(
