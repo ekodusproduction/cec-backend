@@ -207,7 +207,6 @@ export const fileUpload = async (req, res, next) => {
           }.${file.mimetype.split("/")[1]}`
       ),
       imgBuffer,
-      { flag: "wb" },
       "utf-8"
     );
 
