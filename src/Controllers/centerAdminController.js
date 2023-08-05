@@ -184,7 +184,7 @@ export const updatecenterAdmin = async (req, res, next) => {
 export const fileUpload = async (req, res, next) => {
   try {
     const file = req.files[0];
-
+    console.log(file)
     if (!file) {
       return res
         .status(400)
@@ -198,21 +198,22 @@ export const fileUpload = async (req, res, next) => {
         .status(400)
         .send({ message: "invalid user id in token. login again" });
     }
+
     await fs.writeFile(
       join(
         __dirname +
           `/../../public/centeradmin/${user.whatsApp.toString().slice(-6)}${
             file.fieldname
-          }`
+          }.${file.mimetype.split("/")[1]}`
       ),
       imgBuffer,
-      { flag: "a" },
+      { flag: "wb" },
       "utf-8"
     );
 
-    const profilePic = `${baseUrl}/public/superadmin/${user.whatsApp.toString().slice(-6)}${
-      file.fieldname  
-    }`;
+    const profilePic = `${baseUrl}/public/centeradmin/${user.whatsApp
+      .toString()
+      .slice(-6)}${file.fieldname}.${file.mimetype.split("/")[1]}`;
     console.log("profilePic", file);
     const userupdate = await centerAdminModel.updateOne(
       { _id: req.id },

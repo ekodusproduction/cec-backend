@@ -321,7 +321,11 @@ export const updateStudent = async (req, res, next) => {
 export const fileUploads = async (req, res, next) => {
   try {
     const { rollNumber } = req.body;
-
+    if (!rollNumber) {
+      return res
+        .status(400)
+        .send({ message: "invalid request. send rollNumber", status: "fail" });
+    }
     const file = req.files[0];
 
     if (!file) {
@@ -329,39 +333,42 @@ export const fileUploads = async (req, res, next) => {
         .status(400)
         .send({ message: "invalid request. send file", status: "fail" });
     }
+    const imageType = ["profilePic", "Id", "addressProof", "acadCert"];
 
-    await fs.mkdir(join(__dirname + `/../../public/student/${rollNumber}`), {
-      recursive: true,
-    });
-    let fileNames = {};
-    for (let i = 0; i < req.files.length; i++) {
-      const extension = req.files[i].mimetype.split("/")[1];
-      const fileName = req.files[i].fieldname;
-      const path = `${baseUrl}/public/student/${rollNumber}/${fileName}.${extension}`;
-      fileNames[fileName] = path;
-      const imgBuffer = Buffer.from(req.files[i].buffer, "utf-8");
-      const profilePic = `/public/student/${rollNumber}/${
-        req.files[i].fieldname
-      }.${req.files[i].mimetype.split("/")[1]}`;
-      await fs.writeFile(
-        join(
-          __dirname +
-            `../../public/student/${rollNumber}/${req.files[i].fieldname}.${
-              req.files[i].mimetype.split("/")[1]
-            }`
-        ),
-        imgBuffer,
-        "utf-8"
-      );
-      const fileUpload = await studentModel.findOneAndUpdate(
-        { rollNumber },
-        { $set: { fileName: path } }
-      );
+    if (!imageType.contains(file.fieldname)) {
+      return res.status(400).send({ message: "invalid type", status: "fail" });
     }
 
-    const center = await studentModel.findOne({ rollNumber });
+    const imgBuffer = Buffer.from(file.buffer, "utf-8");
+    const user = await studentModel.findOne({ rollNumber });
+    if (!user) {
+      return res
+        .status(400)
+        .send({ message: "invalid user id in token. login again" });
+    }
 
-    return res.status(200).send({ data: center, status: "ok" });
+    await fs.writeFile(
+      join(
+        __dirname +
+          `/../../public/student/${rollNumber.toString()}${file.fieldname}.${
+            file.mimetype.split("/")[1]
+          }`
+      ),
+      imgBuffer,
+      { flag: "wb" },
+      "utf-8"
+    );
+
+    const profilePic = `${baseUrl}/public/student/${rollNumber.toString()}${
+      file.fieldname
+    }.${file.mimetype.split("/")[1]}`;
+    console.log("profilePic", file);
+    const userupdate = await studentModel.updateOne(
+      { rollNumber },
+      { profilePic: profilePic }
+    );
+
+    return res.status(200).send({ data: userupdate, status: "ok" });
   } catch (err) {
     return res.status(500).send({ message: err.message, status: "fail" });
   }
