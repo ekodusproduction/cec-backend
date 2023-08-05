@@ -127,7 +127,7 @@ export const createcenter = async (req, res, next) => {
     }
 
     const convertToDate = (dateString) => {
-      const [day, month, year] = dateString.split("/").map(Number);
+      const [year,month,day] = dateString.split("/").map(Number);
       return new Date(year, month - 1, day); // Month is 0-based in JavaScript Date, so subtract 1 from the month value.
     };
 
