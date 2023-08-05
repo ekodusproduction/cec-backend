@@ -46,7 +46,6 @@ const centerAdminSchema = new Schema(
       },
     },
     address: { type: String, required: "address required" },
-    landmark: { type: String, required: "landmark required" },
     district: { type: String, required: "district required" },
     pinCode: { type: Number, required: "Number required" },
     state: { type: String, required: "state required" },
