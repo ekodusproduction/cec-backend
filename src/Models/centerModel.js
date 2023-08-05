@@ -67,19 +67,19 @@ const centerSchema = new Schema(
       required: "franchise name required",
       cast: "{VALUE} is not a String",
     },
-    firmType: {
-      type: String,
-      required: "franchise type required",
-      cast: "{VALUE} is not a String",
-    },
+    // firmType: {
+    //   type: String,
+    //   required: "franchise type required",
+    //   cast: "{VALUE} is not a String",
+    // },
 
-    landlineNumber: {
-      type: Number,
-      validate: {
-        validator: (v) => v.toString().length == 10,
-        message: "enter 10 digit number",
-      },
-    },
+    // landlineNumber: {
+    //   type: Number,
+    //   validate: {
+    //     validator: (v) => v.toString().length == 10,
+    //     message: "enter 10 digit number",
+    //   },
+    // },
     whatsApp: {
       type: Number,
       required: "center whatsapp required",

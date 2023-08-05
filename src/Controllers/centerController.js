@@ -27,9 +27,8 @@ export const getCenter = async (req, res, next) => {
         .send({ message: error.details[0].message, status: "fail" });
     }
 
-    const center = await centerModel
-      .findById(centerId)
-    
+    const center = await centerModel.findById(centerId);
+
     return res.status(200).send({ data: center, status: "ok" });
   } catch (err) {
     return res.status(500).send({ message: err.message, status: "fail" });
@@ -54,14 +53,18 @@ export const getAllInactiveCenter = async (req, res, next) => {
   }
 };
 
-
 export const getAllCentersUnderAdmin = async (req, res, next) => {
   try {
-    const {centeradminId} = req.params
-    if(!centeradminId){
-      return res.status(400).send({message:"invalid request", status:"fail"})
+    const { centeradminId } = req.params;
+    if (!centeradminId) {
+      return res
+        .status(400)
+        .send({ message: "invalid request", status: "fail" });
     }
-    const center = await centerModel.find({ isActive: true, headOfInstitute:centeradminId });
+    const center = await centerModel.find({
+      isActive: true,
+      headOfInstitute: centeradminId,
+    });
     return res.status(200).send({ data: center, status: "ok" });
   } catch (err) {
     return res.status(500).send({ message: err.message, status: "fail" });
@@ -72,7 +75,6 @@ export const createcenter = async (req, res, next) => {
     let {
       firmName,
       dateofReg,
-      firmType,
       address,
       landmark,
       pinCode,
@@ -81,13 +83,11 @@ export const createcenter = async (req, res, next) => {
       alternateNumber,
       whatsApp,
       email,
-      landline,
       whatsAppCenterAdmin,
     } = req.body;
     const schema = Joi.object({
       firmName: Joi.string().required(),
       dateofReg: Joi.string().required(),
-      firmType: Joi.string().required(),
       address: Joi.string().required(),
       landmark: Joi.string().required(),
       pinCode: Joi.string().required(),
@@ -95,16 +95,13 @@ export const createcenter = async (req, res, next) => {
       state: Joi.string().required(),
       alternateNumber: Joi.string().required(),
       whatsApp: Joi.string().required(),
-      landline: Joi.string().required(),
       email: Joi.string().required(),
       whatsAppCenterAdmin: Joi.string().required(),
     });
-    
 
     let data = {
       firmName,
       dateofReg,
-      firmType,
       address,
       landmark,
       pinCode,
@@ -113,7 +110,6 @@ export const createcenter = async (req, res, next) => {
       alternateNumber,
       whatsApp,
       email,
-      landline,
       whatsAppCenterAdmin,
     };
     const { error, value } = schema.validate(data);
@@ -130,15 +126,22 @@ export const createcenter = async (req, res, next) => {
     }
 
     const convertToDate = (dateString) => {
-      const [day, month, year] = dateString.split('/').map(Number);
+      const [day, month, year] = dateString.split("/").map(Number);
       return new Date(year, month - 1, day); // Month is 0-based in JavaScript Date, so subtract 1 from the month value.
     };
 
     data.dateofReg = convertToDate(dateofReg);
     const count = await centerModel.countDocuments();
-    const centerAdmin = await centerAdminModel.findOne({whatsApp:whatsAppCenterAdmin})
-    if(!centerAdmin){
-      return res.status(200).send({ data: "Invalid request. Please provide valid whatsapp number", status: "fail" });
+    const centerAdmin = await centerAdminModel.findOne({
+      whatsApp: whatsAppCenterAdmin,
+    });
+    if (!centerAdmin) {
+      return res
+        .status(200)
+        .send({
+          data: "Invalid request. Please provide valid whatsapp number",
+          status: "fail",
+        });
     }
     data["centerId"] = `${(count + 1).toString().padStart(3, "0")}`;
     data["headOfInstitute"] = centerAdmin._id;
@@ -197,21 +200,21 @@ export const updatecenter = async (req, res, next) => {
 
 export const deletecenter = async (req, res, next) => {
   try {
-    const { email, password } = req.body;
-    const centerId = req.query;
-    const schema = Joi.object({
-      centerId: Joi.string().required(),
-      email: Joi.string().required(),
-      password: Joi.string().required(),
-    });
+    // const { email, password } = req.body;
+    // const centerId = req.query;
+    // const schema = Joi.object({
+    //   centerId: Joi.string().required(),
+    //   email: Joi.string().required(),
+    //   password: Joi.string().required(),
+    // });
 
-    let data = { centerId, email, password };
-    const { error, value } = schema.validate(data);
-    if (error) {
-      return res
-        .status(400)
-        .send({ message: error.details[0].message, status: "fail" });
-    }
+    // let data = { centerId, email, password };
+    // const { error, value } = schema.validate(data);
+    // if (error) {
+    //   return res
+    //     .status(400)
+    //     .send({ message: error.details[0].message, status: "fail" });
+    // }
 
     const user = await superAdminModel.findById({ _id: req.id });
 
@@ -235,15 +238,20 @@ export const deletecenter = async (req, res, next) => {
   }
 };
 
-
 export const addToCart = async (req, res, next) => {
   try {
     const { courseId, centerId, studentId } = req.body;
 
     const schema = Joi.object({
-      courseId: Joi.string().regex(/^[0-9a-fA-F]{24}$}/).required(),
-      centerId: Joi.string().regex(/^[0-9a-fA-F]{24}$}/).required(),
-      studentId: Joi.string().regex(/^[0-9a-fA-F]{24}$}/).required(),
+      courseId: Joi.string()
+        .regex(/^[0-9a-fA-F]{24}$}/)
+        .required(),
+      centerId: Joi.string()
+        .regex(/^[0-9a-fA-F]{24}$}/)
+        .required(),
+      studentId: Joi.string()
+        .regex(/^[0-9a-fA-F]{24}$}/)
+        .required(),
     });
 
     let data = { courseId, centerId, studentId };
@@ -281,7 +289,9 @@ export const getCart = async (req, res, next) => {
     const { centerId } = req.body;
 
     const schema = Joi.object({
-      centerId: Joi.string().regex(/^[0-9a-fA-F]{24}$}/).required(),
+      centerId: Joi.string()
+        .regex(/^[0-9a-fA-F]{24}$}/)
+        .required(),
     });
 
     let data = { centerId };
@@ -305,7 +315,9 @@ export const deleteCart = async (req, res, next) => {
     const { centerId } = req.body;
 
     const schema = Joi.object({
-      centerId: Joi.string().regex(/^[0-9a-fA-F]{24}$}/).required(),
+      centerId: Joi.string()
+        .regex(/^[0-9a-fA-F]{24}$}/)
+        .required(),
     });
 
     let data = { centerId };
