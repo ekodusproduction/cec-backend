@@ -61,7 +61,6 @@ export const createcenterAdmin = async (req, res, next) => {
       district,
       password,
       whatsApp,
-      houseNumber,
     } = req.body;
 
     const schema = Joi.object({
@@ -75,7 +74,6 @@ export const createcenterAdmin = async (req, res, next) => {
       district: Joi.string().required(),
       password: Joi.string().required(),
       whatsApp: Joi.string().required(),
-      houseNumber: Joi.string().required(),
     });
 
     let data = {
@@ -89,7 +87,6 @@ export const createcenterAdmin = async (req, res, next) => {
       district,
       password,
       whatsApp,
-      houseNumber,
     };
     const { error, value } = schema.validate(data);
     if (error) {
@@ -107,7 +104,6 @@ export const createcenterAdmin = async (req, res, next) => {
       email,
       address,
       landmark,
-      houseNumber,
       pinCode,
       state,
       district,
