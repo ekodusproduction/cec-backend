@@ -85,18 +85,19 @@ export const createcenter = async (req, res, next) => {
       email,
       whatsAppCenterAdmin,
     } = req.body;
+
     const schema = Joi.object({
       firmName: Joi.string().required(),
       dateofReg: Joi.string().required(),
       address: Joi.string().required(),
       landmark: Joi.string().required(),
-      pinCode: Joi.string().required(),
+      pinCode: Joi.number().length(6).required(),
       district: Joi.string().required(),
       state: Joi.string().required(),
-      alternateNumber: Joi.string().required(),
-      whatsApp: Joi.string().required(),
+      alternateNumber: Joi.number().length(10).required(),
+      whatsApp: Joi.number().length(10).required(),
       email: Joi.string().required(),
-      whatsAppCenterAdmin: Joi.string().required(),
+      whatsAppCenterAdmin: Joi.number().length(10).required(),
     });
 
     let data = {
