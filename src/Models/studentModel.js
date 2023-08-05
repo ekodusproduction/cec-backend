@@ -120,7 +120,7 @@ const studentSchema = new Schema(
 
     centerId: {
       type: Schema.Types.ObjectId,
-      ref: "courses",
+      ref: "center",
       required: "please provide center",
       cast: "{VALUE} is not a valid object id",
     },
