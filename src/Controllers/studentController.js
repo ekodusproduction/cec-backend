@@ -355,7 +355,6 @@ export const fileUploads = async (req, res, next) => {
           }`
       ),
       imgBuffer,
-      { flag: "wb" },
       "utf-8"
     );
 
