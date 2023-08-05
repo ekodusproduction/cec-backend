@@ -81,8 +81,7 @@ export const studentRegister = async (req, res, next) => {
         .min(100000)
         .max(999999)
         .required(),
-      centerId: Joi.string()
-        .required(),
+      centerId: Joi.string().required(),
     });
 
     let data = {
@@ -214,7 +213,14 @@ export const generateRollNumber = async (req, res, next) => {
 
 export const getallStudent = async (req, res, next) => {
   try {
-    const center = await studentModel.find({ isActive: true });
+    if (req.query.centerId) {
+      const center = await studentModel.find({
+        isActive: true,
+        centerId: req.query.centerId,
+      }).populate("centerId");
+    } else {
+      const center = await studentModel.find({ isActive: true }).populate("centerId");
+    }
     return res.status(200).send({ data: center, status: "ok" });
   } catch (err) {
     return res.status(500).send({ message: err.message, status: "fail" });
