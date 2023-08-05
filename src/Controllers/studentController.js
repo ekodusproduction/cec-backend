@@ -213,13 +213,14 @@ export const generateRollNumber = async (req, res, next) => {
 
 export const getallStudent = async (req, res, next) => {
   try {
+    let center;
     if (req.query.centerId) {
-      const center = await studentModel.find({
+      center = await studentModel.find({
         isActive: true,
         centerId: req.query.centerId,
       }).populate("centerId");
     } else {
-      const center = await studentModel.find({ isActive: true }).populate("centerId");
+      center = await studentModel.find({ isActive: true }).populate("centerId");
     }
     return res.status(200).send({ data: center, status: "ok" });
   } catch (err) {
