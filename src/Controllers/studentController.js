@@ -68,13 +68,13 @@ export const studentRegister = async (req, res, next) => {
       cityPresent: Joi.string()
         .min(3)
         .required(),
-      houseNumberPresent: Joi.string()
+      statePresent: Joi.string()
         .min(1)
         .required(),
       cityPermanent: Joi.string()
         .min(3)
         .required(),
-      houseNumberPermanent: Joi.string()
+      statePermanent: Joi.string()
         .min(1)
         .required(),
       pinCodePermanent: Joi.number()
@@ -109,7 +109,7 @@ export const studentRegister = async (req, res, next) => {
         .send({ message: error.details[0].message, status: "fail" });
     }
     const convertToDate = (dateString) => {
-      const [year,day, month] = dateString.split("-").map(Number);
+      const [year, day, month] = dateString.split("-").map(Number);
       return new Date(year, month - 1, day); // Month is 0-based in JavaScript Date, so subtract 1 from the month value.
     };
 
