@@ -5,9 +5,12 @@ import { dirname, join } from "path";
 import dotenv from "dotenv";
 import { fileURLToPath } from "url";
 import Joi from "joi";
-import {centerModel} from "../server.js";
-import {centerAdminModel} from "../server.js";
-import {studentModel} from "../server.js";
+import {
+  centerModel,
+  centerAdminModel,
+  superAdminModel,
+  courseModel,
+} from "../server.js";
 import { sendMessage } from "../Airtel/airtel.js";
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const baseUrl = `139.59.83.187`;
