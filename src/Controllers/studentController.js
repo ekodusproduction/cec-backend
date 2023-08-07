@@ -219,7 +219,7 @@ export const getStudent = async (req, res, next) => {
         status: "fail",
       });
     }
-    const center = await studentModel.find({ center: req.params.centerid });
+    const center = await studentModel.find({ centerId: req.params.centerid });
     return res.status(200).send({ data: center, status: "ok" });
   } catch (err) {
     return res.status(500).send({ message: err.message, status: "fail" });
