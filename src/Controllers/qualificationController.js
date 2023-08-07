@@ -65,8 +65,8 @@ export const updateQualification = async (req, res, next) => {
     const schema = Joi.object({
       qualificationId: Joi.string().required(),
       qualification: Joi.string().min(2),
-      value: Joi.string().min(3),
-      registrationFees: Joi.string().min(3),
+      value: Joi.number(),
+      registrationFees: Joi.number(),
     });
 
     let data = {
