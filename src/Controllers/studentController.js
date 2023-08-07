@@ -6,7 +6,6 @@ import { dirname, join } from "path";
 import { fileURLToPath } from "url";
 import Joi from "joi";
 import { sendMessage } from "../Airtel/airtel.js";
-import APIFeatures from "../Utils/apiFeatures.js";
 
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
