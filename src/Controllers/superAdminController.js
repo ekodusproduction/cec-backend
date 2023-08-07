@@ -142,7 +142,7 @@ export const loginSuperAdmin = async (req, res, next) => {
     user.password = null;
     const token = generateToken(user._id);
 
-    return res.status(200).send({ data: data, token: token, status: "ok" });
+    return res.status(200).send({ data: user, token: token, status: "ok" });
   } catch (err) {
     res.status(500).send({ message: err.message, status: "fail" });
   }
