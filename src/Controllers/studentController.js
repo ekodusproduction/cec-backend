@@ -9,7 +9,7 @@ import dotenv from "dotenv";
 import { fileURLToPath } from "url";
 import Joi from "joi";
 import { sendMessage } from "../Airtel/airtel.js";
-
+import APIFeatures from "../Utils/apiFeatures.js";
 import { generateToken } from "../Auth/authentication.js";
 import upload from "../app.js";
 
@@ -188,18 +188,29 @@ export const getallStudent = async (req, res, next) => {
   try {
     let center;
     if (req.query.centerId) {
-      center = await studentModel
-        .find({
+      center = await APIFeatures(
+        studentModel.find({
           isActive: true,
           centerId: req.query.centerId,
         })
+      )
+        .paginate()
+        .limitFields()
         .populate({ path: "centerId", model: centerModel });
     } else {
-      center = await studentModel
-        .find({ isActive: true })
+      center = await APIFeatures(studentModel.find({ isActive: true }))
+        .paginate()
+        .limitFields()
         .populate({ path: "centerId", model: centerModel });
     }
-
+    const formatDate = (dateString) => {
+      const date = new Date(dateString);
+      const day = date.getDate();
+      const month = date.getMonth() + 1; // Months are zero-based
+      const year = date.getFullYear();
+      return `${day}/${month}/${year}`;
+    };
+    center = center.map( e => e.createdAt = formatDate(e.createdAt))
     return res.status(200).send({ data: center, status: "ok" });
   } catch (err) {
     console.log(err);
