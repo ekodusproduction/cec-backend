@@ -1,6 +1,6 @@
-import courseModel from "../Models/centerModel.js";
-import paymentsModel from "../Models/paymentModel.js";
-import studentModel from "../Models/studentModel.js";
+import {courseModel} from "../Models/centerModel.js";
+import {paymentsModel} from "../Models/paymentModel.js";
+import {studentModel} from "../Models/studentModel.js";
 
 export const createOrder = async (req, res, next) => {
   try {

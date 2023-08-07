@@ -1,6 +1,6 @@
 import Joi from "joi";
-import categoryModel from "../server.js";
-import courseModel from "../server.js";
+import {categoryModel} from "../server.js";
+import {courseModel} from "../server.js";
 
 export const createCategory = async (req, res, next) => {
   try {

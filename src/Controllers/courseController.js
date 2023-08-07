@@ -1,6 +1,6 @@
 import Joi from "joi";
-import courseModel from "../server.js";
-import qualificationModel from "../server.js";
+import {courseModel} from "../server.js";
+import {qualificationModel} from "../server.js";
 
 export const createCourse = async (req, res, next) => {
   try {

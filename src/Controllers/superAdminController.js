@@ -5,9 +5,9 @@ import { fileURLToPath } from "url";
 import Joi from "joi";
 import { sendMessage } from "../Airtel/airtel.js";
 import { generateToken } from "../Auth/authentication.js";
-import superAdminModel from "../server.js";
-import centerModel from "../server.js";
-import centerAdminModel from "../server.js";
+import {superAdminModel} from "../server.js";
+import {centerModel} from "../server.js";
+import {centerAdminModel} from "../server.js";
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const appDir = dirname(`${import.meta.filename}`);
 
