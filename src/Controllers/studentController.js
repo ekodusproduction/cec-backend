@@ -7,7 +7,6 @@ import { fileURLToPath } from "url";
 import Joi from "joi";
 import { sendMessage } from "../Airtel/airtel.js";
 
-
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const appDir = dirname(`${import.meta.filename}`);
 const baseUrl = `139.59.83.187`;
@@ -183,19 +182,15 @@ export const getallStudent = async (req, res, next) => {
   try {
     let center;
     if (req.query.centerId) {
-      center = await APIFeatures(
-        studentModel.find({
+      center = await studentModel
+        .find({
           isActive: true,
           centerId: req.query.centerId,
         })
-      )
-        .paginate()
-        .limitFields()
         .populate({ path: "centerId", model: centerModel });
     } else {
-      center = await APIFeatures(studentModel.find({ isActive: true }))
-        .paginate()
-        .limitFields()
+      center = await studentModel
+        .find({ isActive: true })
         .populate({ path: "centerId", model: centerModel });
     }
     const formatDate = (dateString) => {
@@ -205,7 +200,7 @@ export const getallStudent = async (req, res, next) => {
       const year = date.getFullYear();
       return `${day}/${month}/${year}`;
     };
-    center = center.map( e => e.createdAt = formatDate(e.createdAt))
+    center = center.map((e) => (e.createdAt = formatDate(e.createdAt)));
     return res.status(200).send({ data: center, status: "ok" });
   } catch (err) {
     console.log(err);
