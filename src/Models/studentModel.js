@@ -35,7 +35,7 @@ const studentSchema = new Schema(
       },
     },
     DOB: {
-      type: String,
+      type: Date,
       required: "please provide date of birth",
       cast: "{VALUE} is not a date",
       required: "date of birth requierd",
