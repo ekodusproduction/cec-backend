@@ -17,6 +17,6 @@ const paymentSchema = new Schema(
   }
 );
 
-// const paymentsModel = mongoose.model("payments", paymentSchema, "payment");
+const paymentsModel = mongoose.model("payments", paymentSchema, "payment");
 export default paymentSchema;
 

@@ -1,8 +1,6 @@
-import {
-  paymentsModel,
-  studentModel,
-  courseModel,
-} from "../server.js";
+import courseModel from "../Models/centerModel.js";
+import paymentsModel from "../Models/paymentModel.js";
+import studentModel from "../Models/studentModel.js";
 
 export const createOrder = async (req, res, next) => {
   try {
@@ -11,20 +9,24 @@ export const createOrder = async (req, res, next) => {
       _id: studentId.studentId,
     });
     if (studentExist == 0) {
-      return res.status(400).send({
-        message: "invalid request. please send valid student id",
-        status: "fail",
-      });
+      return res
+        .status(400)
+        .send({
+          message: "invalid request. please send valid student id",
+          status: "fail",
+        });
     }
 
     const courseExist = await courseModel.countDocuments({
       _id: courseId.courseId,
     });
     if (courseExist == 0) {
-      return res.status(400).send({
-        message: "invalid request. please send valid course id",
-        status: "fail",
-      });
+      return res
+        .status(400)
+        .send({
+          message: "invalid request. please send valid course id",
+          status: "fail",
+        });
     }
 
     const data = { studentId, courseId };

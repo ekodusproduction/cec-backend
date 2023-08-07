@@ -1,3 +1,7 @@
+import superAdminModel from "../Models/superAdminModel.js";
+import centerModel from "../Models/centerModel.js";
+import centerAdminModel from "../Models/centerAdminModel.js";
+import multer from "multer";
 import bcrypt from "bcrypt";
 import fs from "fs/promises";
 import { dirname, join } from "path";
@@ -5,7 +9,7 @@ import { fileURLToPath } from "url";
 import Joi from "joi";
 import { sendMessage } from "../Airtel/airtel.js";
 import { generateToken } from "../Auth/authentication.js";
-import { centerModel ,centerAdminModel, superAdminModel} from "../server.js";
+import upload from "../app.js";
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const appDir = dirname(`${import.meta.filename}`);
 
@@ -104,7 +108,8 @@ export const loginSuperAdmin = async (req, res, next) => {
   try {
     const { whatsApp, password } = req.body;
     const schema = Joi.object({
-      whatsApp: Joi.number().required(),
+      whatsApp: Joi.number()
+        .required(),
       password: Joi.string()
         .min(6)
         .required(),
@@ -133,7 +138,6 @@ export const loginSuperAdmin = async (req, res, next) => {
         status: "fail",
       });
     }
-
     data = {
       firstName: user.firstName,
       lastName: user.lastName,

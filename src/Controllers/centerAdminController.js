@@ -1,3 +1,6 @@
+import superAdminModel from "../Models/superAdminModel.js";
+import centerModel from "../Models/centerModel.js";
+import centerAdminModel from "../Models/centerAdminModel.js";
 import bcrypt from "bcrypt";
 import { generateToken } from "../Auth/authentication.js";
 import APIFeatures from "../Utils/apiFeatures.js";
@@ -6,7 +9,6 @@ import { dirname, join } from "path";
 import { fileURLToPath } from "url";
 import Joi from "joi";
 import { sendMessage } from "../Airtel/airtel.js";
-import {centerModel, centerAdminModel , superAdminModel} from "../server.js";
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const appDir = dirname(`${import.meta.filename}`);
 var baseUrl = `139.59.83.187`;
@@ -174,7 +176,7 @@ export const updatecenterAdmin = async (req, res, next) => {
 export const fileUpload = async (req, res, next) => {
   try {
     const file = req.files[0];
-    console.log(file);
+    console.log(file)
     if (!file) {
       return res
         .status(400)

@@ -45,10 +45,10 @@ superAdminSchema.pre(/^find/, function(next) {
   next();
 });
 
-// const superAdminModel = mongoose.model(
-//   "superAdmins",
-//   superAdminSchema,
-//   "superAdmin"
-// );
+const superAdminModel = mongoose.model(
+  "superAdmins",
+  superAdminSchema,
+  "superAdmin"
+);
 
 export default superAdminSchema;

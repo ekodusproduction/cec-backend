@@ -65,10 +65,10 @@ centerAdminSchema.pre(/^find/, function(next) {
   next();
 });
 
-// const centerAdminModel = mongoose.model(
-//   "centerAdmins",
-//   centerAdminSchema,
-//   "centerAdmin"
-// );
+const centerAdminModel = mongoose.model(
+  "centerAdmins",
+  centerAdminSchema,
+  "centerAdmin"
+);
 
 export default centerAdminSchema;
