@@ -22,7 +22,7 @@ qualificaitonSchema.pre(/^find/, function(next) {
 });
 
 const qualificationModel = mongoose.model(
-  "qualification",
+  "qualifications",
   qualificaitonSchema,
   "qualification"
 );
