@@ -70,4 +70,5 @@ centerAdminSchema.pre(/^find/, function(next) {
 //   centerAdminSchema,
 //   "centerAdmin"
 // );
+
 export default centerAdminSchema;

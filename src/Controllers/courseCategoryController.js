@@ -1,13 +1,6 @@
-import fs from "fs/promises";
 import Joi from "joi";
-import superAdminModel from "../Models/superAdminModel.js";
-import centerModel from "../Models/centerModel.js";
-import centerAdminModel from "../Models/centerAdminModel.js";
-import studentModel from "../Models/studentModel.js";
-import categoryModel from "../Models/courseCategoryModel.js";
-
-import APIFeatures from "../Utils/apiFeatures.js";
-import courseModel from "../Models/centerModel.js";
+import categoryModel from "../server.js";
+import courseModel from "../server.js";
 
 export const createCategory = async (req, res, next) => {
   try {

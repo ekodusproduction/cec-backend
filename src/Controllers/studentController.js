@@ -1,21 +1,15 @@
-import superAdminModel from "../Models/superAdminModel.js";
-import centerModel from "../Models/centerModel.js";
-import centerAdminModel from "../Models/centerAdminModel.js";
-import studentModel from "../Models/studentModel.js";
 import fs from "fs/promises";
 import APIFeatures from "../Utils/apiFeatures.js";
-import courseModel from "../Models/centerModel.js";
+import courseModel from "../server.js";
 import { dirname, join } from "path";
 import dotenv from "dotenv";
 import { fileURLToPath } from "url";
 import Joi from "joi";
+import centerModel from "../server.js";
+import centerAdminModel from "../server.js";
+import studentModel from "../server.js";
 import { sendMessage } from "../Airtel/airtel.js";
-
-import { generateToken } from "../Auth/authentication.js";
-import upload from "../app.js";
-
 const __dirname = dirname(fileURLToPath(import.meta.url));
-const appDir = dirname(`${import.meta.filename}`);
 const baseUrl = `139.59.83.187`;
 
 export const studentRegister = async (req, res, next) => {
@@ -215,17 +209,19 @@ export const getallStudent = async (req, res, next) => {
   try {
     let center;
     if (req.query.centerId) {
-      center = await studentModel.find({
-        isActive: true,
-        centerId: req.query.centerId,
-      }).populate("centerId");
+      center = await studentModel
+        .find({
+          isActive: true,
+          centerId: req.query.centerId,
+        })
+        .populate("centerId");
     } else {
       center = await studentModel.find({ isActive: true }).populate("centerId");
     }
-    
+
     return res.status(200).send({ data: center, status: "ok" });
   } catch (err) {
-    console.log(err)
+    console.log(err);
     return res.status(500).send({ message: err, status: "fail" });
   }
 };

@@ -1,12 +1,6 @@
-import superAdminModel from "../Models/superAdminModel.js";
-import centerModel from "../Models/centerModel.js";
-import centerAdminModel from "../Models/centerAdminModel.js";
-import studentModel from "../Models/studentModel.js";
-import fs from "fs/promises";
 import Joi from "joi";
-import APIFeatures from "../Utils/apiFeatures.js";
-import courseModel from "../Models/courseModel.js";
-import qualificationModel from "../Models/qualificationModel.js";
+import courseModel from "../server.js";
+import qualificationModel from "../server.js";
 
 export const createCourse = async (req, res, next) => {
   try {
