@@ -106,17 +106,16 @@ export const createSuperAdmin = async (req, res, next) => {
 
 export const loginSuperAdmin = async (req, res, next) => {
   try {
-    const { email, password } = req.body;
+    const { whatsApp, password } = req.body;
     const schema = Joi.object({
-      email: Joi.string()
-        .min(11)
+      whatsApp: Joi.number()
         .required(),
       password: Joi.string()
         .min(6)
         .required(),
     });
 
-    let data = { email, password };
+    let data = { whatsApp, password };
     const { error, value } = schema.validate(data);
     if (error) {
       return res
@@ -124,13 +123,14 @@ export const loginSuperAdmin = async (req, res, next) => {
         .send({ message: error.details[0].message, status: "fail" });
     }
 
-    const user = await superAdminModel.findOne({ email: email });
+    const user = await superAdminModel.findOne({ mobile: whatsApp });
     if (user == null) {
       return res.status(400).send({
         data: { message: "email doesnt exist. Please register" },
         status: "fail",
       });
     }
+
     const isPasswordCorrect = await bcrypt.compare(password, user.password);
     if (!isPasswordCorrect) {
       return res.status(400).send({
@@ -138,6 +138,7 @@ export const loginSuperAdmin = async (req, res, next) => {
         status: "fail",
       });
     }
+    
     data = {
       firstName: user.firstName,
       lastName: user.lastName,
