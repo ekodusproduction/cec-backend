@@ -193,7 +193,7 @@ export const getallStudent = async (req, res, next) => {
         .find({ isActive: true })
         .populate({ path: "centerId", model: centerModel });
     }
-    const formatDate = (dateString) => {
+    const formatDate = async(dateString) => {
       const date = new Date(dateString);
       const day = date.getDate();
       const month = date.getMonth() + 1; // Months are zero-based
@@ -201,8 +201,8 @@ export const getallStudent = async (req, res, next) => {
       return `${day}/${month}/${year}`;
     };
 
-    center.forEach((e) => {
-      e.createdAt = formatDate(e.createdAt);
+    center.forEach(async(e) => {
+      e.createdAt = await formatDate(e.createdAt);
     });
 
     return res.status(200).send({ data: center, status: "ok" });
