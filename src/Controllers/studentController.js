@@ -219,7 +219,7 @@ export const getallStudent = async (req, res, next) => {
         centerId: req.query.centerId,
       }).populate("centerId");
     } else {
-      center = await studentModel.find({ isActive: true }).populate("centerId");
+      center = await studentModel.find({ isActive: true }).populate({path:"centerId", model:centerModel});
     }
     
     return res.status(200).send({ data: center, status: "ok" });
