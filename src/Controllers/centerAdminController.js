@@ -1,9 +1,7 @@
 import superAdminModel from "../Models/superAdminModel.js";
-import centerModel from "../Models/centerModel.js";
 import centerAdminModel from "../Models/centerAdminModel.js";
 import bcrypt from "bcrypt";
 import { generateToken } from "../Auth/authentication.js";
-import APIFeatures from "../Utils/apiFeatures.js";
 import fs from "fs/promises";
 import { dirname, join } from "path";
 import { fileURLToPath } from "url";

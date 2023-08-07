@@ -1,14 +1,10 @@
 
-
 import { dirname } from "path";
-import dotenv from "dotenv";
 import { fileURLToPath } from "url";
-
 import Joi from "joi";
 import qualificationModel from "../Models/qualificationModel.js";
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const appDir = dirname(`${import.meta.filename}`);
-dotenv.config();
 
 export const createQualification = async (req, res, next) => {
   try {

@@ -1,17 +1,13 @@
 import centerModel from "../Models/centerModel.js";
-import centerAdminModel from "../Models/centerAdminModel.js";
 import studentModel from "../Models/studentModel.js";
 import fs from "fs/promises";
 import APIFeatures from "../Utils/apiFeatures.js";
-import courseModel from "../Models/centerModel.js";
 import { dirname, join } from "path";
-import dotenv from "dotenv";
 import { fileURLToPath } from "url";
 import Joi from "joi";
 import { sendMessage } from "../Airtel/airtel.js";
 import APIFeatures from "../Utils/apiFeatures.js";
-import { generateToken } from "../Auth/authentication.js";
-import upload from "../app.js";
+
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const appDir = dirname(`${import.meta.filename}`);
