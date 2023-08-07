@@ -1,6 +1,5 @@
 import fs from "fs/promises";
 import APIFeatures from "../Utils/apiFeatures.js";
-import courseModel from "../server.js";
 import { dirname, join } from "path";
 import dotenv from "dotenv";
 import { fileURLToPath } from "url";
