@@ -2,7 +2,7 @@ import { dirname } from "path";
 import dotenv from "dotenv";
 import { fileURLToPath } from "url";
 import Joi from "joi";
-import {qualificationModel} from "../server.js";
+import { qualificationModel } from "../server.js";
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const appDir = dirname(`${import.meta.filename}`);
 dotenv.config();

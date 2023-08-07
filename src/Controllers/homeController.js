@@ -1,9 +1,13 @@
 import Joi from "joi";
 import { dirname } from "path";
 import { fileURLToPath } from "url";
-import {superAdminModel} from "../server.js";
-import {centerModel} from "../server.js";
-import {centerAdminModel} from "../server.js";
+import {
+  centerModel,
+  centerAdminModel,
+  studentModel,
+  superAdminModel,
+} from "../server.js";
+
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const appDir = dirname(`${import.meta.filename}`);
 
