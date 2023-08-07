@@ -130,43 +130,16 @@ export const studentRegister = async (req, res, next) => {
 
 export const generateRollNumber = async (req, res, next) => {
   try {
-    const {
-      paymentId,
-      orderId,
-      centerId,
-      studentId,
-      mobile,
-      courseId,
-    } = req.body;
+    const { studentId } = req.body;
 
     const schema = Joi.object({
-      paymentId: Joi.string()
-        .regex(/^[0-9a-fA-F]{24}$}/)
-        .required(),
-      orderId: Joi.string()
-        .regex(/^[0-9a-fA-F]{24}$}/)
-        .required(),
-      centerId: Joi.string()
-        .regex(/^[0-9a-fA-F]{24}$}/)
-        .required(),
       studentId: Joi.string()
         .regex(/^[0-9a-fA-F]{24}$}/)
-        .required(),
-      courseId: Joi.string()
-        .regex(/^[0-9a-fA-F]{24}$}/)
-        .required(),
-      mobile: Joi.string()
-        .length(10)
         .required(),
     });
 
     let data = {
-      paymentId,
-      orderId,
-      centerId,
       studentId,
-      mobile,
-      courseId,
     };
     const { error, value } = schema.validate(data);
     if (error) {
@@ -198,6 +171,7 @@ export const generateRollNumber = async (req, res, next) => {
     });
     const rollNumber = `${(count % 1000) +
       1}${`${new Date().getFullYear()}`.slice(-2)}${regCenter.franchiseCode}`;
+      
     const updateStudent = await studentModel.findByIdAndUpdate(studentId, {
       $set: { rollNumber: rollNumber },
     });
@@ -214,17 +188,21 @@ export const getallStudent = async (req, res, next) => {
   try {
     let center;
     if (req.query.centerId) {
-      center = await studentModel.find({
-        isActive: true,
-        centerId: req.query.centerId,
-      }).populate("centerId");
+      center = await studentModel
+        .find({
+          isActive: true,
+          centerId: req.query.centerId,
+        })
+        .populate("centerId");
     } else {
-      center = await studentModel.find({ isActive: true }).populate({path:"centerId", model:centerModel});
+      center = await studentModel
+        .find({ isActive: true })
+        .populate({ path: "centerId", model: centerModel });
     }
-    
+
     return res.status(200).send({ data: center, status: "ok" });
   } catch (err) {
-    console.log(err)
+    console.log(err);
     return res.status(500).send({ message: err, status: "fail" });
   }
 };
