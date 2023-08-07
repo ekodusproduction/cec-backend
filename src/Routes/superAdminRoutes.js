@@ -19,8 +19,9 @@ router
   .get(verifyToken, isSuperAdmin, getSuperAdmin)
   .put(verifyToken, isSuperAdmin, updateSuperAdmin)
   .delete(verifyToken, isSuperAdmin, deleteSuperAdmin);
-
+  
 router.route("/superadmin/login").post(loginSuperAdmin);
+
 
 export const superAdminRoutes = router;
 export default superAdminRoutes;

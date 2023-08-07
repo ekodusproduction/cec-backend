@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import centerModel from "./centerModel.js";
+import centerModel from "./centerModel.js"; 
 const Schema = mongoose.Schema;
 
 const studentSchema = new Schema(
@@ -94,7 +94,7 @@ const studentSchema = new Schema(
       {
         courseId: {
           type: mongoose.Schema.Types.ObjectId,
-          ref: "center",
+          ref: "course",
           validate: {
             validator: (value) => mongoose.Types.ObjectId.isValid(value),
             message: "{VALUE} is not a valid ObjectId",
