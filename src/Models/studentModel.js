@@ -153,5 +153,5 @@ studentSchema.pre(/^find/, function(next) {
   next();
 });
 
-const studentModel = mongoose.model("students", studentSchema, "student");
-export default studentModel;
+// const studentModel = mongoose.model("students", studentSchema, "student");
+export default studentSchema;

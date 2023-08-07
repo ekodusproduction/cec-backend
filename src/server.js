@@ -6,30 +6,30 @@ import path from "path"
 import { dirname } from "path";
 import { fileURLToPath } from "url";
 
-import superAdminModel from "./Models/superAdminModel.js";
-import centerAdminModel from "./Models/centerAdminModel.js";
-import centerModel from "./Models/centerModel.js";
-import courseModel from "./Models/courseModel.js";
-import categoryModel from "./Models/courseCategoryModel.js";
-import qualificationModel from "./Models/qualificationModel.js";
-import studentModel from "./Models/studentModel.js";
-import orderModel from "./Models/orderModel.js";
-import paymentsModel from "./Models/paymentModel.js";
+import superAdminSchema from "./Models/superAdminModel.js";
+import centerAdminSchema from "./Models/centerAdminModel.js";
+import centerSchema from "./Models/centerModel.js";
+import courseSchema from "./Models/courseModel.js";
+import categorySchema from "./Models/courseCategoryModel.js";
+import qualificaitonSchema from "./Models/qualificationModel.js";
+import studentSchema from "./Models/studentModel.js";
+import orderSchema from "./Models/orderModel.js";
+import paymentSchema from "./Models/paymentModel.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
 dotenv.config({path:path.join(__dirname,"../.env") });
 import { app } from "./app.js";
 
-mongoose.model("superAdmin", superAdminModel)
-mongoose.model("centerAdmin", centerAdminModel)
-mongoose.model("center", centerModel)
-mongoose.model("course", courseModel)
-mongoose.model("category", categoryModel)
-mongoose.model("qualification", qualificationModel)
-mongoose.model("student", studentModel)
-mongoose.model("order", orderModel)
-mongoose.model("payment", paymentsModel)
+mongoose.model("superAdmin", superAdminSchema, "superAdmin")
+mongoose.model("centerAdmin", centerAdminSchema, "centerAdmin")
+mongoose.model("center", centerSchema,"center")
+mongoose.model("course", courseSchema, "course")
+mongoose.model("category", categorySchema, "category")
+mongoose.model("qualification", qualificaitonSchema, "qualification")
+mongoose.model("student", studentSchema, "student")
+mongoose.model("order", orderSchema, "order")
+mongoose.model("payment", paymentSchema,"payment")
 
 
 

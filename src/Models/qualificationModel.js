@@ -21,9 +21,9 @@ qualificaitonSchema.pre(/^find/, function(next) {
   next();
 });
 
-const qualificationModel = mongoose.model(
-  "qualifications",
-  qualificaitonSchema,
-  "qualification"
-);
-export default qualificationModel;
+// const qualificationModel = mongoose.model(
+//   "qualifications",
+//   qualificaitonSchema,
+//   "qualification"
+// );
+export default qualificaitonSchema;
