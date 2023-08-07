@@ -200,10 +200,11 @@ export const getallStudent = async (req, res, next) => {
       const year = date.getFullYear();
       return `${day}/${month}/${year}`;
     };
-    center = center.map((e) => {
+
+    center.forEach((e) => {
       e.createdAt = formatDate(e.createdAt);
-      return e;
     });
+
     return res.status(200).send({ data: center, status: "ok" });
   } catch (err) {
     console.log(err);
