@@ -16,7 +16,7 @@ export const createQualification = async (req, res, next) => {
 
     const schema = Joi.object({
       qualification: Joi.string()
-        .min(3)
+        .min(2)
         .required(),
       value: Joi.string()
         .min(1)
