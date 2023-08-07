@@ -26,4 +26,4 @@ const qualificationModel = mongoose.model(
   qualificaitonSchema,
   "qualification"
 );
-export default qualificaitonSchema;
+export default qualificationModel;

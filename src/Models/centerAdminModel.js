@@ -71,4 +71,4 @@ const centerAdminModel = mongoose.model(
   "centerAdmin"
 );
 
-export default centerAdminSchema;
+export default centerAdminModel;

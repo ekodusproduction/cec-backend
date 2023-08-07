@@ -119,4 +119,4 @@ centerSchema.pre(/^find/, function(next) {
 
 const centerModel = mongoose.model("centers", centerSchema, "center");
 
-export default centerSchema;
+export default centerModel;

@@ -45,4 +45,4 @@ orderSchema.pre(/^find/, function (next) {
 });
 
 const orderModel = mongoose.model("orders", orderSchema, "order");
-export default orderSchema;
+export default orderModel;

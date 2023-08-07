@@ -61,4 +61,4 @@ courseSchema.pre(/^find/, function(next) {
 });
 
 const courseModel = mongoose.model("courses", courseSchema, "course");
-export default courseSchema;
+export default courseModel;

@@ -21,4 +21,4 @@ categorySchema.pre(/^find/, function(next) {
 });
 
 const categoryModel = mongoose.model("categories", categorySchema, "category");
-export default categorySchema;
+export default categoryModel;

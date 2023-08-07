@@ -51,4 +51,4 @@ const superAdminModel = mongoose.model(
   "superAdmin"
 );
 
-export default superAdminSchema;
+export default superAdminModel;
