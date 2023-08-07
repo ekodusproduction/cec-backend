@@ -187,13 +187,13 @@ export const getallStudent = async (req, res, next) => {
           isActive: true,
           centerId: req.query.centerId,
         })
+        .populate({ path: "centerId", model: centerModel })
         .populate({ path: "centerId", model: centerModel });
     } else {
       center = await studentModel
         .find({ isActive: true })
         .populate({ path: "centerId", model: centerModel });
     }
-
 
     return res.status(200).send({ data: center, status: "ok" });
   } catch (err) {
@@ -213,7 +213,7 @@ export const getallInactiveStudent = async (req, res, next) => {
 
 export const getStudent = async (req, res, next) => {
   try {
-    if (!req.params.centerId) {
+    if (!req.params.centerid) {
       return res.status(400).send({
         data: { message: "invalid request. please provide centerId" },
         status: "fail",
