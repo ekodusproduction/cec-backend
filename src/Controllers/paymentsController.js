@@ -1,45 +1,77 @@
+import centerModel from "../Models/centerModel.js";
 import courseModel from "../Models/courseModel.js";
 import paymentsModel from "../Models/paymentModel.js";
 import studentModel from "../Models/studentModel.js";
+import Joi from "joi";
 
-export const createOrder = async (req, res, next) => {
+export const savePayments = async (req, res, next) => {
   try {
-    const { studentId, courseId } = req.body;
-    const studentExist = await studentModel.countDocuments({
-      _id: studentId.studentId,
-    });
-    if (studentExist == 0) {
-      return res
-        .status(400)
-        .send({
-          message: "invalid request. please send valid student id",
-          status: "fail",
-        });
-    }
-
-    const courseExist = await courseModel.countDocuments({
-      _id: courseId.courseId,
-    });
-    if (courseExist == 0) {
-      return res
-        .status(400)
-        .send({
-          message: "invalid request. please send valid course id",
-          status: "fail",
-        });
-    }
-
-    const data = { studentId, courseId };
+    const {
+      key,
+      api_version,
+      txnid,
+      amount,
+      productinfo,
+      firstname,
+      email,
+      phone,
+      lastname,
+      address1,
+      address2,
+      city,
+      state,
+      country,
+      zipcode,
+      surl,
+      furl,
+      hash,
+      udf1,
+      udf2,
+      udf3,
+      udf4,
+      udf5,
+      codurl,
+      pg,
+      drop_category,
+      enforce_paymethod,
+      custom_note,
+      note_category,
+      display_lang,
+    } = req.body;
+    const data = {
+      key,
+      api_version,
+      txnid,
+      amount,
+      productinfo,
+      firstname,
+      email,
+      phone,
+      lastname,
+      address1,
+      address2,
+      city,
+      state,
+      country,
+      zipcode,
+      surl,
+      furl,
+      hash,
+      udf1,
+      udf2,
+      udf3,
+      udf4,
+      udf5,
+      codurl,
+      pg,
+      drop_category,
+      enforce_paymethod,
+      custom_note,
+      note_category,
+      display_lang,
+    };
     const payment = await paymentsModel.create(data);
-  } catch (err) {
-    return res
-      .status(500)
-      .send({ message: "Internal server error", status: "fail" });
-  }
-};
-
-export const updateOrder = async (req, res, next) => {
-  try {
+    return res.status(201).send({ data: payment, status: "ok" });
   } catch (err) {
     return res
       .status(500)

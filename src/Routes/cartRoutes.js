@@ -1,9 +1,9 @@
 import { Router } from "express";
 import { verifyToken } from "../Auth/authorization.js";
-import { savePayments } from "../Controllers/paymentsController.js";
+import { createCart } from "../Controllers/cartController.js";
 const router = Router();
 
-router.route("/payments/savePayments").put(verifyToken, savePayments);
+router.route("/cart/createCart").post(verifyToken, createCart);
 
 const centerRoutes = router;
 export default centerRoutes;

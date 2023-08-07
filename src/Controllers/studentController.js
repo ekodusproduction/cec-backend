@@ -228,22 +228,16 @@ export const getStudent = async (req, res, next) => {
 
 export const addNewCourse = async (req, res, next) => {
   try {
-    const { id, courseId, paymentId, orderId, centerId } = req.body;
+    const { id, courseId, paymentId } = req.body;
 
     const schema = Joi.object({
       id: Joi.string()
         .regex(/^[0-9a-fA-F]{24}$}/)
         .required(),
-      course: Joi.string()
+      courseId: Joi.string()
         .regex(/^[0-9a-fA-F]{24}$}/)
         .required(),
       paymentId: Joi.string()
-        .regex(/^[0-9a-fA-F]{24}$}/)
-        .required(),
-      orderId: Joi.string()
-        .regex(/^[0-9a-fA-F]{24}$}/)
-        .required(),
-      centerId: Joi.string()
         .regex(/^[0-9a-fA-F]{24}$}/)
         .required(),
     });
@@ -252,8 +246,6 @@ export const addNewCourse = async (req, res, next) => {
       id,
       courseId,
       paymentId,
-      orderId,
-      centerId,
     };
     const { error, value } = schema.validate(data);
     if (error) {
@@ -262,9 +254,12 @@ export const addNewCourse = async (req, res, next) => {
         .send({ message: error.details[0].message, status: "fail" });
     }
 
-    const student = await studentModel.findByIdAndUpdate(id, {
-      $addToSet: { courseId },
-    });
+    const student = await studentModel.findByIdAndUpdate(
+      { _id: id },
+      { $addToSet: { course: courseId } },
+      { new: true }
+    );
+
     return res.status(200).send({ data: student, status: "ok" });
   } catch (err) {
     return res.status(500).send({ message: err.message, status: "fail" });

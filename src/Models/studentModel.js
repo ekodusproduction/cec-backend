@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import centerModel from "./centerModel.js"; 
+import centerModel from "./centerModel.js";
 const Schema = mongoose.Schema;
 
 const studentSchema = new Schema(
@@ -92,23 +92,23 @@ const studentSchema = new Schema(
 
     course: [
       {
-        courseId: {
-          type: mongoose.Schema.Types.ObjectId,
-          ref: "course",
-          validate: {
-            validator: (value) => mongoose.Types.ObjectId.isValid(value),
-            message: "{VALUE} is not a valid ObjectId",
-          },
-        },
-        paymentStatus: {
-          type: String,
-          enum: ["paid", "unpaid"],
-          default: "unpaid",
-          validate: {
-            validator: (value) => ["paid", "unpaid"].includes(value),
-            message: "{VALUE} is not a valid payment status",
-          },
-        },
+        // courseId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "course",
+        //   validate: {
+        //     validator: (value) => mongoose.Types.ObjectId.isValid(value),
+        //     message: "{VALUE} is not a valid ObjectId",
+        //   },
+        // },
+        // paymentStatus: {
+        //   type: String,
+        //   enum: ["paid", "unpaid"],
+        //   default: "unpaid",
+        //   validate: {
+        //     validator: (value) => ["paid", "unpaid"].includes(value),
+        //     message: "{VALUE} is not a valid payment status",
+        //   },
+        // },
       },
     ],
 
