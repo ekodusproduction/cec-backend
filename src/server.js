@@ -21,6 +21,18 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 dotenv.config({path:path.join(__dirname,"../.env") });
 import { app } from "./app.js";
 
+mongoose.model("superAdmin", superAdminModel)
+mongoose.model("centerAdmin", centerAdminModel)
+mongoose.model("center", centerModel)
+mongoose.model("course", courseModel)
+mongoose.model("category", categoryModel)
+mongoose.model("qualification", qualificationModel)
+mongoose.model("student", studentModel)
+mongoose.model("order", orderModel)
+mongoose.model("payment", paymentsModel)
+
+
+
 const uri = process.env.MONGODB_URI 
 mongoose
   .connect(uri, {
