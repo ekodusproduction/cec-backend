@@ -1,4 +1,4 @@
-import courseModel from "../Models/centerModel.js";
+import courseModel from "../Models/courseModel.js";
 import paymentsModel from "../Models/paymentModel.js";
 import studentModel from "../Models/studentModel.js";
 
