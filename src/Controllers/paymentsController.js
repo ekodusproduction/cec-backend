@@ -2,7 +2,7 @@ import {
   paymentsModel,
   studentModel,
   courseModel,
-} from "../Models/paymentModel.js";
+} from "../server.js";
 
 export const createOrder = async (req, res, next) => {
   try {
