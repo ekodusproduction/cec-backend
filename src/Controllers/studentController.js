@@ -171,7 +171,7 @@ export const generateRollNumber = async (req, res, next) => {
     });
     const rollNumber = `${(count % 1000) +
       1}${`${new Date().getFullYear()}`.slice(-2)}${regCenter.franchiseCode}`;
-      
+
     const updateStudent = await studentModel.findByIdAndUpdate(studentId, {
       $set: { rollNumber: rollNumber },
     });
@@ -193,7 +193,7 @@ export const getallStudent = async (req, res, next) => {
           isActive: true,
           centerId: req.query.centerId,
         })
-        .populate("centerId");
+        .populate({ path: "centerId", model: centerModel });
     } else {
       center = await studentModel
         .find({ isActive: true })

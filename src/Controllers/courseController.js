@@ -7,6 +7,7 @@ import Joi from "joi";
 import APIFeatures from "../Utils/apiFeatures.js";
 import courseModel from "../Models/courseModel.js";
 import qualificationModel from "../Models/qualificationModel.js";
+import categoryModel from "../Models/courseCategoryModel.js";
 
 export const createCourse = async (req, res, next) => {
   try {
@@ -69,8 +70,8 @@ export const createCourse = async (req, res, next) => {
     const course = await courseModel.create(createCourse);
     const DATA = await courseModel
       .findById(course._id)
-      .populate("qualificationType")
-      .populate("category");
+      .populate({ path: "qualificationType", model: qualificationModel })
+      .populate({ path: "category", model: categoryModel });
 
     return res.status(201).send({
       data: DATA,
@@ -86,8 +87,9 @@ export const getCourse = async (req, res, next) => {
   try {
     const courses = await courseModel
       .find({})
-      .populate("qualificationType")
-      .populate("category");
+      .populate({ path: "qualificationType", model: qualificationModel })
+      .populate({ path: "category", model: categoryModel });
+
     return res.status(200).send({ data: courses, status: "ok" });
   } catch (err) {
     return res.status(500).send({ message: err.message, status: "fail" });
@@ -113,8 +115,9 @@ export const filterCourses = async (req, res, next) => {
     console.log(qualification);
     let courses = await courseModel
       .find({})
-      .populate("qualificationType")
-      .populate("category");
+      .populate({ path: "qualificationType", model: qualificationModel })
+      .populate({ path: "category", model: categoryModel });
+
 
     courses = courses.filter(
       (item) => item.qualificationType.value <= qualification.value
