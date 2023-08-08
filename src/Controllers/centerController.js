@@ -80,7 +80,7 @@ export const createcenter = async (req, res, next) => {
       alternateNumber,
       whatsApp,
       email,
-      whatsAppCenterAdmin,
+      adminMobile,
       centerCode,
     } = req.body;
 
@@ -96,7 +96,7 @@ export const createcenter = async (req, res, next) => {
       alternateNumber: Joi.number(),
       whatsApp: Joi.number().required(),
       email: Joi.string().required(),
-      whatsAppCenterAdmin: Joi.number().required(),
+      adminMobile: Joi.number().required(),
     });
 
     let data = {
@@ -111,7 +111,7 @@ export const createcenter = async (req, res, next) => {
       alternateNumber,
       whatsApp,
       email,
-      whatsAppCenterAdmin,
+      adminMobile,
     };
     const { error, value } = schema.validate(data);
     if (error) {
@@ -120,7 +120,7 @@ export const createcenter = async (req, res, next) => {
         .send({ message: error.details[0].message, status: "fail" });
     }
 
-    if (!whatsAppCenterAdmin) {
+    if (!adminMobile) {
       return res
         .status(400)
         .send({ data: { message: "provide admin loginId" }, status: "fail" });
@@ -134,7 +134,7 @@ export const createcenter = async (req, res, next) => {
     data.dateofReg = convertToDate(dateofReg);
     const count = await centerModel.countDocuments();
     const centerAdmin = await centerAdminModel.findOne({
-      whatsApp: whatsAppCenterAdmin,
+      mobile: adminMobile,
     });
     if (!centerAdmin) {
       return res.status(200).send({
