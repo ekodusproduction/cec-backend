@@ -20,7 +20,7 @@ export const loginCenteradmin = async (req, res, next) => {
       password: Joi.string().required(),
     });
 
-    let data = { whatsApp, password };
+    let data = { mobile, password };
     const { error, value } = schema.validate(data);
     if (error) {
       return res
