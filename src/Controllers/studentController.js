@@ -185,32 +185,35 @@ export const getallStudent = async (req, res, next) => {
     let doc;
     if (req.query.centerId) {
       center = new APIFeatures(
-        studentModel.find({
-          isActive: true,
-          centerId: req.query.centerId,
-        }),
+        studentModel
+          .find({
+            isActive: true,
+            centerId: req.query.centerId,
+          })
+          .populate({ path: "centerId", model: centerModel })
+          .populate({ path: "course", model: courseModel }),
         req.query
       )
         .filter()
         .sort()
         .limitFields()
-        .paginate()
-        .populate({ path: "centerId", model: centerModel })
-        .populate({ path: "course", model: courseModel });
+        .paginate();
       doc = await center.query;
     } else {
       center = new APIFeatures(
-        studentModel.find({
-          isActive: true,
-        }),
+        studentModel
+          .find({
+            isActive: true,
+          })
+          .populate({ path: "centerId", model: centerModel })
+          .populate({ path: "course", model: courseModel }),
         req.query
       )
         .filter()
         .sort()
         .limitFields()
-        .paginate()
-        .populate({ path: "centerId", model: centerModel })
-        .populate({ path: "course", model: courseModel });
+        .paginate();
+
       doc = await center.query;
     }
 
