@@ -147,7 +147,7 @@ export const createcenter = async (req, res, next) => {
     const center = await centerModel.create(data);
     const user = await centerAdminModel.findOneAndUpdate(
       {
-        whatsApp: whatsAppCenterAdmin,
+        mobile: adminMobile,
       },
       { $addToSet: { centers: center._id } }
     );
