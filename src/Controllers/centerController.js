@@ -112,7 +112,7 @@ export const createcenter = async (req, res, next) => {
       email,
       adminMobile,
     };
-    if(alternateNumber){
+    if(alternateNumber != ""){
       data.alternateNumber = alternateNumber
     }
     const { error, value } = schema.validate(data);
