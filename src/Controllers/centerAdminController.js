@@ -125,7 +125,7 @@ export const createcenterAdmin = async (req, res, next) => {
     // sendMessage(text, mobile);
     return res.status(200).send({ data: user, status: "ok" });
   } catch (err) {
-    return res.status(500).send({ message: err.message, status: "fail" });
+    return res.status(500).send({ message: err, status: "fail" });
   }
 };
 
