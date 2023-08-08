@@ -122,7 +122,7 @@ export const createcenterAdmin = async (req, res, next) => {
     let user = await centerAdminModel.create(data);
     user.password = null;
     const text = `centerAdmin created successfully. please login using your email ${email} and password ${password}`;
-    sendMessage(text, whatsApp);
+    // sendMessage(text, mobile);
     return res.status(200).send({ data: user, status: "ok" });
   } catch (err) {
     return res.status(500).send({ message: err.message, status: "fail" });
