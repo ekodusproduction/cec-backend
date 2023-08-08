@@ -6,6 +6,7 @@ import { dirname, join } from "path";
 import { fileURLToPath } from "url";
 import Joi from "joi";
 import { sendMessage } from "../Airtel/airtel.js";
+import courseModel from "../Models/courseModel.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const appDir = dirname(`${import.meta.filename}`);
@@ -181,18 +182,36 @@ export const generateRollNumber = async (req, res, next) => {
 export const getallStudent = async (req, res, next) => {
   try {
     let center;
+    let doc;
     if (req.query.centerId) {
-      center = await studentModel
-        .find({
+      center = new APIFeatures(
+        studentModel.find({
           isActive: true,
           centerId: req.query.centerId,
-        })
+        }),
+        req.query
+      )
+        .filter()
+        .sort()
+        .limitFields()
+        .paginate()
         .populate({ path: "centerId", model: centerModel })
-        .populate({ path: "centerId", model: centerModel });
+        .populate({ path: "course", model: courseModel });
+      doc = await center.query;
     } else {
-      center = await studentModel
-        .find({ isActive: true })
-        .populate({ path: "centerId", model: centerModel });
+      center = new APIFeatures(
+        studentModel.find({
+          isActive: true,
+        }),
+        req.query
+      )
+        .filter()
+        .sort()
+        .limitFields()
+        .paginate()
+        .populate({ path: "centerId", model: centerModel })
+        .populate({ path: "course", model: courseModel });
+      doc = await center.query;
     }
 
     return res.status(200).send({ data: center, status: "ok" });

@@ -70,7 +70,7 @@ export const getAllCentersUnderAdmin = async (req, res, next) => {
 export const createcenter = async (req, res, next) => {
   try {
     let {
-      firmName,
+      centerName,
       dateofReg,
       address,
       landmark,
@@ -81,24 +81,27 @@ export const createcenter = async (req, res, next) => {
       whatsApp,
       email,
       whatsAppCenterAdmin,
+      centerCode,
     } = req.body;
 
     const schema = Joi.object({
-      firmName: Joi.string().required(),
+      centerName: Joi.string().required(),
+      centerCode: Joi.string().required(),
       dateofReg: Joi.string().required(),
       address: Joi.string().required(),
       landmark: Joi.string().required(),
       pinCode: Joi.number().required(),
       district: Joi.string().required(),
       state: Joi.string().required(),
-      alternateNumber: Joi.number().required(),
+      alternateNumber: Joi.number(),
       whatsApp: Joi.number().required(),
       email: Joi.string().required(),
       whatsAppCenterAdmin: Joi.number().required(),
     });
 
     let data = {
-      firmName,
+      centerName,
+      centerCode,
       dateofReg,
       address,
       landmark,
@@ -120,14 +123,13 @@ export const createcenter = async (req, res, next) => {
     if (!whatsAppCenterAdmin) {
       return res
         .status(400)
-        .send({ data: { message: "provide whatsapp" }, status: "fail" });
+        .send({ data: { message: "provide admin loginId" }, status: "fail" });
     }
 
     const convertToDate = (DOB) => {
       const [year, day, month] = DOB.split("-").map(Number);
       return new Date(year, month - 1, day); // Month is 0-based in JavaScript Date, so subtract 1 from the month value.
     };
-
 
     data.dateofReg = convertToDate(dateofReg);
     const count = await centerModel.countDocuments();

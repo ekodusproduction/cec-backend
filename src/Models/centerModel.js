@@ -61,7 +61,7 @@ const centerSchema = new Schema(
       required: "franchise date of registration required",
     },
 
-    firmName: {
+    centerName: {
       type: String,
       maxLength: 60,
       required: "franchise name required",
@@ -90,7 +90,6 @@ const centerSchema = new Schema(
     },
     alternateNumber: {
       type: Number,
-      required: "center alternate mobile required",
       validate: {
         validator: (v) => v.toString().length == 10,
         message: "enter 10 digit number",
