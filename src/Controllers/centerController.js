@@ -108,11 +108,13 @@ export const createcenter = async (req, res, next) => {
       pinCode,
       district,
       state,
-      alternateNumber,
       whatsApp,
       email,
       adminMobile,
     };
+    if(alternateNumber){
+      data.alternateNumber = alternateNumber
+    }
     const { error, value } = schema.validate(data);
     if (error) {
       return res
