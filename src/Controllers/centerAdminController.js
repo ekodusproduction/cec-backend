@@ -89,7 +89,7 @@ export const createcenterAdmin = async (req, res, next) => {
 
     let data = {
       adminName,
-      alternateNumber,
+      
       email,
       address,
       pinCode,
@@ -98,6 +98,9 @@ export const createcenterAdmin = async (req, res, next) => {
       password,
       mobile,
     };
+    if(alternateNumber != ""){
+      data.alternateNumber = alternateNumber
+    }
     const { error, value } = schema.validate(data);
     if (error) {
       return res
