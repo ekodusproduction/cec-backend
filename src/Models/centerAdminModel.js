@@ -44,7 +44,7 @@ const centerAdminSchema = new Schema(
       validate: {
         validator: (v) => v.toString().length == 10,
         message: "enter 10 digit number",
-      },
+      }
     },
     address: { type: String, required: "address required" },
     district: { type: String, required: "district required" },

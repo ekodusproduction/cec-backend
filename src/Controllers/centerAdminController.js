@@ -77,7 +77,7 @@ export const createcenterAdmin = async (req, res, next) => {
 
     const schema = Joi.object({
       adminName: Joi.string().required(),
-      alternateNumber: Joi.string().required(),
+      alternateNumber: Joi.string(),
       email: Joi.string().required(),
       address: Joi.string().required(),
       pinCode: Joi.string().required(),
