@@ -31,13 +31,28 @@ export const loginCenteradmin = async (req, res, next) => {
     const centerAdmin = await centerAdminModel
       .findOne({ whatsApp })
       .populate("centers");
-    console.log("hi", centerAdmin);
+
+    if (centerAdmin == null) {
+      return res.status(400).send({
+        data: { message: "whatsApp doesnt exist. Please register" },
+        status: "fail",
+      });
+    }
+
     const isCorrectPassword = await bcrypt.compare(
       password,
       centerAdmin.password
     );
+    
+    if (!isPasswordCorrect) {
+      return res.status(400).send({
+        data: { message: "Incorrect password. Please try again" },
+        status: "fail",
+      });
+    }
     const token = generateToken(centerAdmin._id);
     centerAdmin.password = null;
+
     return res
       .status(200)
       .send({ data: centerAdmin, token: token, status: "ok" });
@@ -174,7 +189,7 @@ export const updatecenterAdmin = async (req, res, next) => {
 export const fileUpload = async (req, res, next) => {
   try {
     const file = req.files[0];
-    console.log(file)
+    console.log(file);
     if (!file) {
       return res
         .status(400)
