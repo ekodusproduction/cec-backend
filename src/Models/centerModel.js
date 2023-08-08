@@ -60,7 +60,12 @@ const centerSchema = new Schema(
       type: Date,
       required: "franchise date of registration required",
     },
-
+    centerCode: {
+      type: String,
+      maxLength: 60,
+      required: "Center code required",
+      cast: "{VALUE} is not a String",
+    },
     centerName: {
       type: String,
       maxLength: 60,
