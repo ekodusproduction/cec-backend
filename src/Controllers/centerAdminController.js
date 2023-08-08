@@ -64,7 +64,7 @@ export const loginCenteradmin = async (req, res, next) => {
 export const createcenterAdmin = async (req, res, next) => {
   try {
     const {
-      nameHoi,
+      adminName,
       alternateNumber,
       email,
       address,
@@ -72,11 +72,11 @@ export const createcenterAdmin = async (req, res, next) => {
       state,
       district,
       password,
-      whatsApp,
+      mobile,
     } = req.body;
 
     const schema = Joi.object({
-      nameHoi: Joi.string().required(),
+      adminName: Joi.string().required(),
       alternateNumber: Joi.string().required(),
       email: Joi.string().required(),
       address: Joi.string().required(),
@@ -84,11 +84,11 @@ export const createcenterAdmin = async (req, res, next) => {
       state: Joi.string().required(),
       district: Joi.string().required(),
       password: Joi.string().required(),
-      whatsApp: Joi.string().required(),
+      mobile: Joi.string().required(),
     });
 
     let data = {
-      nameHoi,
+      adminName,
       alternateNumber,
       email,
       address,
@@ -96,7 +96,7 @@ export const createcenterAdmin = async (req, res, next) => {
       state,
       district,
       password,
-      whatsApp,
+      mobile,
     };
     const { error, value } = schema.validate(data);
     if (error) {
@@ -109,14 +109,14 @@ export const createcenterAdmin = async (req, res, next) => {
     const salt = await bcrypt.genSalt(saltRounds);
     const encryptedPassword = await bcrypt.hash(password, salt);
     data = {
-      nameHoi,
+      adminName,
       alternateNumber,
       email,
       address,
       pinCode,
       state,
       district,
-      whatsApp,
+      mobile,
       password: encryptedPassword,
     };
     let user = await centerAdminModel.create(data);

@@ -4,7 +4,7 @@ const Schema = mongoose.Schema;
 
 const centerAdminSchema = new Schema(
   {
-    nameHoi: {
+    adminName: {
       type: String,
       required: "center admin name required",
       cast: "{VALUE} is not a String",
@@ -30,7 +30,7 @@ const centerAdminSchema = new Schema(
     },
     isSuperAdmin: { type: Boolean, default: false },
     centers: [{ type: Schema.Types.ObjectId, ref: "centers" }],
-    whatsApp: {
+    mobile: {
       type: Number,
       required: "whatsapp number required",
       validate: {
