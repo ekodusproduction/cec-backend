@@ -13,10 +13,10 @@ var baseUrl = `139.59.83.187`;
 
 export const loginCenteradmin = async (req, res, next) => {
   try {
-    const { whatsApp, password } = req.body;
+    const { mobile, password } = req.body;
 
     const schema = Joi.object({
-      whatsApp: Joi.string().required(),
+      mobile: Joi.string().required(),
       password: Joi.string().required(),
     });
 
@@ -29,7 +29,7 @@ export const loginCenteradmin = async (req, res, next) => {
     }
 
     const centerAdmin = await centerAdminModel
-      .findOne({ whatsApp })
+      .findOne({ mobile })
       .populate("centers");
 
     if (centerAdmin == null) {
