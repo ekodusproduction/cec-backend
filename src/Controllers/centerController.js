@@ -132,7 +132,7 @@ export const createcenter = async (req, res, next) => {
     };
 
     data.dateofReg = convertToDate(dateofReg);
-    const count = await centerModel.countDocuments();
+    // const count = await centerModel.countDocuments();
     const centerAdmin = await centerAdminModel.findOne({
       mobile: adminMobile,
     });
@@ -142,7 +142,7 @@ export const createcenter = async (req, res, next) => {
         status: "fail",
       });
     }
-    data["centerId"] = `${(count + 1).toString().padStart(3, "0")}`;
+    // data["centerId"] = `${(count + 1).toString().padStart(3, "0")}`;
     data["headOfInstitute"] = centerAdmin._id;
     const center = await centerModel.create(data);
     const user = await centerAdminModel.findOneAndUpdate(

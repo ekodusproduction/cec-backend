@@ -45,12 +45,12 @@ const orderSchema = Schema({
 });
 const centerSchema = new Schema(
   {
-    centerId: {
-      type: String,
-      required: "franchise code required",
-      unique: true,
-      cast: "{VALUE} is not a String",
-    },
+    // centerId: {
+    //   type: String,
+    //   required: "franchise code required",
+    //   unique: true,
+    //   cast: "{VALUE} is not a String",
+    // },
     headOfInstitute: {
       type: Schema.Types.ObjectId,
       ref: "centerAdmin",
@@ -69,6 +69,7 @@ const centerSchema = new Schema(
     centerName: {
       type: String,
       maxLength: 60,
+      unique:true,
       required: "franchise name required",
       cast: "{VALUE} is not a String",
     },
