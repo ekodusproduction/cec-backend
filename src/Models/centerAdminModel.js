@@ -37,6 +37,7 @@ const centerAdminSchema = new Schema(
         validator: (v) => v.toString().length == 10,
         message: "enter 10 digit number",
       },
+      unique:true,
     },
     alternateNumber: {
       type: Number,

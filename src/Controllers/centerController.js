@@ -138,7 +138,7 @@ export const createcenter = async (req, res, next) => {
     });
     if (!centerAdmin) {
       return res.status(200).send({
-        data: "Invalid request. Please provide valid whatsapp number",
+        data: "Invalid request. Please provide valid mobile number",
         status: "fail",
       });
     }
