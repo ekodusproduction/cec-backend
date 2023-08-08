@@ -4,53 +4,32 @@ import { fileURLToPath } from "url";
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const appDir = dirname(`${import.meta.filename}`);
 
-import studentModel from "../Models/studentModel.js"
+import studentModel from "../Models/studentModel.js";
 
 export const getHomeCenter = async (req, res, next) => {
   try {
-    // Calculate date one year ago from today
-    const oneYearAgo = new Date();
-    oneYearAgo.setFullYear(oneYearAgo.getFullYear() - 1);
+    const centerId = req.params.centerId; // Assuming centerId is in the request parameters
 
-    // Step 1: Get the number of students registered in each month of the last year
-    const studentsCountByMonth = await studentModel.aggregate([
-      {
-        $match: {
-          createdAt: { $gte: oneYearAgo }, // Filter students created in the last year
-        },
-      },
-      {
-        $group: {
-          _id: { $month: "$createdAt" }, // Group by the month of creation
-          count: { $sum: 1 }, // Count the number of students in each group
-        },
-      },
-      {
-        $project: {
-          month: "$_id", // Rename _id to month
-          count: 1, // Include the count field
-          _id: 0, // Exclude _id from the results
-        },
-      },
-      {
-        $sort: { month: 1 }, // Sort by month in ascending order (1 for ascending, -1 for descending)
-      },
-    ]);
+    const oneMonthAgo = new Date();
+    oneMonthAgo.setMonth(oneMonthAgo.getMonth() - 1);
 
-    // Step 2: Get the total number of students
-    const totalStudentsCount = await studentModel.countDocuments();
+    const studentsCountLastMonth = await studentModel.countDocuments({
+      centerId,
+      createdAt: { $gte: oneMonthAgo },
+    });
 
-    // Step 3: Get student details sorted by creation date in descending order
-    const studentsDetails = await studentModel
-      .find()
-      .sort({ createdAt: -1 })
-      .select("-createdAt -updatedAt -__v"); // Exclude unnecessary fields
+    const totalStudents = await studentModel.countDocuments({ centerId });
+
+    const studentsRegisteredPerMonth = await getRegisteredPerMonth(
+      studentModel,
+      centerId
+    );
 
     return res.status(200).send({
       data: {
-        studentsByMonth: studentsCountByMonth,
-        studentCount: totalStudentsCount,
-        studentsDetail: studentsDetails,
+        newStudentsLastMonth: studentsCountLastMonth,
+        totalStudents,
+        studentsRegisteredPerMonth,
       },
       status: "ok",
     });
@@ -62,50 +41,41 @@ export const getHomeCenter = async (req, res, next) => {
 export const getHomeSuper = async (req, res, next) => {
   try {
     // Calculate date one year ago from today
-    const oneYearAgo = new Date();
-    oneYearAgo.setFullYear(oneYearAgo.getFullYear() - 1);
+    const oneMonthAgo = new Date();
+    oneMonthAgo.setMonth(oneMonthAgo.getMonth() - 1);
 
-    // Step 1: Get the number of students registered in each month of the last year
-    const studentsCountByMonth = await studentModel.aggregate([
-      {
-        $match: {
-          createdAt: { $gte: oneYearAgo }, // Filter students created in the last year
-        },
-      },
-      {
-        $group: {
-          _id: { $month: "$createdAt" }, // Group by the month of creation
-          count: { $sum: 1 }, // Count the number of students in each group
-        },
-      },
-      {
-        $project: {
-          month: "$_id", // Rename _id to month
-          count: 1, // Include the count field
-          _id: 0, // Exclude _id from the results
-        },
-      },
-      {
-        $sort: { month: 1 }, // Sort by month in ascending order (1 for ascending, -1 for descending)
-      },
-    ]);
+    const studentsCountLastMonth = await studentModel.countDocuments({
+      createdAt: { $gte: oneMonthAgo },
+    });
 
-    // Step 2: Get the total number of students
-    const totalStudentsCount = await studentModel.countDocuments();
+    const totalCenters = await centerModel.countDocuments();
+    const totalStudents = await studentModel.countDocuments();
 
-    // Step 3: Get student details sorted by creation date in descending order
-    const studentsDetails = await studentModel
-      .find()
-      .sort({ createdAt: -1 })
-      .select("-createdAt -updatedAt -__v"); // Exclude unnecessary fields
+    const newCoursesLastMonth = await courseModel.find({
+      createdAt: { $gte: oneMonthAgo },
+    });
 
-    const newCenters = await centerModel.find().sort({ createdAt: -1 });
+    const totalCourses = await courseModel.countDocuments();
+
+    const newCentersLastMonth = await centerModel.find({
+      createdAt: { $gte: oneMonthAgo },
+    });
+
+    const studentsRegisteredPerMonth = await getRegisteredPerMonth(
+      studentModel
+    );
+    const centersRegisteredPerMonth = await getRegisteredPerMonth(centerModel);
+
     return res.status(200).send({
       data: {
-        studentsByMonth: studentsCountByMonth,
-        studentCount: totalStudentsCount,
-        studentsDetail: studentsDetails,
-        newCenters: newCenters,
+        newStudentsLastMonth: studentsCountLastMonth,
+        totalCenters,
+        totalStudents,
+        newCoursesLastMonth,
+        totalCourses,
+        newCentersLastMonth,
+        studentsRegisteredPerMonth,
+        centersRegisteredPerMonth,
       },
       status: "ok",
     });
