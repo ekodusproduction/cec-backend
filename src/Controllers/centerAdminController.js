@@ -44,7 +44,7 @@ export const loginCenteradmin = async (req, res, next) => {
       centerAdmin.password
     );
     
-    if (!isPasswordCorrect) {
+    if (!isCorrectPassword) {
       return res.status(400).send({
         data: { message: "Incorrect password. Please try again" },
         status: "fail",
