@@ -183,38 +183,30 @@ export const getallStudent = async (req, res, next) => {
   try {
     let center;
     let doc;
-    if (req.query.centerId) {
-      center = new APIFeatures(
-        studentModel
-          .find({
-            isActive: true,
-            centerId: req.query.centerId,
-          })
-          .populate({ path: "centerId", model: centerModel })
-          .populate({ path: "course", model: courseModel }),
-        req.query
-      )
-        .filter()
-        .sort()
-        .limitFields()
-        .paginate();
-      doc = await center.query;
-    } else {
-      center = new APIFeatures(
-        studentModel
-          .find({
-            isActive: true,
-          })
-          .populate({ path: "centerId", model: centerModel })
-          .populate({ path: "course", model: courseModel }),
-        req.query
-      )
-        .filter()
-        .sort()
-        .limitFields()
-        .paginate();
+    let page = req.query.page * 1 || 1;
 
-      doc = await center.query;
+    let limit = req.query.limit * 1 || 20;
+    const skip = (page - 1) * limit;
+    const sort = req.query.sort || "-createdAt";
+    if (req.query.centerId) {
+      center = await studentModel
+        .find({
+          isActive: true,
+          centerId: req.query.centerId,
+        })
+        .skip(skip)
+        .limit(limit)
+        .populate({ path: "centerId", model: centerModel })
+        .populate({ path: "course", model: courseModel });
+    } else {
+      center = studentModel
+        .find({
+          isActive: true,
+        })
+        .skip(skip)
+        .limit(limit)
+        .populate({ path: "centerId", model: centerModel })
+        .populate({ path: "course", model: courseModel });
     }
 
     return res.status(200).send({ data: center, status: "ok" });
