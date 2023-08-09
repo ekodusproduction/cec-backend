@@ -18,7 +18,7 @@ const router = Router();
 
 router.route("/student").post(verifyToken, studentRegister);
 router.route("/student/all").get(verifyToken, getallStudentSuper);
-router.route("/student/all/:centerId").get(verifyToken, getallStudentCenter);
+router.route("/student/all/center/:centerId").get(verifyToken, getallStudentCenter);
 router.route("/student/inactive").get(verifyToken, getallInactiveStudent);
 router.route("/student/:studentId").get(verifyToken, getStudent);
 router.route("/student").put(verifyToken, updateStudent);

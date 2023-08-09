@@ -71,6 +71,7 @@ app.use((req, res, next) => {
   next();
 });
 
+app.use("/api", studentRoutes);
 app.use("/api", courseRoutes);
 app.use("/api", categoryRoutes);
 app.use("/api", qualificationRoutes);
@@ -79,7 +80,7 @@ app.use("/api", homeRoutes);
 app.use("/api", centerRoutes);
 app.use("/api", superAdminRoutes);
 app.use("/api", centerAdminRoutes);
-app.use("/api", studentRoutes);
+
 
 app.all("*", (req, res, next) => {
   return res

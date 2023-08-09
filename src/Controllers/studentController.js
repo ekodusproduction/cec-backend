@@ -7,7 +7,7 @@ import { fileURLToPath } from "url";
 import Joi from "joi";
 import { sendMessage } from "../Airtel/airtel.js";
 import courseModel from "../Models/courseModel.js";
-
+import qualificationModel from "../Models/qualificationModel.js";
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const appDir = dirname(`${import.meta.filename}`);
 const baseUrl = `139.59.83.187`;
@@ -186,14 +186,16 @@ export const getallStudentSuper = async (req, res, next) => {
     const skip = (page - 1) * limit;
     const sort = req.query.sort || "-createdAt";
 
-    const students = studentModel
+    console.log("hiiiiii");
+
+    const students = await studentModel
       .find({
         isActive: true,
       })
-      // .skip(skip)
-      // .limit(limit)
-      // .sort(sort);
-
+      .skip(skip)
+      .limit(limit)
+      .sort(sort);
+    console.log(students);
 
     return res.status(200).send({ data: students, status: "ok" });
   } catch (err) {
@@ -220,10 +222,9 @@ export const getallStudentCenter = async (req, res, next) => {
         isActive: true,
         centerId: centerId,
       })
-      console.log()
-      // .skip(skip)
-      // .limit(limit)
-      // .sort(sort);
+      .skip(skip)
+      .limit(limit)
+      .sort(sort);
     // .populate({ path: "centerId", model: centerModel })
     // .populate({ path: "course", model: courseModel });
 
