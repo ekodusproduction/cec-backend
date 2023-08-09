@@ -28,9 +28,9 @@ export const studentRegister = async (req, res, next) => {
       statePermanent,
       cityPermanent,
       pinCodePermanent,
-      centerId,
+      centerCode,
     } = req.body;
-
+    centerCode = centerCode*1;
     const schema = Joi.object({
       firstName: Joi.string()
         .min(3)
@@ -75,7 +75,7 @@ export const studentRegister = async (req, res, next) => {
         .min(100000)
         .max(999999)
         .required(),
-      centerId: Joi.string().required(),
+        centerCode: Joi.number().required(),
     });
 
     let data = {
@@ -92,7 +92,7 @@ export const studentRegister = async (req, res, next) => {
       statePermanent,
       cityPermanent,
       pinCodePermanent,
-      centerId,
+      centerCode,
     };
     const { error, value } = schema.validate(data);
     if (error) {
@@ -107,7 +107,7 @@ export const studentRegister = async (req, res, next) => {
 
     data.DOB = convertToDate(DOB);
 
-    const center = await centerModel.findById(centerId);
+    const center = await centerModel.findOne({centerCode:centerCode});
     if (!center) {
       return res
         .status(404)

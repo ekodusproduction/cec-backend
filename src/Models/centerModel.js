@@ -58,6 +58,7 @@ const centerSchema = new Schema(
     centerCode: {
       type: Number,
       maxLength: 60,
+      unique:true,
       required: "Center code required",
       cast: "{VALUE} is not a String",
     },

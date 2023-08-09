@@ -31,16 +31,10 @@ export const upload = multer({ dest: "public/" });
 
 app.use(cors());
 app.options("*", cors());
-// app.options('/api/v1/tours/:id', cors());
-// Serving static files
-// Set security HTTP headers
+
 app.use(helmet());
 app.set("trust proxy", true);
-// Development logging
-// if (process.env.NODE_ENV === 'development') {
-//   app.use(morgan('dev'));
-// }
-// Limit requests from same API
+
 
 const limiter = rateLimit({
   max: 1000,
