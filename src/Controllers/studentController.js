@@ -190,9 +190,9 @@ export const getallStudentSuper = async (req, res, next) => {
       .find({
         isActive: true,
       })
-      .skip(skip)
-      .limit(limit)
-      .sort(sort);
+      // .skip(skip)
+      // .limit(limit)
+      // .sort(sort);
 
 
     return res.status(200).send({ data: center, status: "ok" });
@@ -219,11 +219,11 @@ export const getallStudentCenter = async (req, res, next) => {
     center = await studentModel
       .find({
         isActive: true,
-        centerId: req.query.centerId,
+        centerId: centerId,
       })
-      .skip(skip)
-      .limit(limit)
-      .sort(sort);
+      // .skip(skip)
+      // .limit(limit)
+      // .sort(sort);
     // .populate({ path: "centerId", model: centerModel })
     // .populate({ path: "course", model: courseModel });
 
