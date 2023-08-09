@@ -14,7 +14,7 @@ const baseUrl = `139.59.83.187`;
 
 export const studentRegister = async (req, res, next) => {
   try {
-    const {
+    let {
       firstName,
       lastName,
       DOB,
