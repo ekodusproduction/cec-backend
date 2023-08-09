@@ -250,13 +250,13 @@ export const getallInactiveStudent = async (req, res, next) => {
 
 export const getStudent = async (req, res, next) => {
   try {
-    if (!req.params.studentid) {
+    if (!req.params.studentId) {
       return res.status(400).send({
-        data: { message: "invalid request. please provide centerId" },
+        data: { message: "invalid request. please provide studentId" },
         status: "fail",
       });
     }
-    const center = await studentModel.find({ _id: req.params.studentid });
+    const center = await studentModel.find({ _id: req.params.studentId });
     return res.status(200).send({ data: center, status: "ok" });
   } catch (err) {
     return res.status(500).send({ message: err.message, status: "fail" });
