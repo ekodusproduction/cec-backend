@@ -42,8 +42,7 @@ export const studentRegister = async (req, res, next) => {
       DOB: Joi.string()
         .min(3)
         .required(),
-      mobile: Joi.number()
-        .required(),
+      mobile: Joi.number().required(),
       qualification: Joi.string()
         .min(3)
         .required(),
@@ -191,8 +190,11 @@ export const getallStudentSuper = async (req, res, next) => {
       .find({
         isActive: true,
       })
-      .populate({ path: "centerId", model: centerModel })
-      .populate({ path: "course", model: courseModel });
+      .skip(skip)
+      .limit(limit)
+      .sort(sort);
+    // .populate({ path: "centerId", model: centerModel })
+    // .populate({ path: "course", model: courseModel });
 
     return res.status(200).send({ data: center, status: "ok" });
   } catch (err) {
@@ -222,9 +224,9 @@ export const getallStudentCenter = async (req, res, next) => {
       })
       .skip(skip)
       .limit(limit)
-      .sort(sort)
-      .populate({ path: "centerId", model: centerModel })
-      .populate({ path: "course", model: courseModel });
+      .sort(sort);
+    // .populate({ path: "centerId", model: centerModel })
+    // .populate({ path: "course", model: courseModel });
 
     return res.status(200).send({ data: center, status: "ok" });
   } catch (err) {
@@ -235,7 +237,11 @@ export const getallStudentCenter = async (req, res, next) => {
 
 export const getallInactiveStudent = async (req, res, next) => {
   try {
-    const center = await studentModel.find({ isActive: false });
+    const center = await studentModel
+      .find({ isActive: false })
+      .skip(skip)
+      .limit(limit)
+      .sort(sort);
     return res.status(200).send({ data: center, status: "ok" });
   } catch (err) {
     return res.status(500).send({ message: err.message, status: "fail" });
