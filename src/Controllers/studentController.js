@@ -99,6 +99,7 @@ export const studentRegister = async (req, res, next) => {
         .status(400)
         .send({ message: error.details[0].message, status: "fail" });
     }
+
     let convertToDate = (DOB) => {
       let [year, day, month] = DOB.split("-").map(Number);
       return new Date(year, month - 1, day); // Month is 0-based in JavaScript Date, so subtract 1 from the month value.
@@ -115,6 +116,10 @@ export const studentRegister = async (req, res, next) => {
     }
 
     let student = await studentModel.create(data);
+    const centerUpdate = await centerModel.findByIdAndUpdate(
+      { _id: center._id },
+      { $inc: { totalStudent: 1 } }
+    );
     let text = `Student registered succesfully with CEC. To generate rollnumber please pay for the course`;
     // sendMessage(text, mobile);
     return res.status(200).send({ data: student, status: "ok" });
@@ -227,8 +232,20 @@ export const getallStudentCenter = async (req, res, next) => {
       .populate({ path: "course", model: courseModel });
     // .populate({ path: "centerId", model: centerModel })
     // .populate({ path: "course", model: courseModel });
+    const oneMonthAgo = new Date();
+    oneMonthAgo.setMonth(oneMonthAgo.getMonth() - 1);
 
-    return res.status(200).send({ data: students, status: "ok" });
+    const studentsCountLastMonth = await studentModel.countDocuments({
+      centerId,
+      createdAt: { $gte: oneMonthAgo },
+    });
+
+    return res
+      .status(200)
+      .send({
+        data: { list: students, newStudents: studentsCountLastMonth },
+        status: "ok",
+      });
   } catch (err) {
     console.log(err);
     return res.status(500).send({ message: err, status: "fail" });

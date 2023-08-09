@@ -82,6 +82,7 @@ const centerSchema = new Schema(
     //     message: "enter 10 digit number",
     //   },
     // },
+    totalStudent:{type:Number, default:0},
     whatsApp: {
       type: Number,
       required: "center whatsapp required",
