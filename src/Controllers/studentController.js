@@ -43,7 +43,6 @@ export const studentRegister = async (req, res, next) => {
         .min(3)
         .required(),
       mobile: Joi.number()
-        .length(10)
         .required(),
       qualification: Joi.string()
         .min(3)
