@@ -107,8 +107,11 @@ export const studentRegister = async (req, res, next) => {
     };
 
     data.DOB = convertToDate(DOB);
+    
+
 
     let center = await centerModel.findOne({centerCode:centerCode});
+    data.centerId = center._id;
     if (!center) {
       return res
         .status(404)
