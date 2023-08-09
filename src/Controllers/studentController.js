@@ -193,8 +193,7 @@ export const getallStudentSuper = async (req, res, next) => {
       .skip(skip)
       .limit(limit)
       .sort(sort);
-    // .populate({ path: "centerId", model: centerModel })
-    // .populate({ path: "course", model: courseModel });
+
 
     return res.status(200).send({ data: center, status: "ok" });
   } catch (err) {
