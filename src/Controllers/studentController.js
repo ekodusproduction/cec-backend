@@ -186,16 +186,14 @@ export const getallStudentSuper = async (req, res, next) => {
     const skip = (page - 1) * limit;
     const sort = req.query.sort || "-createdAt";
 
-    console.log("hiiiiii");
-
     const students = await studentModel
       .find({
         isActive: true,
       })
       .skip(skip)
       .limit(limit)
-      .sort(sort);
-    console.log(students);
+      .sort(sort)
+      .populate({ path: "centerId", model: centerModel });
 
     return res.status(200).send({ data: students, status: "ok" });
   } catch (err) {
@@ -224,7 +222,8 @@ export const getallStudentCenter = async (req, res, next) => {
       })
       .skip(skip)
       .limit(limit)
-      .sort(sort);
+      .sort(sort)
+      .populate({ path: "course", model: courseModel });
     // .populate({ path: "centerId", model: centerModel })
     // .populate({ path: "course", model: courseModel });
 
