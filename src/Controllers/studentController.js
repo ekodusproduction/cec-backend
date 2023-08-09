@@ -30,8 +30,9 @@ export const studentRegister = async (req, res, next) => {
       pinCodePermanent,
       centerCode,
     } = req.body;
+
     centerCode = centerCode*1;
-    const schema = Joi.object({
+    let schema = Joi.object({
       firstName: Joi.string()
         .min(3)
         .required(),
@@ -94,28 +95,28 @@ export const studentRegister = async (req, res, next) => {
       pinCodePermanent,
       centerCode,
     };
-    const { error, value } = schema.validate(data);
+    let { error, value } = schema.validate(data);
     if (error) {
       return res
         .status(400)
         .send({ message: error.details[0].message, status: "fail" });
     }
-    const convertToDate = (DOB) => {
-      const [year, day, month] = DOB.split("-").map(Number);
+    let convertToDate = (DOB) => {
+      let [year, day, month] = DOB.split("-").map(Number);
       return new Date(year, month - 1, day); // Month is 0-based in JavaScript Date, so subtract 1 from the month value.
     };
 
     data.DOB = convertToDate(DOB);
 
-    const center = await centerModel.findOne({centerCode:centerCode});
+    let center = await centerModel.findOne({centerCode:centerCode});
     if (!center) {
       return res
         .status(404)
         .send({ data: { message: "center not found" }, status: "fail" });
     }
 
-    const student = await studentModel.create(data);
-    const text = `Student registered succesfully with CEC. To generate rollnumber please pay for the course`;
+    let student = await studentModel.create(data);
+    let text = `Student registered succesfully with CEC. To generate rollnumber please pay for the course`;
     // sendMessage(text, mobile);
     return res.status(200).send({ data: student, status: "ok" });
   } catch (err) {
