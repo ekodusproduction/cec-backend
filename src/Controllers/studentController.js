@@ -186,7 +186,7 @@ export const getallStudentSuper = async (req, res, next) => {
     const skip = (page - 1) * limit;
     const sort = req.query.sort || "-createdAt";
 
-    const center = studentModel
+    const students = studentModel
       .find({
         isActive: true,
       })
@@ -195,7 +195,7 @@ export const getallStudentSuper = async (req, res, next) => {
       // .sort(sort);
 
 
-    return res.status(200).send({ data: center, status: "ok" });
+    return res.status(200).send({ data: students, status: "ok" });
   } catch (err) {
     console.log(err);
     return res.status(500).send({ message: err, status: "fail" });
@@ -204,7 +204,6 @@ export const getallStudentSuper = async (req, res, next) => {
 
 export const getallStudentCenter = async (req, res, next) => {
   try {
-    let center;
     let page = req.query.page * 1 || 1;
     let limit = req.query.limit * 1 || 20;
     const skip = (page - 1) * limit;
@@ -216,18 +215,19 @@ export const getallStudentCenter = async (req, res, next) => {
         .status(400)
         .send({ message: "invalid request. Send request params" });
     }
-    center = await studentModel
+    const students = await studentModel
       .find({
         isActive: true,
         centerId: centerId,
       })
+      console.log()
       // .skip(skip)
       // .limit(limit)
       // .sort(sort);
     // .populate({ path: "centerId", model: centerModel })
     // .populate({ path: "course", model: courseModel });
 
-    return res.status(200).send({ data: center, status: "ok" });
+    return res.status(200).send({ data: students, status: "ok" });
   } catch (err) {
     console.log(err);
     return res.status(500).send({ message: err, status: "fail" });
