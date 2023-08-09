@@ -190,7 +190,7 @@ export const getallStudentSuper = async (req, res, next) => {
       .find({
         isActive: true,
       })
-      .populate({ path: "centerId", model: centerModel })
+      .populate({ path: "course", model: courseModel })
       .skip(skip)
       .limit(limit)
       .sort(sort)
