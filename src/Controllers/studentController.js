@@ -192,9 +192,6 @@ export const getallStudentSuper = async (req, res, next) => {
       .find({
         isActive: true,
       })
-      .skip(skip)
-      .limit(limit)
-      .sort(sort)
       .populate({ path: "centerId", model: centerModel })
       .populate({ path: "course", model: courseModel });
 
