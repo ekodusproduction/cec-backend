@@ -182,13 +182,12 @@ export const generateRollNumber = async (req, res, next) => {
 
 export const getallStudentSuper = async (req, res, next) => {
   try {
-    let center;
     let page = req.query.page * 1 || 1;
     let limit = req.query.limit * 1 || 20;
     const skip = (page - 1) * limit;
     const sort = req.query.sort || "-createdAt";
 
-    center = studentModel
+    const center = studentModel
       .find({
         isActive: true,
       })
