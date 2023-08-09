@@ -31,7 +31,7 @@ export const studentRegister = async (req, res, next) => {
       centerCode,
     } = req.body;
 
-    centerCode = centerCode*1;
+    centerCode = centerCode * 1;
     let schema = Joi.object({
       firstName: Joi.string()
         .min(3)
@@ -76,7 +76,7 @@ export const studentRegister = async (req, res, next) => {
         .min(100000)
         .max(999999)
         .required(),
-        centerCode: Joi.number().required(),
+      centerCode: Joi.number().required(),
     });
 
     let data = {
@@ -107,10 +107,8 @@ export const studentRegister = async (req, res, next) => {
     };
 
     data.DOB = convertToDate(DOB);
-    
 
-
-    let center = await centerModel.findOne({centerCode:centerCode});
+    let center = await centerModel.findOne({ centerCode: centerCode });
     data.centerId = center._id;
     if (!center) {
       return res
@@ -183,35 +181,55 @@ export const generateRollNumber = async (req, res, next) => {
   }
 };
 
-export const getallStudent = async (req, res, next) => {
+export const getallStudentSuper = async (req, res, next) => {
   try {
     let center;
-    let doc;
     let page = req.query.page * 1 || 1;
-
     let limit = req.query.limit * 1 || 20;
     const skip = (page - 1) * limit;
     const sort = req.query.sort || "-createdAt";
-    if (req.query.centerId) {
-      center = await studentModel
-        .find({
-          isActive: true,
-          centerId: req.query.centerId,
-        })
-        .skip(skip)
-        .limit(limit)
-        .populate({ path: "centerId", model: centerModel })
-        .populate({ path: "course", model: courseModel });
-    } else {
-      center = studentModel
-        .find({
-          isActive: true,
-        })
-        .skip(skip)
-        .limit(limit)
-        .populate({ path: "centerId", model: centerModel })
-        .populate({ path: "course", model: courseModel });
+
+    center = studentModel
+      .find({
+        isActive: true,
+      })
+      .skip(skip)
+      .limit(limit)
+      .sort(sort)
+      .populate({ path: "centerId", model: centerModel })
+      .populate({ path: "course", model: courseModel });
+
+    return res.status(200).send({ data: center, status: "ok" });
+  } catch (err) {
+    console.log(err);
+    return res.status(500).send({ message: err, status: "fail" });
+  }
+};
+
+export const getallStudentCenter = async (req, res, next) => {
+  try {
+    let center;
+    let page = req.query.page * 1 || 1;
+    let limit = req.query.limit * 1 || 20;
+    const skip = (page - 1) * limit;
+    const sort = req.query.sort || "-createdAt";
+    const { centerId } = req.params;
+
+    if (!centerId) {
+      return res
+        .status(400)
+        .send({ message: "invalid request. Send request params" });
     }
+    center = await studentModel
+      .find({
+        isActive: true,
+        centerId: req.query.centerId,
+      })
+      .skip(skip)
+      .limit(limit)
+      .sort(sort)
+      .populate({ path: "centerId", model: centerModel })
+      .populate({ path: "course", model: courseModel });
 
     return res.status(200).send({ data: center, status: "ok" });
   } catch (err) {
@@ -231,13 +249,13 @@ export const getallInactiveStudent = async (req, res, next) => {
 
 export const getStudent = async (req, res, next) => {
   try {
-    if (!req.params.centerid) {
+    if (!req.params.studentid) {
       return res.status(400).send({
         data: { message: "invalid request. please provide centerId" },
         status: "fail",
       });
     }
-    const center = await studentModel.find({ centerId: req.params.centerid });
+    const center = await studentModel.find({ centerId: req.params.studentid });
     return res.status(200).send({ data: center, status: "ok" });
   } catch (err) {
     return res.status(500).send({ message: err.message, status: "fail" });
