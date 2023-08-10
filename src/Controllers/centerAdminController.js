@@ -11,55 +11,55 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const appDir = dirname(`${import.meta.filename}`);
 var baseUrl = `139.59.83.187`;
 
-export const loginCenteradmin = async (req, res, next) => {
-  try {
-    const { mobile, password } = req.body;
+// export const loginCenteradmin = async (req, res, next) => {
+//   try {
+//     const { mobile, password } = req.body;
 
-    const schema = Joi.object({
-      mobile: Joi.string().required(),
-      password: Joi.string().required(),
-    });
+//     const schema = Joi.object({
+//       mobile: Joi.string().required(),
+//       password: Joi.string().required(),
+//     });
 
-    let data = { mobile, password };
-    const { error, value } = schema.validate(data);
-    if (error) {
-      return res
-        .status(400)
-        .send({ message: error.details[0].message, status: "fail" });
-    }
+//     let data = { mobile, password };
+//     const { error, value } = schema.validate(data);
+//     if (error) {
+//       return res
+//         .status(400)
+//         .send({ message: error.details[0].message, status: "fail" });
+//     }
 
-    const centerAdmin = await centerAdminModel
-      .findOne({ mobile })
-      .populate("centers");
+//     const centerAdmin = await centerAdminModel
+//       .findOne({ mobile })
+//       .populate("centers");
 
-    if (centerAdmin == null) {
-      return res.status(400).send({
-        data: { message: "whatsApp doesnt exist. Please register" },
-        status: "fail",
-      });
-    }
+//     if (centerAdmin == null) {
+//       return res.status(400).send({
+//         data: { message: "whatsApp doesnt exist. Please register" },
+//         status: "fail",
+//       });
+//     }
 
-    const isCorrectPassword = await bcrypt.compare(
-      password,
-      centerAdmin.password
-    );
-    
-    if (!isCorrectPassword) {
-      return res.status(400).send({
-        data: { message: "Incorrect password. Please try again" },
-        status: "fail",
-      });
-    }
-    const token = generateToken(centerAdmin._id);
-    centerAdmin.password = null;
+//     const isCorrectPassword = await bcrypt.compare(
+//       password,
+//       centerAdmin.password
+//     );
 
-    return res
-      .status(200)
-      .send({ data: centerAdmin, token: token, status: "ok" });
-  } catch (err) {
-    return res.status(500).send({ message: err.message, status: "fail" });
-  }
-};
+//     if (!isCorrectPassword) {
+//       return res.status(400).send({
+//         data: { message: "Incorrect password. Please try again" },
+//         status: "fail",
+//       });
+//     }
+//     const token = generateToken(centerAdmin._id);
+//     centerAdmin.password = null;
+
+//     return res
+//       .status(200)
+//       .send({ data: centerAdmin, token: token, status: "ok" });
+//   } catch (err) {
+//     return res.status(500).send({ message: err.message, status: "fail" });
+//   }
+// };
 
 export const createcenterAdmin = async (req, res, next) => {
   try {
@@ -74,8 +74,8 @@ export const createcenterAdmin = async (req, res, next) => {
       password,
       mobile,
     } = req.body;
-    if(alternateNumber == "" ){
-      alternateNumber = mobile
+    if (alternateNumber == "") {
+      alternateNumber = mobile;
     }
     const schema = Joi.object({
       adminName: Joi.string().required(),
@@ -90,7 +90,7 @@ export const createcenterAdmin = async (req, res, next) => {
     });
 
     let data = {
-      adminName, 
+      adminName,
       email,
       address,
       alternateNumber,
@@ -128,7 +128,7 @@ export const createcenterAdmin = async (req, res, next) => {
     // sendMessage(text, mobile);
     return res.status(200).send({ data: user, status: "ok" });
   } catch (err) {
-    console.log(err)
+    console.log(err);
     return res.status(500).send({ message: err, status: "fail" });
   }
 };

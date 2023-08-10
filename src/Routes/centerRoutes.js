@@ -11,9 +11,14 @@ import {
   addToCart,
   getCart,
   deleteCart,
+  loginCenter,
 } from "../Controllers/centerController.js";
 import { isSuperAdmin } from "../Auth/isSuperAdmin.js";
 const router = Router();
+
+
+
+router.route("/center/login").post(loginCenter);
 
 router.route("/center/all").get(verifyToken, getAllCenter);
 router.route("/center/inactive").get(verifyToken, getAllInactiveCenter);
