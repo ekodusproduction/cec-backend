@@ -91,14 +91,9 @@ export const loginCenter = async (req, res, next) => {
       });
     }
 
-    const center = await centerModel.find({ isActive: true }).populate({
-      path: "headOfInstitute",
-      model: centerAdminModel,
-      select: "adminName",
-    });
 
     const token = generateToken(centerCodeExist._id);
-    return res.status(200).send({ data: center, token: token, status: "ok" });
+    return res.status(200).send({ data: centerCodeExist, token: token, status: "ok" });
   } catch (err) {
     return res.status(500).send({ message: err.message, status: "fail" });
   }
