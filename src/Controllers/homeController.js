@@ -33,7 +33,7 @@ export const getHomeCenter = async (req, res, next) => {
       },
       status: "ok",
     });
-  } catch (error) {
+  } catch (err) {
     return res.status(500).send({ message: err.message, status: "fail" });
   }
 };
@@ -79,7 +79,7 @@ export const getHomeSuper = async (req, res, next) => {
       },
       status: "ok",
     });
-  } catch (error) {
+  } catch (err) {
     return res.status(500).send({ message: err.message, status: "fail" });
   }
 };

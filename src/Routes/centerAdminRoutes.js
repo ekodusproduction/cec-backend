@@ -10,11 +10,11 @@ import {
   getAllInactiveCenterAdmin,
   fileUpload,
 } from "../Controllers/centerAdminController.js";
-import { loginCenteradmin } from "../Controllers/centerAdminController.js";
+// import { loginCenteradmin } from "../Controllers/centerAdminController.js";
 import { isSuperAdmin } from "../Auth/isSuperAdmin.js";
 
 const router = Router();
-router.route("/centeradmin/login").post(loginCenteradmin);
+// router.route("/centeradmin/login").post(loginCenteradmin);
 router
   .route("/centeradmin")
   .post(verifyToken, createcenterAdmin)

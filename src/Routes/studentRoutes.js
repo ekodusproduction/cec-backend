@@ -5,7 +5,6 @@ import {
   getStudent,
   deleteStudent,
   updateStudent,
-  
   getallInactiveStudent,
   addNewCourse,
   getallStudentCenter,
