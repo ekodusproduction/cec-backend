@@ -5,6 +5,7 @@ import bcrypt from "bcrypt";
 import Joi from "joi";
 import { dirname } from "path";
 import { fileURLToPath } from "url";
+import { generateToken } from "../Auth/authentication.js";
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const appDir = dirname(`${import.meta.filename}`);
 
@@ -32,11 +33,84 @@ export const getCenter = async (req, res, next) => {
   }
 };
 
+export const loginCenter = async (req, res, next) => {
+  try {
+    const { centerName, centerCode, password } = req.body;
+
+    const schema = Joi.object({
+      centerName: Joi.string().required(),
+      centerCode: Joi.string().required(),
+      password: Joi.string().required(),
+    });
+
+    let data = { centerName, centerCode, password };
+    const { error, value } = schema.validate(data);
+    if (error) {
+      return res
+        .status(400)
+        .send({ message: error.details[0].message, status: "fail" });
+    }
+    const centerNameExist = await centerModel.findOne({
+      centerName: centerName,
+    });
+
+    if (!centerNameExist) {
+      return res
+        .status(400)
+        .send({ message: "Wrong center name", status: "fail" });
+    }
+
+    const centerCodeExist = await centerModel.findOne({
+      centerCode: centerCode,
+    });
+
+    if (!centerCodeExist) {
+      return res
+        .status(400)
+        .send({ message: "Wrong center code", status: "fail" });
+    }
+
+    if (centerCodeExist.centerName != centerName) {
+      return res.status(400).send({
+        message: "center code doesnt belong to center name",
+        status: "fail",
+      });
+    }
+
+    const centerAdmin = await centerAdminModel.findById(
+      centerCodeExist.headOfInstitute
+    );
+    const isPasswordCorrect = await bcrypt.compare(
+      password,
+      centerAdmin.password
+    );
+    if (!isPasswordCorrect) {
+      return res.status(400).send({
+        message: "Incorrect password",
+        status: "fail",
+      });
+    }
+
+    const center = await centerModel.find({ isActive: true }).populate({
+      path: "headOfInstitute",
+      model: centerAdminModel,
+      select: "adminName",
+    });
+
+    const token = generateToken(centerCodeExist._id);
+    return res.status(200).send({ data: center, token: token, status: "ok" });
+  } catch (err) {
+    return res.status(500).send({ message: err.message, status: "fail" });
+  }
+};
+
 export const getAllCenter = async (req, res, next) => {
   try {
-    const center = await centerModel
-      .find({ isActive: true })
-      .populate({ path: "headOfInstitute", model: centerAdminModel ,select: "adminName"});
+    const center = await centerModel.find({ isActive: true }).populate({
+      path: "headOfInstitute",
+      model: centerAdminModel,
+      select: "adminName",
+    });
     return res.status(200).send({ data: center, status: "ok" });
   } catch (err) {
     return res.status(500).send({ message: err.message, status: "fail" });
