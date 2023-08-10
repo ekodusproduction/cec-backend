@@ -34,7 +34,9 @@ export const getCenter = async (req, res, next) => {
 
 export const getAllCenter = async (req, res, next) => {
   try {
-    const center = await centerModel.find({ isActive: true });
+    const center = await centerModel
+      .find({ isActive: true })
+      .populate({ path: "headOfInstitute", model: centerAdminModel ,select: "adminName"});
     return res.status(200).send({ data: center, status: "ok" });
   } catch (err) {
     return res.status(500).send({ message: err.message, status: "fail" });
@@ -112,8 +114,8 @@ export const createcenter = async (req, res, next) => {
       email,
       adminMobile,
     };
-    if(alternateNumber != ""){
-      data.alternateNumber = alternateNumber
+    if (alternateNumber != "") {
+      data.alternateNumber = alternateNumber;
     }
     const { error, value } = schema.validate(data);
     if (error) {
