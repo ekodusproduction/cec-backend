@@ -91,7 +91,6 @@ export const loginCenter = async (req, res, next) => {
       });
     }
 
-
     const token = generateToken(centerCodeExist._id);
     return res.status(200).send({ data: centerCodeExist, token: token, status: "ok" });
   } catch (err) {
@@ -101,7 +100,7 @@ export const loginCenter = async (req, res, next) => {
 
 export const getAllCenter = async (req, res, next) => {
   try {
-    const center = await centerModel.find({ isActive: true }).populate({
+    const center = await centerModel.find({ isActive: true }).select({centerCode:1, centerName:1, dateofReg:1,totalStudent:1 }).populate({
       path: "headOfInstitute",
       model: centerAdminModel,
       select: "adminName",
