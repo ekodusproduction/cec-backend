@@ -288,7 +288,7 @@ export const getStudentByRoll = async (req, res, next) => {
     }
 
     const student = await studentModel.find({
-      rollNumber: studentRoll,
+      rollNumber: rollnumber,
       centerId:centerId
     });
 
