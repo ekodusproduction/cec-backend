@@ -260,12 +260,12 @@ export const getallStudentCenter = async (req, res, next) => {
 
 export const getallInactiveStudent = async (req, res, next) => {
   try {
-    const center = await studentModel
+    const student = await studentModel
       .find({ isActive: false })
       .skip(skip)
       .limit(limit)
       .sort(sort);
-    return res.status(200).send({ data: center, status: "ok" });
+    return res.status(200).send({ data: student, status: "ok" });
   } catch (err) {
     return res.status(500).send({ message: err.message, status: "fail" });
   }
@@ -273,17 +273,26 @@ export const getallInactiveStudent = async (req, res, next) => {
 
 export const getStudentByRoll = async (req, res, next) => {
   try {
-    if (!req.params.studentRoll) {
+    const {studentRoll, centerId} = req.query;
+    if (!studentRoll) {
       return res.status(400).send({
         data: { message: "invalid request. please provide student Rollnumber" },
         status: "fail",
       });
     }
+    if (!centerId) {
+      return res.status(400).send({
+        data: { message: "invalid request. please provide centerId" },
+        status: "fail",
+      });
+    }
 
-    const center = await studentModel.find({
-      rollNumber: req.params.studentRoll,
+    const student = await studentModel.find({
+      rollNumber: studentRoll,
+      centerId:centerId
     });
-    return res.status(200).send({ data: center, status: "ok" });
+
+    return res.status(200).send({ data: student, status: "ok" });
   } catch (err) {
     return res.status(500).send({ message: err.message, status: "fail" });
   }
@@ -298,8 +307,8 @@ export const getStudentById = async (req, res, next) => {
       });
     }
 
-    const center = await studentModel.find({ _id: req.params.studentId });
-    return res.status(200).send({ data: center, status: "ok" });
+    const student = await studentModel.find({ _id: req.params.studentId });
+    return res.status(200).send({ data: student, status: "ok" });
   } catch (err) {
     return res.status(500).send({ message: err.message, status: "fail" });
   }
