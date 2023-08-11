@@ -225,6 +225,13 @@ export const getallStudentCenter = async (req, res, next) => {
       .find({
         isActive: true,
         centerId: centerId,
+      }).select({
+        firstName:1,
+        lastName:1,
+          rollNumber:1,
+          regDate:1,
+          centerName:1,
+          courseName:1,
       })
       .skip(skip)
       .limit(limit)
@@ -271,6 +278,7 @@ export const getStudent = async (req, res, next) => {
         status: "fail",
       });
     }
+
     const center = await studentModel.find({ _id: req.params.studentId });
     return res.status(200).send({ data: center, status: "ok" });
   } catch (err) {
