@@ -21,7 +21,7 @@ router.route("/student/all").get(verifyToken, getallStudentSuper);
 router.route("/student/center/:centerId").get(verifyToken, getallStudentCenter);
 router.route("/student/inactive").get(verifyToken, getallInactiveStudent);
 router.route("/student/:studentId").get(verifyToken, getStudentById);
-router.route("/student/rollnumber/:studentroll").get(verifyToken, getStudentByRoll);
+router.route("/student/rollnumber/:rollnumber").get(verifyToken, getStudentByRoll);
 router.route("/student").put(verifyToken, updateStudent);
 router.route("/student/course/:courseid").put(verifyToken, addNewCourse);
 router.route("/student").delete(verifyToken, isSuperAdmin, deleteStudent);
