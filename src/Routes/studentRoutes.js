@@ -9,7 +9,8 @@ import {
   addNewCourse,
   getallStudentCenter,
   getallStudentSuper,
-  getStudentByRoll
+  getStudentByRoll,
+  studentRegisterCenter
 } from "../Controllers/studentController.js";
 import { isSuperAdmin } from "../Auth/isSuperAdmin.js";
 import { isCenterAdmin } from "../Auth/isCenterAdmin.js";
@@ -17,6 +18,8 @@ import { isCenterAdmin } from "../Auth/isCenterAdmin.js";
 const router = Router();
 
 router.route("/student").post(verifyToken, studentRegister);
+router.route("/student/center").post(verifyToken, studentRegisterCenter);
+
 router.route("/student").put(verifyToken, updateStudent);
 router.route("/student").delete(verifyToken, isSuperAdmin, deleteStudent);
 
