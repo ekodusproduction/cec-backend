@@ -273,7 +273,8 @@ export const getallInactiveStudent = async (req, res, next) => {
 
 export const getStudentByRoll = async (req, res, next) => {
   try {
-    const {rollnumber, centerId} = req.query;
+    let {rollnumber, centerId} = req.query;
+    rollnumber = rollnumber.toString();
     if (!rollnumber) {
       return res.status(400).send({
         data: { message: "invalid request. please provide student Rollnumber" },
