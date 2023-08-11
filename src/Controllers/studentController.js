@@ -300,7 +300,7 @@ export const getStudentByRoll = async (req, res, next) => {
     return res.status(200).send({ data: student, status: "ok" });
   } catch (err) {
     console.log(err)
-    return res.status(500).send({ message: err.message, status: "fail" });
+    return res.status(500).send({ message: err, status: "fail" });
   }
 };
 
