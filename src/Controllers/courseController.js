@@ -106,7 +106,6 @@ export const filterCourses = async (req, res, next) => {
         .status(404)
         .send({ message: "Qualification not found.", status: "fail" });
     }
-    console.log(qualification);
     let courses = await courseModel
       .find({})
       .populate({ path: "qualificationType", model: qualificationModel })
@@ -127,8 +126,7 @@ export const updateCourse = async (req, res, next) => {
   try {
     const { updateField, updateValue } = req.body;
     const { courseId } = req.params;
-    console.log("tyyype", typeof courseId);
-    console.log("updateField", typeof updateField);
+
 
     const schema = Joi.object({
       courseId: Joi.string()

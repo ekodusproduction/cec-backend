@@ -16,8 +16,6 @@ import {
 import { isSuperAdmin } from "../Auth/isSuperAdmin.js";
 const router = Router();
 
-
-
 router.route("/center/login").post(loginCenter);
 
 router.route("/center/all").get(verifyToken, getAllCenter);

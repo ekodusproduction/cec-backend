@@ -13,6 +13,7 @@ const jwtSecretKey =  process.env.JWT_SECRET ;
 export const verifyToken = async (req, res, next) => {
   try {
     const token = req.headers.authorization.split(" ");
+    console.log("hi")
 
     const isvalid = await jsonwebtoken.verify(token[1], jwtSecretKey);
 

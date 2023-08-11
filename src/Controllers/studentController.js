@@ -203,7 +203,6 @@ export const getallStudentSuper = async (req, res, next) => {
 
     return res.status(200).send({ data: students, status: "ok" });
   } catch (err) {
-    console.log(err);
     return res.status(500).send({ message: err, status: "fail" });
   }
 };
@@ -253,7 +252,6 @@ export const getallStudentCenter = async (req, res, next) => {
       status: "ok",
     });
   } catch (err) {
-    console.log(err);
     return res.status(500).send({ message: err, status: "fail" });
   }
 };
@@ -273,33 +271,29 @@ export const getallInactiveStudent = async (req, res, next) => {
 
 export const getStudentByRoll = async (req, res, next) => {
   try {
-    let {rollnumber, centerId} = req.query;
-    rollnumber = rollnumber.toString();
-    if (!rollnumber) {
+    let { rollNumber } = req.params;
+    rollNumber = rollNumber.toString();
+    if (!rollNumber) {
       return res.status(400).send({
         data: { message: "invalid request. please provide student Rollnumber" },
         status: "fail",
       });
     }
-    if (!centerId) {
-      return res.status(400).send({
-        data: { message: "invalid request. please provide centerId" },
-        status: "fail",
-      });
-    }
-    console.log("rollnumber",rollnumber, "centerId",centerId)
+
+    console.log(rollNumber, req.id);
     const student = await studentModel.findOne({
-      rollNumber: rollnumber,
-      centerId:centerId
+      rollNumber: rollNumber,
+      centerId: req.id,
     });
 
-    if(!student){
-      return res.status(200).send({ message:"No student found", status: "ok" });
+    if (!student) {
+      return res
+        .status(200)
+        .send({ message: "No student found", status: "ok" });
     }
 
     return res.status(200).send({ data: student, status: "ok" });
   } catch (err) {
-    console.log(err)
     return res.status(500).send({ message: err, status: "fail" });
   }
 };
@@ -433,7 +427,6 @@ export const fileUploads = async (req, res, next) => {
     const profilePic = `${baseUrl}/public/student/${rollNumber.toString()}${
       file.fieldname
     }.${file.mimetype.split("/")[1]}`;
-    console.log("profilePic", file);
     const userupdate = await studentModel.updateOne(
       { rollNumber },
       { profilePic: profilePic }

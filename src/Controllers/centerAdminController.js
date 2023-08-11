@@ -128,7 +128,6 @@ export const createcenterAdmin = async (req, res, next) => {
     // sendMessage(text, mobile);
     return res.status(200).send({ data: user, status: "ok" });
   } catch (err) {
-    console.log(err);
     return res.status(500).send({ message: err, status: "fail" });
   }
 };
@@ -193,7 +192,6 @@ export const updatecenterAdmin = async (req, res, next) => {
 export const fileUpload = async (req, res, next) => {
   try {
     const file = req.files[0];
-    console.log(file);
     if (!file) {
       return res
         .status(400)
@@ -222,7 +220,6 @@ export const fileUpload = async (req, res, next) => {
     const profilePic = `${baseUrl}/public/centeradmin/${user.whatsApp
       .toString()
       .slice(-6)}${file.fieldname}.${file.mimetype.split("/")[1]}`;
-    console.log("profilePic", file);
     const userupdate = await centerAdminModel.updateOne(
       { _id: req.id },
       { profilePic: profilePic }

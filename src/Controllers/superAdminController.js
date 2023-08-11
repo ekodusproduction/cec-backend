@@ -310,7 +310,6 @@ export const updateSuperAdmin = async (req, res, next) => {
     );
     return res.status(200).send({ data: userupdate, status: "ok" });
   } catch (err) {
-    console.log(err);
     res.status(500).send({ message: err, status: "fail" });
   }
 };
