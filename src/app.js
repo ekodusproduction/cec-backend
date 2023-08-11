@@ -35,12 +35,12 @@ app.options("*", cors());
 app.use(helmet());
 app.set("trust proxy", true);
 
-
 const limiter = rateLimit({
   max: 1000,
   windowMs: 60 * 60 * 1000,
   message: "Too many requests from this IP, please try again in an hour!",
-  keyGenerator: (req) => req.headers["x-forwarded-for"] || req.connection.remoteAddress,
+  keyGenerator: (req) =>
+    req.headers["x-forwarded-for"] || req.connection.remoteAddress,
 });
 app.use("/api", limiter);
 
@@ -51,20 +51,8 @@ app.use(xss());
 app.use(compression());
 
 const __filename = fileURLToPath(import.meta.url);
-// Get the current directory's path
-// const __dirname = dirname(__filename);
-// console.log("dddd",__dirname)
-
-// // Set the path to the public folder
-// const publicFolderPath = join(__dirname, "../public");
-// console.log("dduu",publicFolderPath)
-
-// // Serve static files from the public folder
-// app.use(express.static(publicFolderPath));
 
 app.use("/public", express.static(path.join(__dirname, "../public")));
-
-
 
 app.use((req, res, next) => {
   req.requestTime = new Date().toISOString();
@@ -80,7 +68,6 @@ app.use("/api", homeRoutes);
 app.use("/api", centerRoutes);
 app.use("/api", superAdminRoutes);
 app.use("/api", centerAdminRoutes);
-
 
 app.all("*", (req, res, next) => {
   return res
