@@ -286,11 +286,15 @@ export const getStudentByRoll = async (req, res, next) => {
         status: "fail",
       });
     }
-
-    const student = await studentModel.find({
+    console.log(rollnumber, centerId)
+    const student = await studentModel.findOne({
       rollNumber: rollnumber,
       centerId:centerId
     });
+
+    if(!student){
+      return res.status(200).send({ message:"No student found", status: "ok" });
+    }
 
     return res.status(200).send({ data: student, status: "ok" });
   } catch (err) {
