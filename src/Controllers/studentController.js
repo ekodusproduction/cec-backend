@@ -225,13 +225,14 @@ export const getallStudentCenter = async (req, res, next) => {
       .find({
         isActive: true,
         centerId: centerId,
-      }).select({
-        firstName:1,
-        lastName:1,
-          rollNumber:1,
-          regDate:1,
-          centerName:1,
-          courseName:1,
+      })
+      .select({
+        firstName: 1,
+        lastName: 1,
+        rollNumber: 1,
+        regDate: 1,
+        centerName: 1,
+        courseName: 1,
       })
       .skip(skip)
       .limit(limit)
@@ -270,7 +271,25 @@ export const getallInactiveStudent = async (req, res, next) => {
   }
 };
 
-export const getStudent = async (req, res, next) => {
+export const getStudentByRoll = async (req, res, next) => {
+  try {
+    if (!req.params.studentRoll) {
+      return res.status(400).send({
+        data: { message: "invalid request. please provide student Rollnumber" },
+        status: "fail",
+      });
+    }
+
+    const center = await studentModel.find({
+      rollNumber: req.params.studentRoll,
+    });
+    return res.status(200).send({ data: center, status: "ok" });
+  } catch (err) {
+    return res.status(500).send({ message: err.message, status: "fail" });
+  }
+};
+
+export const getStudentById = async (req, res, next) => {
   try {
     if (!req.params.studentId) {
       return res.status(400).send({
