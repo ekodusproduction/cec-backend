@@ -240,12 +240,10 @@ export const getallStudentCenter = async (req, res, next) => {
       createdAt: { $gte: oneMonthAgo },
     });
 
-    return res
-      .status(200)
-      .send({
-        data: { list: students, newStudents: studentsCountLastMonth },
-        status: "ok",
-      });
+    return res.status(200).send({
+      data: { list: students, newStudents: studentsCountLastMonth },
+      status: "ok",
+    });
   } catch (err) {
     console.log(err);
     return res.status(500).send({ message: err, status: "fail" });
@@ -295,7 +293,6 @@ export const addNewCourse = async (req, res, next) => {
         .regex(/^[0-9a-fA-F]{24}$}/)
         .required(),
     });
-
     let data = {
       id,
       courseId,
@@ -307,13 +304,11 @@ export const addNewCourse = async (req, res, next) => {
         .status(400)
         .send({ message: error.details[0].message, status: "fail" });
     }
-
     const student = await studentModel.findByIdAndUpdate(
       { _id: id },
       { $addToSet: { course: courseId } },
       { new: true }
     );
-
     return res.status(200).send({ data: student, status: "ok" });
   } catch (err) {
     return res.status(500).send({ message: err.message, status: "fail" });
