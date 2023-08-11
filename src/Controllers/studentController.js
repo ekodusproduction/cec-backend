@@ -286,7 +286,7 @@ export const getStudentByRoll = async (req, res, next) => {
         status: "fail",
       });
     }
-    console.log(rollnumber, centerId)
+    console.log("rollnumber",rollnumber, "centerId",centerId)
     const student = await studentModel.findOne({
       rollNumber: rollnumber,
       centerId:centerId
