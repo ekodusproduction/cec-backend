@@ -423,7 +423,8 @@ export const getStudentById = async (req, res, next) => {
     const student = await studentModel
       .find({ _id: req.params.studentId })
       .populate({ path: "centerId", model: centerModel })
-      .populate({ path: "course", model: courseModel });
+      .populate({ path: "course", model: courseModel })
+      .populate({ path: "qualification", model: qualificationModel });
 
     return res.status(200).send({ data: student, status: "ok" });
   } catch (err) {
