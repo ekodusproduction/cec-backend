@@ -20,7 +20,7 @@ import qualificationRoutes from "./Routes/qualificationRotes.js";
 import centerAdminRoutes from "./Routes/centerAdminRoutes.js";
 import paymentsRoutes from "./Routes/paymentsRoutes.js";
 const __dirname = dirname(fileURLToPath(import.meta.url));
-const appDir = dirname(`${import.meta.filename}`);
+const __filename = fileURLToPath(import.meta.url);
 export const app = express();
 
 app.use(express.json());
@@ -50,7 +50,6 @@ app.use(mongoSanitize());
 app.use(xss());
 app.use(compression());
 
-const __filename = fileURLToPath(import.meta.url);
 
 app.use("/public", express.static(path.join(__dirname, "../public")));
 
