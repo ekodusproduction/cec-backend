@@ -27,7 +27,7 @@ export const getCenter = async (req, res, next) => {
 
     const center = await centerModel
       .findById(centerId)
-      .populate({ path: "headOfInstitute", model: centerModel });
+      .populate({ path: "headOfInstitute", model: centerAdminModel });
 
     return res.status(200).send({ data: center, status: "ok" });
   } catch (err) {
