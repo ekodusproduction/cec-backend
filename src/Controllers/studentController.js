@@ -144,7 +144,6 @@ export const studentRegisterCenter = async (req, res, next) => {
       statePermanent,
       cityPermanent,
       pinCodePermanent,
-      
     } = req.body;
 
     let schema = Joi.object({
@@ -188,7 +187,7 @@ export const studentRegisterCenter = async (req, res, next) => {
       pinCodePermanent: Joi.number()
         .min(100000)
         .max(999999)
-        .required()
+        .required(),
     });
 
     let data = {
@@ -204,7 +203,7 @@ export const studentRegisterCenter = async (req, res, next) => {
       permanentAddress,
       statePermanent,
       cityPermanent,
-      pinCodePermanent
+      pinCodePermanent,
     };
     let { error, value } = schema.validate(data);
     if (error) {
@@ -421,7 +420,11 @@ export const getStudentById = async (req, res, next) => {
       });
     }
 
-    const student = await studentModel.find({ _id: req.params.studentId });
+    const student = await studentModel
+      .find({ _id: req.params.studentId })
+      .populate({ path: "centerId", model: centerModel })
+      .populate({ path: "course", model: courseModel });
+
     return res.status(200).send({ data: student, status: "ok" });
   } catch (err) {
     return res.status(500).send({ message: err.message, status: "fail" });

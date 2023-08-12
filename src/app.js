@@ -50,7 +50,6 @@ app.use(mongoSanitize());
 app.use(xss());
 app.use(compression());
 
-
 app.use("/public", express.static(path.join(__dirname, "../public")));
 
 app.use((req, res, next) => {
