@@ -396,7 +396,9 @@ export const getStudentByRoll = async (req, res, next) => {
     const student = await studentModel.findOne({
       rollNumber: rollNumber,
       centerId: req.id,
-    });
+    }).populate({ path: "centerId", model: centerModel })
+    .populate({ path: "course", model: courseModel })
+    .populate({ path: "qualification", model: qualificationModel });;
 
     if (!student) {
       return res
