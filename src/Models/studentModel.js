@@ -63,7 +63,7 @@ const studentSchema = new Schema(
       maxLength: 25,
       cast: "{VALUE} is not a string",
     },
-    Gender: {
+    gender: {
       type: String,
       enum: ["Female", "Male", "other"],
       cast: "{VALUE} is not valid",
