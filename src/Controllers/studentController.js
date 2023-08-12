@@ -393,7 +393,6 @@ export const getStudentByRoll = async (req, res, next) => {
       });
     }
 
-    console.log(rollNumber, req.id);
     const student = await studentModel.findOne({
       rollNumber: rollNumber,
       centerId: req.id,
