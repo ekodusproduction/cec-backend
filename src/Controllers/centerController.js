@@ -96,7 +96,7 @@ export const loginCenter = async (req, res, next) => {
     const token = generateToken(centerCodeExist._id);
     return res
       .status(200)
-      .send({ data: {...centerCodeExist, isSuperAdmin: false}, token: token, status: "ok" });
+      .send({ data: {centerCodeExist, isSuperAdmin: false}, token: token, status: "ok" });
   } catch (err) {
     return res.status(500).send({ message: err.message, status: "fail" });
   }
