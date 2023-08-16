@@ -45,7 +45,6 @@ const orderSchema = Schema({
 });
 const centerSchema = new Schema(
   {
-
     headOfInstitute: {
       type: Schema.Types.ObjectId,
       ref: "centerAdmin",
@@ -58,14 +57,14 @@ const centerSchema = new Schema(
     centerCode: {
       type: Number,
       maxLength: 60,
-      unique:true,
+      unique: true,
       required: "Center code required",
       cast: "{VALUE} is not a String",
     },
     centerName: {
       type: String,
       maxLength: 60,
-      unique:true,
+      unique: true,
       required: "franchise name required",
       cast: "{VALUE} is not a String",
     },
@@ -82,7 +81,7 @@ const centerSchema = new Schema(
     //     message: "enter 10 digit number",
     //   },
     // },
-    totalStudent:{type:Number, default:0},
+    totalStudent: { type: Number, default: 0 },
     whatsApp: {
       type: Number,
       required: "center whatsapp required",
@@ -108,6 +107,8 @@ const centerSchema = new Schema(
     state: { type: String, required: "center state required" },
     isActive: { type: Boolean, default: true },
     cart: { type: orderSchema },
+    isSuperAdmin: { type: Boolean, default: true },
+    isSuperAdmin: { type: Boolean, default: false },
   },
   {
     timestamps: true,
