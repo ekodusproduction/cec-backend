@@ -92,7 +92,7 @@ export const loginCenter = async (req, res, next) => {
         status: "fail",
       });
     }
-    centerCodeExist.isSuper = false;
+    centerCodeExist.isSuperAdmin = false;
     const token = generateToken(centerCodeExist._id);
     return res
       .status(200)
