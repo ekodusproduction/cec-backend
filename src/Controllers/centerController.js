@@ -62,7 +62,7 @@ export const loginCenter = async (req, res, next) => {
         .send({ message: "Wrong center name", status: "fail" });
     }
 
-    const centerCodeExist = await centerModel.findOne({
+    let centerCodeExist = await centerModel.findOne({
       centerCode: centerCode,
     });
 
