@@ -28,12 +28,12 @@ const courseSchema = new Schema(
       },
       cast: "{VALUE} is not a String",
     },
-    category: {
-      type: Schema.Types.ObjectId,
-      ref: "categories",
-      required: "course category required",
-      cast: "{VALUE} is not a object id",
-    },
+    // category: {
+    //   type: Schema.Types.ObjectId,
+    //   ref: "categories",
+    //   required: "course category required",
+    //   cast: "{VALUE} is not a object id",
+    // },
     duration: {
       type: Number,
       minlength: 1,

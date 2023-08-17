@@ -8,7 +8,7 @@ export const createCourse = async (req, res, next) => {
     const {
       courseName,
       courseCode,
-      category,
+      // category,
       duration,
       qualificationType,
       courseFee,
@@ -21,7 +21,7 @@ export const createCourse = async (req, res, next) => {
         .max(50)
         .required(),
       courseCode: Joi.number().required(),
-      category: Joi.string().required(),
+      // category: Joi.string().required(),
       duration: Joi.string()
         .min(1)
         .required(),
@@ -36,7 +36,7 @@ export const createCourse = async (req, res, next) => {
     let data = {
       courseName,
       courseCode,
-      category,
+      // category,
       duration,
       qualificationType,
       courseFee,
@@ -49,16 +49,8 @@ export const createCourse = async (req, res, next) => {
         .send({ message: error.details[0].message, status: "fail" });
     }
 
-    const createCourse = {
-      courseName,
-      courseCode,
-      category,
-      duration,
-      qualificationType,
-      courseFee,
-      courseDescription,
-    };
-    const course = await courseModel.create(createCourse);
+
+    const course = await courseModel.create(data);
     const DATA = await courseModel
       .findById(course._id)
       .populate({ path: "qualificationType", model: qualificationModel })
