@@ -20,10 +20,7 @@ export const createCourse = async (req, res, next) => {
         .min(3)
         .max(50)
         .required(),
-      courseCode: Joi.string()
-        .min(3)
-        .max(6)
-        .required(),
+      courseCode: Joi.number().required(),
       category: Joi.string().required(),
       duration: Joi.string()
         .min(1)
@@ -111,7 +108,6 @@ export const filterCourses = async (req, res, next) => {
       .populate({ path: "qualificationType", model: qualificationModel })
       .populate({ path: "category", model: categoryModel });
 
-
     courses = courses.filter(
       (item) => item.qualificationType.value <= qualification.value
     );
@@ -126,7 +122,6 @@ export const updateCourse = async (req, res, next) => {
   try {
     const { updateField, updateValue } = req.body;
     const { courseId } = req.params;
-
 
     const schema = Joi.object({
       courseId: Joi.string()
