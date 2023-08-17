@@ -24,6 +24,10 @@ const courseSchema = new Schema(
       unique: true,
       minlength: 3,
       maxlength: 6,
+      validate:{
+        validator: (v) => v.toString().length == 3,
+        message:"code length should be 3"
+      },
       cast: "{VALUE} is not a String",
     },
     category: {
@@ -33,10 +37,10 @@ const courseSchema = new Schema(
       cast: "{VALUE} is not a object id",
     },
     duration: {
-      type: String,
+      type: Number,
       minlength: 1,
       required: "course duration required",
-      cast: "{VALUE} is not a String",
+      cast: "{VALUE} is not a Number",
     },
     qualificationType: {
       type: Schema.Types.ObjectId,
@@ -59,6 +63,25 @@ courseSchema.pre(/^find/, function(next) {
   this.select("-createdAt -updatedAt -__v");
   next();
 });
+mongoose.connection.syncIndexes()
+  .then(() => {
+    console.log("Indexes synchronized successfully.");
+  })
+  .catch((error) => {
+    console.error("Error synchronizing indexes:", error);
+  });
+
+// courseSchema.pre("save", async function (next) {
+//   const existingCourse = await this.constructor.findOne({
+//     courseCode: this.courseCode,
+//   });
+
+//   if (existingCourse) {
+//     this.invalidate("courseCode", "Course code must be unique.");
+//   }
+
+//   next();
+// });
 
 const courseModel = mongoose.model("courses", courseSchema, "course");
 export default courseModel;

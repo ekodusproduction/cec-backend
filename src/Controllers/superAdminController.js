@@ -93,7 +93,7 @@ export const createSuperAdmin = async (req, res, next) => {
     );
 
     return res.status(201).send({
-      data: { message: "superadmin created successfully" },
+      data: user,
       status: "ok",
     });
   } catch (err) {

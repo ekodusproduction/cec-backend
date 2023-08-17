@@ -24,6 +24,7 @@ mongoose
   .connect(uri, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
+    autoIndex: true,
   })
   .then(() =>
     console.log(
@@ -31,6 +32,14 @@ mongoose
     )
   )
   .catch((err) => console.log(err));
+
+  mongoose.connection.syncIndexes()
+  .then(() => {
+    console.log("Indexes synchronized successfully.");
+  })
+  .catch((error) => {
+    console.error("Error synchronizing indexes:", error);
+  });
 
 const port = process.env.NODE_PORT || 3000;
 app.listen(port, () => console.log("server running on " + port));

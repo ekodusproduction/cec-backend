@@ -393,12 +393,14 @@ export const getStudentByRoll = async (req, res, next) => {
       });
     }
 
-    const student = await studentModel.findOne({
-      rollNumber: rollNumber,
-      centerId: req.id,
-    }).populate({ path: "centerId", model: centerModel })
-    .populate({ path: "course", model: courseModel })
-    .populate({ path: "qualification", model: qualificationModel });;
+    const student = await studentModel
+      .findOne({
+        rollNumber: rollNumber,
+        centerId: req.id,
+      })
+      .populate({ path: "centerId", model: centerModel })
+      .populate({ path: "course", model: courseModel })
+      .populate({ path: "qualification", model: qualificationModel });
 
     if (!student) {
       return res
@@ -472,21 +474,19 @@ export const addNewCourse = async (req, res, next) => {
 
 export const updateStudent = async (req, res, next) => {
   try {
-    const { id, updateField, updateValue } = req.body;
+    const updateObj = req.body;
+    const studentId = req.params;
+    if (!studentId) {
+      return res
+        .status(404)
+        .send({ message: "Student not found", status: 404 });
+    }
+    const student = await studentModel.findById(studentId);
 
-    const schema = Joi.object({
-      id: Joi.string()
-        .regex(/^[0-9a-fA-F]{24}$}/)
-        .required(),
-      updateField: Joi.string().required(),
-      updateValue: Joi.string().required(),
-    });
-    let data = { id, updateField, updateValue };
-    const { error, value } = schema.validate(data);
-    if (error) {
+    if (!(Object(updateObj).keys().length > 0)) {
       return res
         .status(400)
-        .send({ message: error.details[0].message, status: "fail" });
+        .send({ message: "Invalid request . Send update object", status: 400 });
     }
     const updateObject = {};
     updateObject[updateField] = updateValue;
