@@ -22,7 +22,7 @@ export const createCourse = async (req, res, next) => {
         .required(),
       courseCode: Joi.string().required(),
       // category: Joi.string().required(),
-      duration: Joi.string()
+      duration: Joi.number()
         .min(1)
         .required(),
       qualificationType: Joi.string().required(),
