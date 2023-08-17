@@ -189,7 +189,7 @@ export const createcenter = async (req, res, next) => {
       email,
       adminMobile,
     };
-    if (alternateNumber != "") {
+    if (alternateNumber == "") {
       data.alternateNumber = alternateNumber;
     }
     const { error, value } = schema.validate(data);
@@ -216,7 +216,7 @@ export const createcenter = async (req, res, next) => {
       mobile: adminMobile,
     });
     if (!centerAdmin) {
-      return res.status(200).send({
+      return res.status(400).send({
         data: "Invalid request. Please provide valid mobile number",
         status: "fail",
       });

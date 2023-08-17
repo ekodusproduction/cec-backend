@@ -74,7 +74,7 @@ export const createcenterAdmin = async (req, res, next) => {
       password,
       mobile,
     } = req.body;
-    if (alternateNumber == "") {
+    if (alternateNumber == "" ) {
       alternateNumber = mobile;
     }
     const schema = Joi.object({
