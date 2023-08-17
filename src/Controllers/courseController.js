@@ -20,7 +20,7 @@ export const createCourse = async (req, res, next) => {
         .min(3)
         .max(50)
         .required(),
-      courseCode: Joi.number().required(),
+      courseCode: Joi.string().required(),
       // category: Joi.string().required(),
       duration: Joi.string()
         .min(1)
