@@ -22,8 +22,6 @@ const courseSchema = new Schema(
       type: String,
       required: "course code required",
       unique: true,
-      minlength: 3,
-      maxlength: 6,
       validate:{
         validator: (v) => v.toString().length == 3,
         message:"code length should be 3"
