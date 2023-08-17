@@ -32,7 +32,7 @@ export const createCourse = async (req, res, next) => {
         .max(50)
         .required(),
     });
-    const courseCodeExist = await courseModel.findOne({courseCode:courseCode})
+    const courseCodeExist = await courseModel.findOne({courseCode})
     if(!courseCodeExist){
       return res.status(400).send({message:"Course code exist. Please send another course code"})
     }
