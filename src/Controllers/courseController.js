@@ -71,7 +71,6 @@ export const getCourse = async (req, res, next) => {
     const courses = await courseModel
       .find({})
       .populate({ path: "qualificationType", model: qualificationModel })
-      .populate({ path: "category", model: categoryModel });
 
     return res.status(200).send({ data: courses, status: "ok" });
   } catch (err) {
@@ -98,7 +97,6 @@ export const filterCourses = async (req, res, next) => {
     let courses = await courseModel
       .find({})
       .populate({ path: "qualificationType", model: qualificationModel })
-      .populate({ path: "category", model: categoryModel });
 
     courses = courses.filter(
       (item) => item.qualificationType.value <= qualification.value
