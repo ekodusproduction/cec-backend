@@ -33,7 +33,7 @@ export const createCourse = async (req, res, next) => {
         .required(),
     });
     const courseCodeExist = await courseModel.findOne({ courseCode });
-    if (!courseCodeExist) {
+    if (courseCodeExist) {
       return res
         .status(400)
         .send({
@@ -41,13 +41,14 @@ export const createCourse = async (req, res, next) => {
         });
     }
     const courseNameExist = await courseModel.findOne({ courseName });
-    if (!courseNameExist) {
+    if (courseNameExist) {
       return res
         .status(400)
         .send({
           message: "Course name exist. Please send another course name",
         });
     }
+
     let data = {
       courseName,
       courseCode,
