@@ -244,6 +244,13 @@ export const createcenter = async (req, res, next) => {
       .status(400)
       .send({ message: "center Code exist. Please provide another center code", status: 400 });
     }
+
+    const centerNameExist = await centerModel.findOne({centerName});
+    if(centerNameExist){
+      return res
+      .status(400)
+      .send({ message: "Center name exist. Please provide another center name", status: 400 });
+    }
     data.dateofReg = convertToDate(dateofReg);
     // const count = await centerModel.countDocuments();
     const centerAdmin = await centerAdminModel.findOne({
