@@ -177,7 +177,7 @@ export const createcenter = async (req, res, next) => {
       adminMobile: Joi.number().required(),
     });
   if (alternateNumber == "") {
-      data.alternateNumber = whatsApp;
+      alternateNumber = whatsApp;
     }
     let data = {
       centerName,
