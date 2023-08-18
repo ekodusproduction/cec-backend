@@ -24,7 +24,7 @@ const courseSchema = new Schema(
       unique: true,
       validate:{
         validator: (v) => v.toString().length <= 5,
-        message:"code length should be 3"
+        message:"code length should be less than equal to 5"
       },
       cast: "{VALUE} is not a String",
     },
