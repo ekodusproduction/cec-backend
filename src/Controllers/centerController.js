@@ -235,8 +235,8 @@ export const createcenter = async (req, res, next) => {
     });
     if (!centerAdmin) {
       return res.status(400).send({
-        data: "Invalid request. Please provide valid mobile number",
-        status: "fail",
+        message: "Invalid request. Please provide valid mobile number",
+        status: 400,
       });
     }
     // data["centerId"] = `${(count + 1).toString().padStart(3, "0")}`;
@@ -249,7 +249,7 @@ export const createcenter = async (req, res, next) => {
       { $addToSet: { centers: center._id } }
     );
 
-    return res.status(200).send({ data: center, status: "ok" });
+    return res.status(201).send({ data: center, status: 201 });
   } catch (err) {
     return res.status(500).send({ message: err, status: "fail" });
   }
