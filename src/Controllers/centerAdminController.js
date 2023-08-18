@@ -74,7 +74,7 @@ export const createcenterAdmin = async (req, res, next) => {
       password,
       mobile,
     } = req.body;
-    if (alternateNumber == "" ) {
+    if (alternateNumber == "") {
       alternateNumber = mobile;
     }
     const schema = Joi.object({
@@ -82,7 +82,7 @@ export const createcenterAdmin = async (req, res, next) => {
       alternateNumber: Joi.number(),
       email: Joi.string().required(),
       address: Joi.string().required(),
-      pinCode: Joi.string().required(),
+      pinCode: Joi.number().required(),
       state: Joi.string().required(),
       district: Joi.string().required(),
       password: Joi.string().required(),
