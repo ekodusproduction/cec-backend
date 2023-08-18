@@ -18,7 +18,7 @@ const router = Router();
 
 router.route("/center/login").post(loginCenter);
 
-router.route("/center/all").get(verifyToken, getAllCenter);
+router.route("/center/all").get(verifyToken, isSuperAdmin, getAllCenter);
 router.route("/center/inactive").get(verifyToken, getAllInactiveCenter);
 router
   .route("/center/centeradmin/:centeradminId")

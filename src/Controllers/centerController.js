@@ -176,7 +176,7 @@ export const createcenter = async (req, res, next) => {
       email: Joi.string().required(),
       adminMobile: Joi.number().required(),
     });
-  if (alternateNumber == "") {
+    if (alternateNumber == "") {
       alternateNumber = whatsApp;
     }
     let data = {
@@ -191,9 +191,9 @@ export const createcenter = async (req, res, next) => {
       whatsApp,
       email,
       adminMobile,
-      alternateNumber
+      alternateNumber,
     };
-  
+    console.log("datadfatttt",data)
     const { error, value } = schema.validate(data);
     if (error) {
       return res
