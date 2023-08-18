@@ -86,7 +86,7 @@ export const createcenterAdmin = async (req, res, next) => {
       state: Joi.string().required(),
       district: Joi.string().required(),
       password: Joi.string().required(),
-      mobile: Joi.string().required(),
+      mobile: Joi.number().required(),
     });
 
     let data = {
