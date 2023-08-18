@@ -8,6 +8,7 @@ import Joi from "joi";
 import { sendMessage } from "../Airtel/airtel.js";
 import courseModel from "../Models/courseModel.js";
 import qualificationModel from "../Models/qualificationModel.js";
+import superAdminModel from "../Models/superAdminModel.js";
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const appDir = dirname(`${import.meta.filename}`);
 const baseUrl = `139.59.83.187`;
@@ -392,16 +393,28 @@ export const getStudentByRoll = async (req, res, next) => {
         status: "fail",
       });
     }
-
-    const student = await studentModel
-      .findOne({
-        rollNumber: rollNumber,
-        centerId: req.id,
-      })
-      .populate({ path: "centerId", model: centerModel })
-      .populate({ path: "course", model: courseModel })
-      .populate({ path: "qualification", model: qualificationModel });
-
+    const isSuper = await superAdminModel
+      .findById(req.id)
+      .select({ firstName: 1 });
+    let student;
+    if (isSuper) {
+      student = await studentModel
+        .findOne({
+          rollNumber: rollNumber,
+        })
+        .populate({ path: "centerId", model: centerModel })
+        .populate({ path: "course", model: courseModel })
+        .populate({ path: "qualification", model: qualificationModel });
+    } else {
+      student = await studentModel
+        .findOne({
+          rollNumber: rollNumber,
+          centerId: req.id,
+        })
+        .populate({ path: "centerId", model: centerModel })
+        .populate({ path: "course", model: courseModel })
+        .populate({ path: "qualification", model: qualificationModel });
+    }
     if (!student) {
       return res
         .status(200)
@@ -502,7 +515,6 @@ export const updateStudent = async (req, res, next) => {
     return res.status(500).send({ message: err.message, status: "fail" });
   }
 };
-
 export const fileUploads = async (req, res, next) => {
   try {
     const { rollNumber } = req.body;
