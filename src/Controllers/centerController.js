@@ -191,7 +191,7 @@ export const createcenter = async (req, res, next) => {
       adminMobile,
     };
     if (alternateNumber == "") {
-      data.alternateNumber = alternateNumber;
+      data.alternateNumber = whatsApp;
     }
     const { error, value } = schema.validate(data);
     if (error) {
