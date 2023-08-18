@@ -166,29 +166,28 @@ export const getAllInactiveCenterAdmin = async (req, res, next) => {
 
 export const updatecenterAdmin = async (req, res, next) => {
   try {
-    const { id, updateField, updateValue } = req.body;
-    const schema = Joi.object({
-      id: Joi.string().required(),
-      updateField: Joi.string().required(),
-      updateValue: Joi.string().required(),
-    });
+    const updateObj = req.body;
+    const centerAdminId = req.params;
+    if (!centerAdminId) {
+      return res
+        .status(404)
+        .send({ message: "center Admin not found", status: 404 });
+    }
+    const centerAdmin = await centerAdminModel.findById(centerAdminId);
 
-    let data = { id, updateField, updateValue };
-    const { error, value } = schema.validate(data);
-    if (error) {
+    if (!(Object(updateObj).keys().length > 0)) {
       return res
         .status(400)
-        .send({ message: error.details[0].message, status: "fail" });
+        .send({ message: "Invalid request . Send update object", status: 400 });
     }
 
-    const updateObject = { [updateField]: updateValue };
-    const updatedAdmin = await centerAdminModel.findByIdAndUpdate(
+    const updatedStudent = await studentModel.findByIdAndUpdate(
       id,
-      updateObject,
+      { $set: updateObj },
       { new: true }
     );
 
-    return res.status(200).send({ data: updatedAdmin, status: "ok" });
+    return res.status(200).send({ data: updatedStudent, status: "ok" });
   } catch (err) {
     return res.status(500).send({ message: err.message, status: "fail" });
   }

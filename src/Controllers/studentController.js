@@ -501,12 +501,10 @@ export const updateStudent = async (req, res, next) => {
         .status(400)
         .send({ message: "Invalid request . Send update object", status: 400 });
     }
-    const updateObject = {};
-    updateObject[updateField] = updateValue;
-
+   
     const updatedStudent = await studentModel.findByIdAndUpdate(
       id,
-      { $set: updateObject },
+      { $set: updateObj },
       { new: true }
     );
 

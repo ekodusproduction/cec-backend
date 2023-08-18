@@ -280,40 +280,31 @@ export const createcenter = async (req, res, next) => {
 
 export const updatecenter = async (req, res, next) => {
   try {
-    const { id, updateField, updateValue } = req.body;
+    const updateObj = req.body;
+    const centerId = req.params;
+    if (!centerId) {
+      return res
+        .status(404)
+        .send({ message: "Center not found", status: 404 });
+    }
+    const center = await centerModel.findById(centerId);
 
-    const schema = Joi.object({
-      id: Joi.string().required(),
-      updateField: Joi.string().required(),
-      updateValue: Joi.string().required(),
-    });
-
-    let data = { id, updateField, updateValue };
-    const { error, value } = schema.validate(data);
-    if (error) {
+    if (!(Object(updateObj).keys().length > 0)) {
       return res
         .status(400)
-        .send({ message: error.details[0].message, status: "fail" });
+        .send({ message: "Invalid request . Send update object", status: 400 });
     }
 
-    const dynamicUpdate = { [updateField]: updateValue };
-    if (updateField == "courses" || updateField == "categories") {
-      const update = await centerModel.findByIdAndUpdate(
-        { _id: id },
-        { $addToSet: dynamicUpdate },
-        { new: true }
-      );
-      return res.status(200).send({ data: update, status: "ok" });
-    } else {
-      const update = await centerModel.findByIdAndUpdate(
-        { _id: id },
-        dynamicUpdate,
-        { new: true }
-      );
-      return res.status(200).send({ data: update, status: "ok" });
-    }
+
+    const updateCenter = await studentModel.findByIdAndUpdate(
+      id,
+      { $set: updateObj },
+      { new: true }
+    );
+
+    return res.status(200).send({ data: updateCenter, status: 200 });
   } catch (err) {
-    return res.status(500).send({ message: err.message, status: "fail" });
+    return res.status(500).send({ message: err.message, status: 500 });
   }
 };
 
