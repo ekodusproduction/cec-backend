@@ -32,9 +32,21 @@ export const createCourse = async (req, res, next) => {
         .max(50)
         .required(),
     });
-    const courseCodeExist = await courseModel.findOne({courseCode})
-    if(!courseCodeExist){
-      return res.status(400).send({message:"Course code exist. Please send another course code"})
+    const courseCodeExist = await courseModel.findOne({ courseCode });
+    if (!courseCodeExist) {
+      return res
+        .status(400)
+        .send({
+          message: "Course code exist. Please send another course code",
+        });
+    }
+    const courseNameExist = await courseModel.findOne({ courseName });
+    if (!courseNameExist) {
+      return res
+        .status(400)
+        .send({
+          message: "Course name exist. Please send another course name",
+        });
     }
     let data = {
       courseName,
@@ -52,12 +64,10 @@ export const createCourse = async (req, res, next) => {
         .send({ message: error.details[0].message, status: "fail" });
     }
 
-
     const course = await courseModel.create(data);
     const DATA = await courseModel
       .findById(course._id)
-      .populate({ path: "qualificationType", model: qualificationModel })
-      
+      .populate({ path: "qualificationType", model: qualificationModel });
 
     return res.status(201).send({
       data: DATA,
@@ -73,7 +83,7 @@ export const getCourse = async (req, res, next) => {
   try {
     const courses = await courseModel
       .find({})
-      .populate({ path: "qualificationType", model: qualificationModel })
+      .populate({ path: "qualificationType", model: qualificationModel });
 
     return res.status(200).send({ data: courses, status: "ok" });
   } catch (err) {
@@ -99,7 +109,7 @@ export const filterCourses = async (req, res, next) => {
     }
     let courses = await courseModel
       .find({})
-      .populate({ path: "qualificationType", model: qualificationModel })
+      .populate({ path: "qualificationType", model: qualificationModel });
 
     courses = courses.filter(
       (item) => item.qualificationType.value <= qualification.value
