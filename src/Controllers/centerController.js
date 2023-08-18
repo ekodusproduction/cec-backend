@@ -6,7 +6,7 @@ import Joi from "joi";
 import { dirname } from "path";
 import { fileURLToPath } from "url";
 import { generateToken } from "../Auth/authentication.js";
-import { pinCodeValidator } from "../Utils/validator.js";
+import { pinCodeValidator , mobileValidator} from "../Utils/validator.js";
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const appDir = dirname(`${import.meta.filename}`);
 
