@@ -210,7 +210,7 @@ export const createcenter = async (req, res, next) => {
     }
     console.log("mmmmmmmmmmmm")
 
-    if (!pinCodeValidator(val)) {
+    if (!pinCodeValidator(pinCode)) {
       return res.status(400).send({
         message: "provide valid pincode",
         status: 400,
