@@ -6,6 +6,7 @@ import Joi from "joi";
 import { dirname } from "path";
 import { fileURLToPath } from "url";
 import { generateToken } from "../Auth/authentication.js";
+import { pinCodeValidator } from "../Utils/validator.js";
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const appDir = dirname(`${import.meta.filename}`);
 
@@ -203,16 +204,23 @@ export const createcenter = async (req, res, next) => {
         .status(400)
         .send({ message: "Invalid whatsApp number", status: 400 });
     }
+
+    if (!pinCodeValidator(val)) {
+      return res.status(400).send({
+        message: "provide valid pincode",
+        status: 400,
+      });
+    }
+    if (!adminMobile) {
+      return res.status(400).send({
+        message: "provide admin loginId/number",
+        status: 400,
+      });
+    }
     if (!mobileValidator(adminMobile)) {
       return res
         .status(400)
         .send({ message: "Invalid adminMobile number", status: 400 });
-    }
-
-    if (!adminMobile) {
-      return res
-        .status(400)
-        .send({ data: { message: "provide admin loginId/number" }, status: 400 });
     }
 
     const convertToDate = (DOB) => {
