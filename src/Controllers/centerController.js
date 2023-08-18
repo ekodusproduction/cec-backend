@@ -200,6 +200,9 @@ export const createcenter = async (req, res, next) => {
         .status(400)
         .send({ message: error.details[0].message, status: "fail" });
     }
+
+    console.log("sssssssssssssssss",data)
+
     if (!mobileValidator(whatsApp)) {
       return res
         .status(400)
