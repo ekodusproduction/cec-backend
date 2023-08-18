@@ -208,6 +208,7 @@ export const createcenter = async (req, res, next) => {
         .status(400)
         .send({ message: "Invalid whatsApp number", status: 400 });
     }
+    console.log("mmmmmmmmmmmm")
 
     if (!pinCodeValidator(val)) {
       return res.status(400).send({
@@ -215,22 +216,28 @@ export const createcenter = async (req, res, next) => {
         status: 400,
       });
     }
+    console.log("pppppppppp")
+
     if (!adminMobile) {
       return res.status(400).send({
         message: "provide admin loginId/number",
         status: 400,
       });
     }
+    console.log("aaaaaaaaaaaaaaa")
+
     if (!mobileValidator(adminMobile)) {
       return res
         .status(400)
         .send({ message: "Invalid adminMobile number", status: 400 });
     }
+    console.log("amamamamama")
 
     const convertToDate = (DOB) => {
       const [year, day, month] = DOB.split("-").map(Number);
       return new Date(year, month - 1, day); // Month is 0-based in JavaScript Date, so subtract 1 from the month value.
     };
+    console.log("dbodbodobd")
 
     data.dateofReg = convertToDate(dateofReg);
     // const count = await centerModel.countDocuments();
