@@ -92,11 +92,11 @@ export const loginCenter = async (req, res, next) => {
         status: "fail",
       });
     }
-    
+
     const token = generateToken(centerCodeExist._id);
     return res
       .status(200)
-      .send({ data: {centerCodeExist}, token: token, status: "ok" });
+      .send({ data: { centerCodeExist }, token: token, status: "ok" });
   } catch (err) {
     return res.status(500).send({ message: err.message, status: "fail" });
   }
@@ -198,11 +198,21 @@ export const createcenter = async (req, res, next) => {
         .status(400)
         .send({ message: error.details[0].message, status: "fail" });
     }
+    if (!mobileValidator(whatsApp)) {
+      return res
+        .status(400)
+        .send({ message: "Invalid whatsApp number", status: 400 });
+    }
+    if (!mobileValidator(adminMobile)) {
+      return res
+        .status(400)
+        .send({ message: "Invalid adminMobile number", status: 400 });
+    }
 
     if (!adminMobile) {
       return res
         .status(400)
-        .send({ data: { message: "provide admin loginId" }, status: "fail" });
+        .send({ data: { message: "provide admin loginId/number" }, status: 400 });
     }
 
     const convertToDate = (DOB) => {
