@@ -238,7 +238,12 @@ export const createcenter = async (req, res, next) => {
       return new Date(year, month - 1, day); // Month is 0-based in JavaScript Date, so subtract 1 from the month value.
     };
     console.log("dbodbodobd")
-
+    const centerCodeExist = await centerModel.findOne({centerCode});
+    if(centerCodeExist){
+      return res
+      .status(400)
+      .send({ message: "center Code exist. Please provide another center code", status: 400 });
+    }
     data.dateofReg = convertToDate(dateofReg);
     // const count = await centerModel.countDocuments();
     const centerAdmin = await centerAdminModel.findOne({
