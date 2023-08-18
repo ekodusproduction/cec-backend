@@ -7,6 +7,7 @@ import { dirname, join } from "path";
 import { fileURLToPath } from "url";
 import Joi from "joi";
 import { sendMessage } from "../Airtel/airtel.js";
+import { mobileValidator } from "../Utils/validator.js";
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const appDir = dirname(`${import.meta.filename}`);
 var baseUrl = `139.59.83.187`;
@@ -105,9 +106,13 @@ export const createcenterAdmin = async (req, res, next) => {
     if (error) {
       return res
         .status(400)
-        .send({ message: error.details[0].message, status: "fail" });
+        .send({ message: error.details[0].message, status: 400 });
     }
-
+    if (!mobileValidator(mobile)) {
+      return res
+        .status(400)
+        .send({ message: "Invalid mobile number", status: 400 });
+    }
     const saltRounds = 10;
     const salt = await bcrypt.genSalt(saltRounds);
     const encryptedPassword = await bcrypt.hash(password, salt);
