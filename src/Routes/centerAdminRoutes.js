@@ -18,10 +18,11 @@ const router = Router();
 router
   .route("/centeradmin")
   .post(verifyToken, createcenterAdmin)
-  .put(verifyToken, updatecenterAdmin)
+
   .delete(verifyToken, isSuperAdmin, deletecenterAdmin)
   .get(verifyToken, getcenterAdmin);
 
+router.route("/centeradmin/:centerAdminId").put(verifyToken, updatecenterAdmin);
 router.route("/centeradmin/fileuploads").put(verifyToken, fileUpload);
 router.route("/centeradmin/all").get(verifyToken, getAllcenterAdmin);
 router

@@ -25,14 +25,13 @@ router
   .get(verifyToken, getAllCentersUnderAdmin);
 
 router.route("/center/:centerId").get(verifyToken, getCenter);
-router.post("/center/cart/addtocart", verifyToken, addToCart);
-router.post("/center/cart/getcart", verifyToken, getCart);
-router.post("/center/cart/deletecart", verifyToken, deleteCart);
+router.route("/center/:centerId").put(verifyToken, updatecenter);
 
-router
-  .route("/center")
-  .post(verifyToken, isSuperAdmin, createcenter)
-  .put(verifyToken, updatecenter);
+router.put("/center/cart/addtocart", verifyToken, addToCart);
+router.get("/center/cart/getcart", verifyToken, getCart);
+router.delete("/center/cart/deletecart", verifyToken, deleteCart);
+
+router.route("/center").post(verifyToken, isSuperAdmin, createcenter);
 router.route("/center").delete(verifyToken, isSuperAdmin, deletecenter);
 
 const centerRoutes = router;
