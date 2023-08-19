@@ -402,7 +402,7 @@ export const getStudentByRoll = async (req, res, next) => {
         .findOne({
           rollNumber: rollNumber,
         })
-        .populate({ path: "centerId", model: centerModel })
+        .populate({ path: "centerId", model: centerModel, select:{centerName:1, centerCode:1} })
         .populate({ path: "course", model: courseModel })
         .populate({ path: "qualification", model: qualificationModel });
     } else {
