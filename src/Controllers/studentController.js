@@ -309,11 +309,12 @@ export const getallStudentSuper = async (req, res, next) => {
       .find({
         isActive: true,
       })
-      .populate({ path: "course", model: courseModel })
       .skip(skip)
       .limit(limit)
       .sort(sort)
-      .populate({ path: "centerId", model: centerModel });
+      .populate({ path: "centerId", model: centerModel, select:{centerName:1, centerCode:1} })
+      .populate({ path: "course", model: courseModel })
+      .populate({ path: "qualification", model: qualificationModel });
 
     return res.status(200).send({ data: students, status: "ok" });
   } catch (err) {
@@ -350,7 +351,8 @@ export const getallStudentCenter = async (req, res, next) => {
       .skip(skip)
       .limit(limit)
       .sort(sort)
-      .populate({ path: "course", model: courseModel });
+      .populate({ path: "course", model: courseModel })
+      .populate({ path: "qualification", model: qualificationModel });
     // .populate({ path: "centerId", model: centerModel })
     // .populate({ path: "course", model: courseModel });
     const oneMonthAgo = new Date();
@@ -411,7 +413,7 @@ export const getStudentByRoll = async (req, res, next) => {
           rollNumber: rollNumber,
           centerId: req.id,
         })
-        .populate({ path: "centerId", model: centerModel })
+        .populate({ path: "centerId", model: centerModel, select:{centerName:1, centerCode:1} })
         .populate({ path: "course", model: courseModel })
         .populate({ path: "qualification", model: qualificationModel });
     }
