@@ -504,7 +504,7 @@ export const updateStudent = async (req, res, next) => {
     }
 
     const updatedStudent = await studentModel.findByIdAndUpdate(
-      id,
+      studentId,
       { $set: updateObj },
       { new: true }
     );
