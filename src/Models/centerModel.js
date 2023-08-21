@@ -107,7 +107,6 @@ const centerSchema = new Schema(
     state: { type: String, required: "center state required" },
     isActive: { type: Boolean, default: true },
     cart: { type: orderSchema },
-    isSuperAdmin: { type: Boolean, default: true },
     isSuperAdmin: { type: Boolean, default: false },
   },
   {
