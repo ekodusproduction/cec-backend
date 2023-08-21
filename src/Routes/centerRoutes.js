@@ -33,6 +33,7 @@ router.delete("/center/cart/deletecart", verifyToken, deleteCart);
 
 router.route("/center").post(verifyToken, isSuperAdmin, createcenter);
 router.route("/center").delete(verifyToken, isSuperAdmin, deletecenter);
+router.route("/center/changepassword").put(verifyToken, isSuperAdmin, deletecenter);
 
 const centerRoutes = router;
 export default centerRoutes;

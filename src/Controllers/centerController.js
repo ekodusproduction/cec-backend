@@ -454,16 +454,15 @@ export const deleteCart = async (req, res, next) => {
 
 export const changePassword = async (req, res, next) => {
   try {
-    const { centerName, centerCode, newPassword, confirmPassword } = req.body;
+    const {  centerId, newPassword, confirmPassword } = req.body;
 
     const schema = Joi.object({
-      centerName: Joi.string().required(),
-      centerCode: Joi.string().required(),
-      newPassword: Joi.string().required(),
-      confirmPassword: Joi.string().required(),
+      centerId: Joi.string().min(8).required(),
+      newPassword: Joi.string().min(8).required(),
+      confirmPassword: Joi.string().min(8).required(),
     });
 
-    let data = { centerName, centerCode, newPassword, confirmPassword };
+    let data = { centerId, newPassword, confirmPassword };
     const { error, value } = schema.validate(data);
     if (error) {
       return res
@@ -480,7 +479,7 @@ export const changePassword = async (req, res, next) => {
     }
     const encryptedPassword = await bcrypt.hash(password, 10);
     const center = await centerModel.findOneAndUpdate(
-      { centerName, centerCode },
+      { centerId},
       { password: encryptedPassword },
       { new: true }
     );
