@@ -35,7 +35,7 @@ router.delete("/center/cart/deletecart", verifyToken, deleteCart);
 router.route("/center").post(verifyToken, isSuperAdmin, createcenter);
 router.route("/center").delete(verifyToken, isSuperAdmin, deletecenter);
 router
-  .route("/center/changepassword")
+  .route("/changepassword/center")
   .put(verifyToken, isSuperAdmin, changePassword);
 
 const centerRoutes = router;
