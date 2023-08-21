@@ -26,7 +26,7 @@ router
   .route("/student/:studentId")
   .delete(verifyToken, isSuperAdmin, deleteStudent);
 
-router.route("/student/all").get(verifyToken, getallStudentSuper);
+router.route("/student/all").get(verifyToken, isSuperAdmin,getallStudentSuper);
 router.route("/student/center/:centerId").get(verifyToken, getallStudentCenter);
 router.route("/student/inactive").get(verifyToken, getallInactiveStudent);
 

@@ -13,6 +13,18 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const appDir = dirname(`${import.meta.filename}`);
 const baseUrl = `139.59.83.187`;
 
+const generateRollNumber = async (centerId) => {
+  const regCenter = await centerModel.findById(centerId);
+  const count = await studentModel.countDocuments({
+    center: centerId,
+    regYear: new Date().getFullYear(),
+  });
+  const rollNumber = `${(count % 1000) +
+    1}${`${new Date().getFullYear()}`.slice(-2)}${regCenter.franchiseCode}`;
+
+  return rollNumber;
+};
+
 export const studentRegister = async (req, res, next) => {
   try {
     let {
@@ -30,6 +42,7 @@ export const studentRegister = async (req, res, next) => {
       cityPermanent,
       pinCodePermanent,
       centerCode,
+      courses,
     } = req.body;
 
     centerCode = centerCode * 1;
@@ -76,6 +89,7 @@ export const studentRegister = async (req, res, next) => {
         .max(999999)
         .required(),
       centerCode: Joi.number().required(),
+      courses: Joi.array().required(),
     });
 
     let data = {
@@ -93,6 +107,7 @@ export const studentRegister = async (req, res, next) => {
       cityPermanent,
       pinCodePermanent,
       centerCode,
+      courses,
     };
     let { error, value } = schema.validate(data);
     if (error) {
@@ -115,7 +130,7 @@ export const studentRegister = async (req, res, next) => {
         .status(404)
         .send({ data: { message: "center not found" }, status: "fail" });
     }
-
+    data.rollNumber = await generateRollNumber(center._id);
     let student = await studentModel.create(data);
     const centerUpdate = await centerModel.findByIdAndUpdate(
       { _id: center._id },
@@ -145,6 +160,7 @@ export const studentRegisterCenter = async (req, res, next) => {
       statePermanent,
       cityPermanent,
       pinCodePermanent,
+      courses,
     } = req.body;
 
     let schema = Joi.object({
@@ -189,6 +205,7 @@ export const studentRegisterCenter = async (req, res, next) => {
         .min(100000)
         .max(999999)
         .required(),
+      courses: Joi.array().required(),
     });
 
     let data = {
@@ -205,6 +222,7 @@ export const studentRegisterCenter = async (req, res, next) => {
       statePermanent,
       cityPermanent,
       pinCodePermanent,
+      courses,
     };
     let { error, value } = schema.validate(data);
     if (error) {
@@ -227,6 +245,7 @@ export const studentRegisterCenter = async (req, res, next) => {
         .status(404)
         .send({ data: { message: "center not found" }, status: "fail" });
     }
+    data.rollNumber = await generateRollNumber(center._id);
 
     let student = await studentModel.create(data);
     const centerUpdate = await centerModel.findByIdAndUpdate(
@@ -237,62 +256,6 @@ export const studentRegisterCenter = async (req, res, next) => {
     let text = `Student registered succesfully with CEC. To generate rollnumber please pay for the course`;
     // sendMessage(text, mobile);
     return res.status(200).send({ data: student, status: "ok" });
-  } catch (err) {
-    return res.status(500).send({ message: err.message, status: "fail" });
-  }
-};
-
-export const generateRollNumber = async (req, res, next) => {
-  try {
-    const { studentId } = req.body;
-
-    const schema = Joi.object({
-      studentId: Joi.string()
-        .regex(/^[0-9a-fA-F]{24}$}/)
-        .required(),
-    });
-
-    let data = {
-      studentId,
-    };
-    const { error, value } = schema.validate(data);
-    if (error) {
-      return res
-        .status(400)
-        .send({ message: error.details[0].message, status: "fail" });
-    }
-
-    const updatedStudent = await studentModel.findOneAndUpdate(
-      {
-        _id: studentId,
-        "course.courseId": courseId,
-        "course.paymentStatus": "paid",
-      },
-      { $set: { "course.$.paymentStatus": "paid" } },
-      { new: true }
-    );
-
-    if (!updatedStudent) {
-      return res
-        .status(400)
-        .send({ message: "Payment not done or invalid data.", status: "fail" });
-    }
-
-    const regCenter = await centerModel.findById(centerId);
-    const count = await studentModel.countDocuments({
-      center: centerId,
-      regYear: new Date().getFullYear(),
-    });
-    const rollNumber = `${(count % 1000) +
-      1}${`${new Date().getFullYear()}`.slice(-2)}${regCenter.franchiseCode}`;
-
-    const updateStudent = await studentModel.findByIdAndUpdate(studentId, {
-      $set: { rollNumber: rollNumber },
-    });
-
-    const text = `Payment succesfull. Your roll number is ${rollNumber} `;
-    sendMessage(text, mobile);
-    return res.status(200).send({ data: updateStudent, status: "ok" });
   } catch (err) {
     return res.status(500).send({ message: err.message, status: "fail" });
   }
@@ -312,7 +275,11 @@ export const getallStudentSuper = async (req, res, next) => {
       .skip(skip)
       .limit(limit)
       .sort(sort)
-      .populate({ path: "centerId", model: centerModel, select:{centerName:1, centerCode:1} })
+      .populate({
+        path: "centerId",
+        model: centerModel,
+        select: { centerName: 1, centerCode: 1 },
+      })
       .populate({ path: "course", model: courseModel })
       .populate({ path: "qualification", model: qualificationModel });
 
@@ -355,16 +322,10 @@ export const getallStudentCenter = async (req, res, next) => {
       .populate({ path: "qualification", model: qualificationModel });
     // .populate({ path: "centerId", model: centerModel })
     // .populate({ path: "course", model: courseModel });
-    const oneMonthAgo = new Date();
-    oneMonthAgo.setMonth(oneMonthAgo.getMonth() - 1);
 
-    const studentsCountLastMonth = await studentModel.countDocuments({
-      centerId,
-      createdAt: { $gte: oneMonthAgo },
-    });
 
     return res.status(200).send({
-      data: { list: students, newStudents: studentsCountLastMonth },
+      data: students,
       status: "ok",
     });
   } catch (err) {
@@ -404,7 +365,11 @@ export const getStudentByRoll = async (req, res, next) => {
         .findOne({
           rollNumber: rollNumber,
         })
-        .populate({ path: "centerId", model: centerModel, select:{centerName:1, centerCode:1} })
+        .populate({
+          path: "centerId",
+          model: centerModel,
+          select: { centerName: 1, centerCode: 1 },
+        })
         .populate({ path: "course", model: courseModel })
         .populate({ path: "qualification", model: qualificationModel });
     } else {
@@ -413,7 +378,11 @@ export const getStudentByRoll = async (req, res, next) => {
           rollNumber: rollNumber,
           centerId: req.id,
         })
-        .populate({ path: "centerId", model: centerModel, select:{centerName:1, centerCode:1} })
+        .populate({
+          path: "centerId",
+          model: centerModel,
+          select: { centerName: 1, centerCode: 1 },
+        })
         .populate({ path: "course", model: courseModel })
         .populate({ path: "qualification", model: qualificationModel });
     }
@@ -516,6 +485,7 @@ export const updateStudent = async (req, res, next) => {
     return res.status(500).send({ message: err.message, status: "fail" });
   }
 };
+
 export const fileUploads = async (req, res, next) => {
   try {
     const { rollNumber } = req.body;
