@@ -6,7 +6,7 @@ import Joi from "joi";
 import { dirname } from "path";
 import { fileURLToPath } from "url";
 import { generateToken } from "../Auth/authentication.js";
-import { pinCodeValidator , mobileValidator} from "../Utils/validator.js";
+import { pinCodeValidator, mobileValidator } from "../Utils/validator.js";
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const appDir = dirname(`${import.meta.filename}`);
 
@@ -97,7 +97,7 @@ export const loginCenter = async (req, res, next) => {
     const token = generateToken(centerCodeExist._id);
     return res
       .status(200)
-      .send({ data:  centerCodeExist , token: token, status: "ok" });
+      .send({ data: centerCodeExist, token: token, status: "ok" });
   } catch (err) {
     return res.status(500).send({ message: err.message, status: "fail" });
   }
@@ -161,7 +161,6 @@ export const createcenter = async (req, res, next) => {
       adminMobile,
       centerCode,
     } = req.body;
-
     const schema = Joi.object({
       centerName: Joi.string().required(),
       centerCode: Joi.number().required(),
@@ -193,7 +192,8 @@ export const createcenter = async (req, res, next) => {
       adminMobile,
       alternateNumber,
     };
-    console.log("datadfatttt",data)
+    data.centerName = centerName.toUpperrCase()
+    console.log("datadfatttt", data);
     const { error, value } = schema.validate(data);
     if (error) {
       return res
@@ -201,14 +201,14 @@ export const createcenter = async (req, res, next) => {
         .send({ message: error.details[0].message, status: "fail" });
     }
 
-    console.log("sssssssssssssssss",data)
+    console.log("sssssssssssssssss", data);
 
     if (!mobileValidator(whatsApp)) {
       return res
         .status(400)
         .send({ message: "Invalid whatsApp number", status: 400 });
     }
-    console.log("mmmmmmmmmmmm")
+    console.log("mmmmmmmmmmmm");
 
     if (!pinCodeValidator(pinCode)) {
       return res.status(400).send({
@@ -216,7 +216,7 @@ export const createcenter = async (req, res, next) => {
         status: 400,
       });
     }
-    console.log("pppppppppp")
+    console.log("pppppppppp");
 
     if (!adminMobile) {
       return res.status(400).send({
@@ -224,32 +224,34 @@ export const createcenter = async (req, res, next) => {
         status: 400,
       });
     }
-    console.log("aaaaaaaaaaaaaaa")
+    console.log("aaaaaaaaaaaaaaa");
 
     if (!mobileValidator(adminMobile)) {
       return res
         .status(400)
         .send({ message: "Invalid adminMobile number", status: 400 });
     }
-    console.log("amamamamama")
+    console.log("amamamamama");
 
     const convertToDate = (DOB) => {
       const [year, day, month] = DOB.split("-").map(Number);
       return new Date(year, month - 1, day); // Month is 0-based in JavaScript Date, so subtract 1 from the month value.
     };
-    console.log("dbodbodobd")
-    const centerCodeExist = await centerModel.findOne({centerCode});
-    if(centerCodeExist){
-      return res
-      .status(400)
-      .send({ message: "center Code exist. Please provide another center code", status: 400 });
+    console.log("dbodbodobd");
+    const centerCodeExist = await centerModel.findOne({ centerCode });
+    if (centerCodeExist) {
+      return res.status(400).send({
+        message: "center Code exist. Please provide another center code",
+        status: 400,
+      });
     }
 
-    const centerNameExist = await centerModel.findOne({centerName});
-    if(centerNameExist){
-      return res
-      .status(400)
-      .send({ message: "Center name exist. Please provide another center name", status: 400 });
+    const centerNameExist = await centerModel.findOne({ centerName });
+    if (centerNameExist) {
+      return res.status(400).send({
+        message: "Center name exist. Please provide another center name",
+        status: 400,
+      });
     }
     data.dateofReg = convertToDate(dateofReg);
     // const count = await centerModel.countDocuments();
@@ -283,9 +285,7 @@ export const updatecenter = async (req, res, next) => {
     const updateObj = req.body;
     const centerId = req.params;
     if (!centerId) {
-      return res
-        .status(404)
-        .send({ message: "Center not found", status: 404 });
+      return res.status(404).send({ message: "Center not found", status: 404 });
     }
     const center = await centerModel.findById(centerId);
 
@@ -294,7 +294,6 @@ export const updatecenter = async (req, res, next) => {
         .status(400)
         .send({ message: "Invalid request . Send update object", status: 400 });
     }
-
 
     const updateCenter = await studentModel.findByIdAndUpdate(
       id,
@@ -448,26 +447,38 @@ export const deleteCart = async (req, res, next) => {
   }
 };
 
-
 export const changePassword = async (req, res, next) => {
   try {
-    const {  } = req.body;
+    const { centerName, centerCode, newPassword, confirmPassword } = req.body;
 
     const schema = Joi.object({
-      centerId: Joi.string()
-        .regex(/^[0-9a-fA-F]{24}$}/)
-        .required(),
+      centerName: Joi.string().required(),
+      centerCode: Joi.string().required(),
+      newPassword: Joi.string().required(),
+      confirmPassword: Joi.string().required(),
     });
 
-    let data = { centerId };
+    let data = { centerName, centerCode, newPassword, confirmPassword };
     const { error, value } = schema.validate(data);
     if (error) {
       return res
         .status(400)
         .send({ message: error.details[0].message, status: "fail" });
     }
-
-    const center = await centerModel.findById(req.id);
+    if (newPassword != confirmPassword) {
+      return res
+        .status(400)
+        .send({
+          message:
+            "Invalid request. Confirm password and new password should be same.",
+        });
+    }
+    const encryptedPassword = await bcrypt.hash(password, 10);
+    const center = await centerModel.findOneAndUpdate(
+      { centerName, centerCode },
+      { password: encryptedPassword },
+      { new: true }
+    );
     center.cart = null;
     await center.save();
 
