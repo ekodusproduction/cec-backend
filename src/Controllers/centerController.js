@@ -280,32 +280,37 @@ export const createcenter = async (req, res, next) => {
   }
 };
 
-export const updatecenter = async (req, res, next) => {
+export const updateCenter = async (req, res, next) => {
   try {
-    const updateObj = req.body;
-    const {centerId} = req.params;
-    if (!centerId) {
-      return res.status(404).send({ message: "Center not found", status: 404 });
-    }
-    const center = await centerModel.findById(centerId);
+      const updateObj = req.body;
+      const { centerId } = req.params;
 
-    if (!(Object(updateObj).keys().length > 0)) {
-      return res
-        .status(400)
-        .send({ message: "Invalid request . Send update object", status: 400 });
-    }
+      if (!centerId) {
+          return res.status(404).json({ message: "Center not found", status: 404 });
+      }
 
-    const updateCenter = await studentModel.findByIdAndUpdate(
-      id,
-      { $set: updateObj },
-      { new: true }
-    );
+      const center = await centerModel.findById(centerId);
 
-    return res.status(200).send({ data: updateCenter, status: 200 });
+      if (!center) {
+          return res.status(404).json({ message: "Center not found", status: 404 });
+      }
+
+      if (Object.keys(updateObj).length === 0) {
+          return res.status(400).json({ message: "Invalid request. Send update object", status: 400 });
+      }
+
+      const updatedCenter = await centerModel.findByIdAndUpdate(
+          centerId,
+          { $set: updateObj },
+          { new: true }
+      );
+
+      return res.status(200).json({ data: updatedCenter, status: 200 });
   } catch (err) {
-    return res.status(500).send({ message: err.message, status: 500 });
+      return res.status(500).json({ message: err.message, status: 500 });
   }
 };
+
 
 export const deletecenter = async (req, res, next) => {
   try {
