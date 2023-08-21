@@ -483,13 +483,13 @@ export const changePassword = async (req, res, next) => {
 
     const encryptedPassword = await bcrypt.hash(newPassword, 10);
     console.log("hhiihihihihih")
-    const center = await centerAdminModel.findOneAndUpdate(
+    const centerAdmin = await centerAdminModel.findOneAndUpdate(
       centerAdminId,
       { password: encryptedPassword },
       { new: true }
     );
 
-    return res.status(200).send({ data: center, status: "ok" });
+    return res.status(200).send({ data: centerAdmin, status: "ok" });
   } catch (err) {
     res.status(500).send({ message: err.message, status: "fail" });
   }
