@@ -20,7 +20,7 @@ const generateRollNumber = async (centerId) => {
     regYear: new Date().getFullYear(),
   });
   const rollNumber = `${(count % 1000) +
-    1}${`${new Date().getFullYear()}`.slice(-2)}${regCenter.franchiseCode}`;
+    1}${`${new Date().getFullYear()}`.slice(-2)}${regCenter.centerCode}`;
 
   return rollNumber;
 };
@@ -307,14 +307,6 @@ export const getallStudentCenter = async (req, res, next) => {
         isActive: true,
         centerId: centerId,
       })
-      .select({
-        firstName: 1,
-        lastName: 1,
-        rollNumber: 1,
-        regDate: 1,
-        centerName: 1,
-        courseName: 1,
-      })
       .skip(skip)
       .limit(limit)
       .sort(sort)
@@ -322,7 +314,6 @@ export const getallStudentCenter = async (req, res, next) => {
       .populate({ path: "qualification", model: qualificationModel });
     // .populate({ path: "centerId", model: centerModel })
     // .populate({ path: "course", model: courseModel });
-
 
     return res.status(200).send({
       data: students,
