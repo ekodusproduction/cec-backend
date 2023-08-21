@@ -192,7 +192,7 @@ export const createcenter = async (req, res, next) => {
       adminMobile,
       alternateNumber,
     };
-    data.centerName = centerName.toUpperrCase()
+    data.centerName = centerName.toUpperrCase();
     console.log("datadfatttt", data);
     const { error, value } = schema.validate(data);
     if (error) {
@@ -282,35 +282,36 @@ export const createcenter = async (req, res, next) => {
 
 export const updateCenter = async (req, res, next) => {
   try {
-      const updateObj = req.body;
-      const { centerId } = req.params;
+    const updateObj = req.body;
+    const { centerId } = req.params;
 
-      if (!centerId) {
-          return res.status(404).json({ message: "Center not found", status: 404 });
-      }
+    if (!centerId) {
+      return res.status(404).json({ message: "Center not found", status: 404 });
+    }
 
-      const center = await centerModel.findById(centerId);
+    const center = await centerModel.findById(centerId);
 
-      if (!center) {
-          return res.status(404).json({ message: "Center not found", status: 404 });
-      }
+    if (!center) {
+      return res.status(404).json({ message: "Center not found", status: 404 });
+    }
 
-      if (Object.keys(updateObj).length === 0) {
-          return res.status(400).json({ message: "Invalid request. Send update object", status: 400 });
-      }
+    if (Object.keys(updateObj).length === 0) {
+      return res
+        .status(400)
+        .json({ message: "Invalid request. Send update object", status: 400 });
+    }
 
-      const updatedCenter = await centerModel.findByIdAndUpdate(
-          centerId,
-          { $set: updateObj },
-          { new: true }
-      );
+    const updatedCenter = await centerModel.findByIdAndUpdate(
+      centerId,
+      { $set: updateObj },
+      { new: true }
+    );
 
-      return res.status(200).json({ data: updatedCenter, status: 200 });
+    return res.status(200).json({ data: updatedCenter, status: 200 });
   } catch (err) {
-      return res.status(500).json({ message: err.message, status: 500 });
+    return res.status(500).json({ message: err.message, status: 500 });
   }
 };
-
 
 export const deletecenter = async (req, res, next) => {
   try {
@@ -454,12 +455,16 @@ export const deleteCart = async (req, res, next) => {
 
 export const changePassword = async (req, res, next) => {
   try {
-    const {  centerId, newPassword, confirmPassword } = req.body;
-
+    const { centerId, newPassword, confirmPassword } = req.body;
+    console.log("ghus gaya")
     const schema = Joi.object({
       centerId: Joi.string().required(),
-      newPassword: Joi.string().min(8).required(),
-      confirmPassword: Joi.string().min(8).required(),
+      newPassword: Joi.string()
+        .min(8)
+        .required(),
+      confirmPassword: Joi.string()
+        .min(8)
+        .required(),
     });
 
     let data = { centerId, newPassword, confirmPassword };
@@ -470,20 +475,19 @@ export const changePassword = async (req, res, next) => {
         .send({ message: error.details[0].message, status: "fail" });
     }
     if (newPassword != confirmPassword) {
-      return res
-        .status(400)
-        .send({
-          message:
-            "Invalid request. Confirm password and new password should be same.",
-        });
+      return res.status(400).send({
+        message:
+          "Invalid request. Confirm password and new password should be same.",
+      });
     }
+
     const encryptedPassword = await bcrypt.hash(password, 10);
+    console.log("hhiihihihihih")
     const center = await centerModel.findOneAndUpdate(
       centerId,
       { password: encryptedPassword },
       { new: true }
     );
-
 
     return res.status(200).send({ data: center, status: "ok" });
   } catch (err) {
