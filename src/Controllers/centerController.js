@@ -283,7 +283,7 @@ export const createcenter = async (req, res, next) => {
 export const updatecenter = async (req, res, next) => {
   try {
     const updateObj = req.body;
-    const centerId = req.params;
+    const {centerId} = req.params;
     if (!centerId) {
       return res.status(404).send({ message: "Center not found", status: 404 });
     }
