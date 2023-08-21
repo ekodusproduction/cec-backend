@@ -447,3 +447,32 @@ export const deleteCart = async (req, res, next) => {
     res.status(500).send({ message: err.message, status: "fail" });
   }
 };
+
+
+export const changePassword = async (req, res, next) => {
+  try {
+    const {  } = req.body;
+
+    const schema = Joi.object({
+      centerId: Joi.string()
+        .regex(/^[0-9a-fA-F]{24}$}/)
+        .required(),
+    });
+
+    let data = { centerId };
+    const { error, value } = schema.validate(data);
+    if (error) {
+      return res
+        .status(400)
+        .send({ message: error.details[0].message, status: "fail" });
+    }
+
+    const center = await centerModel.findById(req.id);
+    center.cart = null;
+    await center.save();
+
+    return res.status(200).send({ data: center, status: "ok" });
+  } catch (err) {
+    res.status(500).send({ message: err.message, status: "fail" });
+  }
+};

@@ -167,7 +167,7 @@ export const getAllInactiveCenterAdmin = async (req, res, next) => {
 export const updatecenterAdmin = async (req, res, next) => {
   try {
     const updateObj = req.body;
-    const centerAdminId = req.params;
+    const {centerAdminId} = req.params;
     if (!centerAdminId) {
       return res
         .status(404)

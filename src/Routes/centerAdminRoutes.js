@@ -18,7 +18,6 @@ const router = Router();
 router
   .route("/centeradmin")
   .post(verifyToken, createcenterAdmin)
-
   .delete(verifyToken, isSuperAdmin, deletecenterAdmin)
   .get(verifyToken, getcenterAdmin);
 
