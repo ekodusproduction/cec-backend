@@ -479,12 +479,11 @@ export const changePassword = async (req, res, next) => {
     }
     const encryptedPassword = await bcrypt.hash(password, 10);
     const center = await centerModel.findOneAndUpdate(
-      { centerId},
+      centerId,
       { password: encryptedPassword },
       { new: true }
     );
-    center.cart = null;
-    await center.save();
+
 
     return res.status(200).send({ data: center, status: "ok" });
   } catch (err) {
