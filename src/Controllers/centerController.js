@@ -456,7 +456,6 @@ export const deleteCart = async (req, res, next) => {
 export const changePassword = async (req, res, next) => {
   try {
     const { centerAdminId, newPassword, confirmPassword } = req.body;
-    console.log("ghus gaya")
     const schema = Joi.object({
       centerAdminId: Joi.string().required(),
       newPassword: Joi.string()
@@ -482,13 +481,12 @@ export const changePassword = async (req, res, next) => {
     }
 
     const encryptedPassword = await bcrypt.hash(newPassword, 10);
-    console.log("hhiihihihihih")
     const centerAdmin = await centerAdminModel.findByIdAndUpdate(
       centerAdminId,
       { password: encryptedPassword },
       { new: true }
     );
-
+    console.log(centerAdmin)
     return res.status(200).send({ data: centerAdmin, status: "ok" });
   } catch (err) {
     res.status(500).send({ message: err.message, status: "fail" });
