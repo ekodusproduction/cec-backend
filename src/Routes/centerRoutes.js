@@ -2,7 +2,7 @@ import { Router } from "express";
 import { verifyToken } from "../Auth/authorization.js";
 import {
   createcenter,
-  updatecenter,
+  updateCenter,
   deletecenter,
   getCenter,
   getAllCenter,
@@ -25,7 +25,7 @@ router
   .get(verifyToken, getAllCentersUnderAdmin);
 
 router.route("/center/:centerId").get(verifyToken, getCenter);
-router.route("/center/:centerId").put(verifyToken, updatecenter);
+router.route("/center/:centerId").put(verifyToken, updateCenter);
 
 router.put("/center/cart/addtocart", verifyToken, addToCart);
 router.get("/center/cart/getcart", verifyToken, getCart);
