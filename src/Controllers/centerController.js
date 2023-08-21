@@ -458,7 +458,7 @@ export const changePassword = async (req, res, next) => {
     const { centerAdminId, newPassword, confirmPassword } = req.body;
     console.log("ghus gaya")
     const schema = Joi.object({
-      centerId: Joi.string().required(),
+      centerAdminId: Joi.string().required(),
       newPassword: Joi.string()
         .min(8)
         .required(),
