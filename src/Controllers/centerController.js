@@ -467,7 +467,7 @@ export const changePassword = async (req, res, next) => {
         .required(),
     });
 
-    let data = { centerId, newPassword, confirmPassword };
+    let data = { centerAdminId, newPassword, confirmPassword };
     const { error, value } = schema.validate(data);
     if (error) {
       return res
