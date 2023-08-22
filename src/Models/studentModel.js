@@ -97,7 +97,7 @@ const studentSchema = new Schema(
       },
     ],
     isProfileComplete: { type: Boolean, default: false },
-    hasActiveCourse: { type: Boolean, default: false },
+    hasActiveCourse: { type: Boolean, default: true },
     emergencyContact: {
       type: Number,
       maxLength: 10,

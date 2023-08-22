@@ -550,6 +550,7 @@ export const updateStudent = async (req, res, next) => {
         );
       }
     }
+    
     updateObj.isProfileComplete = true;
     const updatedStudent = await studentModel.findByIdAndUpdate(
       student._id,
