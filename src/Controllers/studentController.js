@@ -529,7 +529,7 @@ export const updateStudent = async (req, res, next) => {
         .send({ message: "Invalid request . Send update object", status: 400 });
     }
 
-    if (req.files.length > 0) {
+    if (req.files && req.files.length > 0) {
       const projectFolder = `/public/student/${student._id}`;
       const folder = join(__dirname, `../../${projectFolder}`);
       for (let i = 0; i < req.files.length; i++) {
@@ -550,7 +550,7 @@ export const updateStudent = async (req, res, next) => {
         );
       }
     }
-    
+
     updateObj.isProfileComplete = true;
     const updatedStudent = await studentModel.findByIdAndUpdate(
       student._id,

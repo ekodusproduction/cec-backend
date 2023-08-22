@@ -65,7 +65,7 @@ const studentSchema = new Schema(
     },
     gender: {
       type: String,
-      enum: ["Female", "Male", "other"],
+      enum: ["FEMALE", "MALE", "OTHER"],
       cast: "{VALUE} is not valid",
     },
     email: {
@@ -78,18 +78,16 @@ const studentSchema = new Schema(
     bloodGroup: { type: String, cast: "{VALUE} is not a string" },
     caste: {
       type: String,
-      enum: ["open", "obc", "sc", "st"],
+      enum: ["GENERAL", "OBC", "SC", "ST"],
       cast: "{VALUE} is not a valid string",
     },
     BPL: {
       type: String,
-      enum: ["yes", "no"],
+      enum: ["YES", "NO"],
       cast: "{VALUE} is not a valid string",
     },
     regYear: { type: String, cast: "{VALUE} is not a date" },
-
     stdCode: { type: Number, cast: "{VALUE} is not a number" },
-
     course: [
       {
         type: mongoose.Schema.Types.ObjectId,
