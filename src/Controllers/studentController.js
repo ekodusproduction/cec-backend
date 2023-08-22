@@ -496,7 +496,7 @@ export const addNewCourse = async (req, res, next) => {
 export const updateStudent = async (req, res, next) => {
   try {
     let updateObj = req.body;
-    const rollNumber = req.params;
+    const {rollNumber} = req.params;
     if (!rollNumber) {
       return res
         .status(400)
