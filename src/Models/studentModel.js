@@ -38,7 +38,7 @@ const studentSchema = new Schema(
       type: Date,
       required: "please provide date of birth",
       cast: "{VALUE} is not a date",
-      required: "date of birth requierd",
+      required: "date of birth required",
     },
 
     presentAddress: { type: String, cast: "{VALUE} is not a string" },
@@ -107,7 +107,7 @@ const studentSchema = new Schema(
     centerId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "center",
-      required: "please provide center",
+      required: "please provide centerId",
       cast: "{VALUE} is not a valid object id",
     },
 

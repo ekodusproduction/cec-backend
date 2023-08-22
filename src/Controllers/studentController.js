@@ -16,12 +16,17 @@ const baseUrl = `139.59.83.187`;
 const generateRollNumber = async (centerId) => {
   const regCenter = await centerModel.findById(centerId);
   const count = await studentModel.countDocuments({
-    center: centerId,
-    regYear: new Date().getFullYear(),
+    centerId: centerId,
   });
-  const rollNumber = `${(count % 1000) +
-    1}${`${new Date().getFullYear()}`.slice(-2)}${regCenter.centerCode}`;
 
+  // Get the current month and year
+  const currentDate = new Date();
+  const currentYear = currentDate.getFullYear().toString().slice(-2);
+  const currentMonth = (currentDate.getMonth() + 1).toString().padStart(2, '0');
+
+  const centerCodePadded = regCenter.centerCode.toString().padStart(3, '0');
+
+  const rollNumber = `${(count+1).toString().padStart(3, '0')}${currentMonth}${currentYear}${centerCodePadded}`;
   return rollNumber;
 };
 
@@ -44,7 +49,7 @@ export const studentRegister = async (req, res, next) => {
       centerCode,
       courses,
     } = req.body;
-
+    console.log(req.body);
     centerCode = centerCode * 1;
     let schema = Joi.object({
       firstName: Joi.string()
@@ -54,7 +59,6 @@ export const studentRegister = async (req, res, next) => {
         .min(3)
         .required(),
       DOB: Joi.string()
-        .min(3)
         .required(),
       mobile: Joi.number().required(),
       qualification: Joi.string()
@@ -121,21 +125,41 @@ export const studentRegister = async (req, res, next) => {
       return new Date(year, month - 1, day); // Month is 0-based in JavaScript Date, so subtract 1 from the month value.
     };
 
-    data.DOB = convertToDate(DOB);
+    DOB = convertToDate(DOB);
 
     let center = await centerModel.findOne({ centerCode: centerCode });
-    data.centerId = center._id;
+    const centerId = center._id;
     if (!center) {
       return res
         .status(404)
         .send({ data: { message: "center not found" }, status: "fail" });
     }
-    data.rollNumber = await generateRollNumber(center._id);
-    let student = await studentModel.create(data);
+    const rollNumber = await generateRollNumber(centerId);
+    const studentData = {
+      firstName,
+      lastName,
+      DOB,
+      mobile,
+      qualification,
+      pinCodePresent,
+      presentAddress,
+      cityPresent,
+      statePresent,
+      permanentAddress,
+      statePermanent,
+      cityPermanent,
+      pinCodePermanent,
+      centerId,
+      rollNumber,
+      course: courses,
+    };
+    let student = await studentModel.create(studentData);
     const centerUpdate = await centerModel.findByIdAndUpdate(
-      { _id: center._id },
+      { _id: centerId },
       { $inc: { totalStudent: 1 } }
     );
+    const updateStudent = await studentModel.findByIdAndUpdate(student._id, {$addToSet:{course:courses}})
+
     let text = `Student registered succesfully with CEC. To generate rollnumber please pay for the course`;
     // sendMessage(text, mobile);
     return res.status(200).send({ data: student, status: "ok" });
