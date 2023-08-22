@@ -39,6 +39,7 @@ const studentSchema = new Schema(
       required: "please provide date of birth",
       validate: {
         validator: function(value) {
+          const currentYear = new Date().getFullYear();
           const dobYear = value.getFullYear();
           const minAllowedYear = 1950;
           return dobYear >= minAllowedYear && dobYear <= currentYear;
@@ -129,6 +130,7 @@ const studentSchema = new Schema(
       type: String,
       validate: {
         validator: function(value) {
+          const currentYear = new Date().getFullYear();
           const minAllowedYear = 1950;
           const parsedYear = parseInt(value);
           return (
