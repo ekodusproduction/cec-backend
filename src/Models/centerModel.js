@@ -53,12 +53,31 @@ const centerSchema = new Schema(
     dateofReg: {
       type: Date,
       required: "franchise date of registration required",
+      validate: {
+        validator: function(value) {
+          const currentYear = new Date().getFullYear();
+          const minAllowedYear = 1950;
+          const parsedYear = parseInt(value);
+          return (
+            !isNaN(parsedYear) &&
+            parsedYear >= minAllowedYear &&
+            parsedYear <= currentYear
+          );
+        },
+        message: "Year must be within the last 60 years.",
+      },
     },
     centerCode: {
-      type: Number,
-      maxLength: 60,
+      type: String,
+      maxLength: 3,
       unique: true,
       required: "Center code required",
+      validate: {
+        validator: function (value) {
+          return value.length === 3; // Validate that the length is exactly 3 characters
+        },
+        message: "Center code must be exactly 3 characters long.",
+      },
       cast: "{VALUE} is not a String",
     },
     centerName: {
@@ -97,11 +116,9 @@ const centerSchema = new Schema(
         message: "enter 10 digit number",
       },
     },
-    email: { type: String, required: "center email required" , unique:true},
+    email: { type: String, required: "center email required", unique: true },
     address: { type: String, required: "center address required" },
     landmark: { type: String, required: "center lanmark required" },
-    //policeStaion: { type: String, required: "center policeStation required" },
-    //postOffice: { type: String, required: "center postOffice required" },
     district: { type: String, required: "center district required" },
     pinCode: { type: Number, required: "center pincode required" },
     state: { type: String, required: "center state required" },
