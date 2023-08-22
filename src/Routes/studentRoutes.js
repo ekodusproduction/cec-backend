@@ -13,7 +13,6 @@ import {
   studentRegisterCenter,
 } from "../Controllers/studentController.js";
 import { isSuperAdmin } from "../Auth/isSuperAdmin.js";
-import { isCenterAdmin } from "../Auth/isCenterAdmin.js";
 
 const router = Router();
 
