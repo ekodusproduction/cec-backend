@@ -35,7 +35,7 @@ export const createCategory = async (req, res, next) => {
 
 export const getCategory = async (req, res, next) => {
   try {
-    const courses = await categoryModel.find({});
+    const courses = await categoryModel.find({}).sort({"createdAt":1});;
     return res.status(200).send({ data: courses, status: "ok" });
   } catch (err) {
     return res.status(500).send({ message: err.message, status: "fail" });

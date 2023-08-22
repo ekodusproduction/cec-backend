@@ -112,7 +112,7 @@ export const getAllCenter = async (req, res, next) => {
         path: "headOfInstitute",
         model: centerAdminModel,
         select: "adminName",
-      });
+      }).sort({"createdAt":1});
     return res.status(200).send({ data: center, status: "ok" });
   } catch (err) {
     return res.status(500).send({ message: err.message, status: "fail" });
@@ -121,7 +121,7 @@ export const getAllCenter = async (req, res, next) => {
 
 export const getAllInactiveCenter = async (req, res, next) => {
   try {
-    const center = await centerModel.find({ isActive: false });
+    const center = await centerModel.find({ isActive: false }).sort({"createdAt":1});
     return res.status(200).send({ data: center, status: "ok" });
   } catch (err) {
     return res.status(500).send({ message: err.message, status: "fail" });
@@ -139,7 +139,7 @@ export const getAllCentersUnderAdmin = async (req, res, next) => {
     const center = await centerModel.find({
       isActive: true,
       headOfInstitute: centeradminId,
-    });
+    }).sort({"createdAt":1});
     return res.status(200).send({ data: center, status: "ok" });
   } catch (err) {
     return res.status(500).send({ message: err.message, status: "fail" });

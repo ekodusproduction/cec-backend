@@ -34,19 +34,15 @@ export const createCourse = async (req, res, next) => {
     });
     const courseCodeExist = await courseModel.findOne({ courseCode });
     if (courseCodeExist) {
-      return res
-        .status(400)
-        .send({
-          message: "Course code exist. Please send another course code",
-        });
+      return res.status(400).send({
+        message: "Course code exist. Please send another course code",
+      });
     }
     const courseNameExist = await courseModel.findOne({ courseName });
     if (courseNameExist) {
-      return res
-        .status(400)
-        .send({
-          message: "Course name exist. Please send another course name",
-        });
+      return res.status(400).send({
+        message: "Course name exist. Please send another course name",
+      });
     }
 
     let data = {
@@ -84,7 +80,8 @@ export const getCourse = async (req, res, next) => {
   try {
     const courses = await courseModel
       .find({})
-      .populate({ path: "qualificationType", model: qualificationModel });
+      .populate({ path: "qualificationType", model: qualificationModel })
+      .sort({ createdAt: 1 });
 
     return res.status(200).send({ data: courses, status: "ok" });
   } catch (err) {

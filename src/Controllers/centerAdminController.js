@@ -99,7 +99,7 @@ export const getcenterAdmin = async (req, res, next) => {
 
 export const getAllcenterAdmin = async (req, res, next) => {
   try {
-    const user = await centerAdminModel.find({ isActive: true });
+    const user = await centerAdminModel.find({ isActive: true }).sort({"createdAt":1});
     return res.status(200).send({ data: user, status: "ok" });
   } catch (err) {
     res.status(500).send({ message: err.message, status: "fail" });
@@ -108,7 +108,7 @@ export const getAllcenterAdmin = async (req, res, next) => {
 
 export const getAllInactiveCenterAdmin = async (req, res, next) => {
   try {
-    const user = await centerAdminModel.find({ isActive: false });
+    const user = await centerAdminModel.find({ isActive: false }).sort({"createdAt":1});
     return res.status(200).send({ data: user, status: "ok" });
   } catch (err) {
     res.status(500).send({ message: err.message, status: "fail" });

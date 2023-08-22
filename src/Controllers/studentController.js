@@ -326,6 +326,10 @@ export const getallStudentCenter = async (req, res, next) => {
 
 export const getallInactiveStudent = async (req, res, next) => {
   try {
+    let page = req.query.page * 1 || 1;
+    let limit = req.query.limit * 1 || 20;
+    const skip = (page - 1) * limit;
+    const sort = req.query.sort || "-createdAt";
     const student = await studentModel
       .find({ isActive: false })
       .skip(skip)
