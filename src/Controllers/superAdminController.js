@@ -6,7 +6,7 @@ import { dirname, join } from "path";
 import { fileURLToPath } from "url";
 import Joi from "joi";
 import { sendMessage } from "../Airtel/airtel.js";
-import { generateToken } from "../Auth/authentication.js";
+import { generateToken } from "../Auth/generateJwt.js";
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const appDir = dirname(`${import.meta.filename}`);
 
