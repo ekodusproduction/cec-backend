@@ -147,6 +147,7 @@ export const getAllCentersUnderAdmin = async (req, res, next) => {
 };
 export const createcenter = async (req, res, next) => {
   try {
+    
     let {
       centerName,
       dateofReg,
@@ -175,26 +176,26 @@ export const createcenter = async (req, res, next) => {
       email: Joi.string().required(),
       adminMobile: Joi.number().required(),
     });
-    
     if (alternateNumber == "") {
       alternateNumber = whatsApp;
     }
+
     let data = {
       centerName,
-      centerCode,
       dateofReg,
       address,
       landmark,
       pinCode,
       district,
       state,
+      alternateNumber,
       whatsApp,
       email,
       adminMobile,
-      alternateNumber,
+      centerCode,
     };
-    data.centerName = centerName.toUpperrCase();
-    console.log("datadfatttt", data);
+
+    data.centerName = centerName.toUpperCase();
     const { error, value } = schema.validate(data);
     if (error) {
       return res
@@ -202,14 +203,12 @@ export const createcenter = async (req, res, next) => {
         .send({ message: error.details[0].message, status: "fail" });
     }
 
-    console.log("sssssssssssssssss", data);
 
     if (!mobileValidator(whatsApp)) {
       return res
         .status(400)
         .send({ message: "Invalid whatsApp number", status: 400 });
     }
-    console.log("mmmmmmmmmmmm");
 
     if (!pinCodeValidator(pinCode)) {
       return res.status(400).send({
@@ -217,7 +216,6 @@ export const createcenter = async (req, res, next) => {
         status: 400,
       });
     }
-    console.log("pppppppppp");
 
     if (!adminMobile) {
       return res.status(400).send({
@@ -225,20 +223,17 @@ export const createcenter = async (req, res, next) => {
         status: 400,
       });
     }
-    console.log("aaaaaaaaaaaaaaa");
 
     if (!mobileValidator(adminMobile)) {
       return res
         .status(400)
         .send({ message: "Invalid adminMobile number", status: 400 });
     }
-    console.log("amamamamama");
 
     const convertToDate = (DOB) => {
       const [year, day, month] = DOB.split("-").map(Number);
       return new Date(year, month - 1, day); // Month is 0-based in JavaScript Date, so subtract 1 from the month value.
     };
-    console.log("dbodbodobd");
     const centerCodeExist = await centerModel.findOne({ centerCode });
     if (centerCodeExist) {
       return res.status(400).send({
