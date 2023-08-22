@@ -503,7 +503,7 @@ export const updateStudent = async (req, res, next) => {
         .send({ message: "Invalid request. Please provide rollNumber.", status: 400 });
     }
 
-    const student = await studentModel.findById({rollNumber});
+    const student = await studentModel.findOne({rollNumber});
 
     if (!student) {
       return res
