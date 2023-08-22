@@ -1,27 +1,56 @@
 import superAdminModel from "../Models/superAdminModel.js";
-import centerModel from "../Models/centerModel.js";
 import centerAdminModel from "../Models/centerAdminModel.js";
-import multer from "multer";
 import bcrypt from "bcrypt";
 import fs from "fs/promises";
-import { dirname } from "path";
+import { dirname, join } from "path";
 import { fileURLToPath } from "url";
-import { sendMessage } from "../Twilio/twilio.js";
-import { generateToken } from "../Auth/authentication.js";
-import upload from "../app.js";
+import Joi from "joi";
+import { sendMessage } from "../Airtel/airtel.js";
+import { generateToken } from "../Auth/generateJwt.js";
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const appDir = dirname(`${import.meta.filename}`);
 
 export const createSuperAdmin = async (req, res, next) => {
   try {
-    const requestBody = req.body;
-    const { firstName, lastName, mobile, email, password } = requestBody;
+    const baseUrl = `139.59.83.187`;
+
+    const schema = Joi.object({
+      firstName: Joi.string()
+        .min(3)
+        .max(30)
+        .required(),
+      lastName: Joi.string()
+        .min(3)
+        .max(30)
+        .required(),
+      mobile: Joi.number().required(),
+      email: Joi.string()
+        .min(11)
+        .required(),
+      password: Joi.string()
+        .min(6)
+        .required(),
+    });
+
+    const { firstName, lastName, mobile, email, password } = req.body;
+    let data = { firstName, lastName, mobile, email, password };
+    const { error, value } = schema.validate(data);
+    if (error) {
+      return res
+        .status(400)
+        .send({ message: error.details[0].message, status: "fail" });
+    }
     const file = req.files[0];
+    if (!file) {
+      return res
+        .status(400)
+        .send({ message: "Invalid request. Send profile pic", status: "fail" });
+    }
     const imgBuffer = Buffer.from(file.buffer, "utf-8");
     const saltRounds = 10;
     const salt = await bcrypt.genSalt(saltRounds);
     const encryptedPassword = await bcrypt.hash(password, salt);
-    const data = {
+    data = {
       firstName,
       lastName,
       mobile,
@@ -37,6 +66,17 @@ export const createSuperAdmin = async (req, res, next) => {
         .status(200)
         .send({ data: { message: "superadmin exist already" }, status: "ok" });
     }
+
+    await fs.writeFile(
+      join(
+        __dirname +
+          `/../../public/superadmin/${mobile.slice(-6)}${file.originalname}`
+      ),
+      imgBuffer,
+      { flag: "a" },
+      "utf-8"
+    );
+
     const user = await superAdminModel.create(data);
     if (user == null) {
       return res
@@ -44,26 +84,18 @@ export const createSuperAdmin = async (req, res, next) => {
         .send({ message: "failed to create superadmin", status: "fail" });
     }
     user.password = null;
-    const profilePic = `/public/superadmin/${user.id.slice(-6)}${
+    const profilePic = `${baseUrl}/public/superadmin/${mobile.slice(-6)}${
       file.originalname
     }`;
     const uploadPic = await superAdminModel.findByIdAndUpdate(
       { _id: user._id },
       { $set: { profilePic: profilePic } }
     );
-    await fs.writeFile(
-      appDir +
-        `../../public/superadmin/${user.id.slice(-6)}${file.originalname}`,
-      imgBuffer,
-      "utf-8"
-    );
 
-    return res
-      .status(201)
-      .send({
-        data: { message: "superadmin created successfully" },
-        status: "ok",
-      });
+    return res.status(201).send({
+      data: user,
+      status: "ok",
+    });
   } catch (err) {
     res.status(500).send({ message: err.message, status: "fail" });
   }
@@ -71,35 +103,43 @@ export const createSuperAdmin = async (req, res, next) => {
 
 export const loginSuperAdmin = async (req, res, next) => {
   try {
-    const requestBody = req.body;
-    const { email, password } = requestBody;
-    const user = await superAdminModel.findOne({ email: email });
-    if (user == null) {
+    const { whatsApp, password } = req.body;
+    const schema = Joi.object({
+      whatsApp: Joi.number()
+        .required(),
+      password: Joi.string()
+        .min(6)
+        .required(),
+    });
+
+    let data = { whatsApp, password };
+    const { error, value } = schema.validate(data);
+    if (error) {
       return res
         .status(400)
-        .send({
-          data: { message: "email doesnt exist. Please register" },
-          status: "fail",
-        });
+        .send({ message: error.details[0].message, status: "fail" });
     }
+
+    const user = await superAdminModel.findOne({ mobile: whatsApp });
+    if (user == null) {
+      return res.status(400).send({
+        data: { message: "whatsApp doesnt exist. Please register" },
+        status: "fail",
+      });
+    }
+
     const isPasswordCorrect = await bcrypt.compare(password, user.password);
     if (!isPasswordCorrect) {
-      return res
-        .status(400)
-        .send({
-          data: { message: "Incorrect password. Please try again" },
-          status: "fail",
-        });
+      return res.status(400).send({
+        data: { message: "Incorrect password. Please try again" },
+        status: "fail",
+      });
     }
-    const data = {
-      firstName: user.firstName,
-      lastName: user.lastName,
-      mobile: user.mobile,
-      email: user.email,
-    };
+   
+    user.password = null;
     const token = generateToken(user._id);
 
-    return res.status(200).send({ data: data, token: token, status: "ok" });
+    return res.status(200).send({ data: user, token: token, status: "ok" });
   } catch (err) {
     res.status(500).send({ message: err.message, status: "fail" });
   }
@@ -108,7 +148,17 @@ export const loginSuperAdmin = async (req, res, next) => {
 export const sendOtp = async (req, res, next) => {
   try {
     const { mobile } = req.body;
-    const text = `${Math.random * 10000}`;
+    const schema = Joi.object({
+      mobile: Joi.number().required(),
+    });
+    let data = { mobile };
+    const { error, value } = schema.validate(data);
+    if (error) {
+      return res
+        .status(400)
+        .send({ message: error.details[0].message, status: "fail" });
+    }
+    const text = `${Math.random * 1000}`;
     sendMessage(text, mobile);
     const centerAdmin = await centerAdminModel.findOneAndUpdate(
       { mobile },
@@ -121,10 +171,25 @@ export const sendOtp = async (req, res, next) => {
     res.status(500).send({ message: err.message, status: "fail" });
   }
 };
+
 export const checkOtp = async (req, res, next) => {
   try {
     const { otp, mobile } = req.body;
-    const centerAdmin = await centerAdminModel.findOne(mobile);
+
+    const schema = Joi.object({
+      otp: Joi.number().required(),
+      mobile: Joi.number().required(),
+    });
+
+    let data = { mobile, otp };
+    const { error, value } = schema.validate(data);
+    if (error) {
+      return res
+        .status(400)
+        .send({ message: error.details[0].message, status: "fail" });
+    }
+
+    const centerAdmin = await centerAdminModel.findOne({ mobile });
     if (otp != centerAdmin.otp) {
       return res
         .status(403)
@@ -141,22 +206,39 @@ export const checkOtp = async (req, res, next) => {
 
 export const resetPassword = async (req, res, next) => {
   try {
-    const requestBody = req.body;
-    const { email, newPassword } = requestBody;
-    const user = await superAdminModel.findOne({ email: email });
-    if (user == null) {
+    const { mobile, newPassword, otp } = req.body;
+
+    const schema = Joi.object({
+      otp: Joi.number().required(),
+      mobile: Joi.number()
+        .min(10)
+        .max(10)
+        .required(),
+      newPassword: Joi.number()
+        .min(6)
+        .required(),
+    });
+
+    let data = { mobile, otp, newPassword };
+    const { error, value } = schema.validate(data);
+    if (error) {
       return res
         .status(400)
-        .send({
-          data: { message: "email doesnt exist. Please register" },
-          status: "fail",
-        });
+        .send({ message: error.details[0].message, status: "fail" });
+    }
+
+    const user = await superAdminModel.findOne({ email: email });
+    if (user == null) {
+      return res.status(400).send({
+        data: { message: "email doesnt exist. Please register" },
+        status: "fail",
+      });
     }
     const saltRounds = 10;
     const salt = await bcrypt.genSalt(saltRounds);
     const encryptedPassword = await bcrypt.hash(newPassword, salt);
 
-    const data = await superAdminModel.findOneAndUpdate(
+    data = await superAdminModel.findOneAndUpdate(
       { email },
       { encryptedPassword }
     );
@@ -171,6 +253,19 @@ export const resetPassword = async (req, res, next) => {
 export const getSuperAdmin = async (req, res, next) => {
   try {
     const id = req.id;
+
+    const schema = Joi.object({
+      id: Joi.string().required(),
+    });
+
+    let data = { id };
+    const { error, value } = schema.validate(data);
+    if (error) {
+      return res
+        .status(400)
+        .send({ message: error.details[0].message, status: "fail" });
+    }
+
     const user = await superAdminModel.findById(id).select({ password: 0 });
 
     return res.status(200).send({ data: user, status: "ok" });
@@ -181,7 +276,22 @@ export const getSuperAdmin = async (req, res, next) => {
 
 export const updateSuperAdmin = async (req, res, next) => {
   try {
-    const requestBody = req.body;
+    const { id, updateField, updateValue } = req.body;
+
+    const schema = Joi.object({
+      id: Joi.string().required(),
+      updateField: Joi.string().required(),
+      updateValue: Joi.string().required(),
+    });
+
+    let data = { id, updateField, updateValue };
+    const { error, value } = schema.validate(data);
+    if (error) {
+      return res
+        .status(400)
+        .send({ message: error.details[0].message, status: "fail" });
+    }
+
     const file = req.files[0];
 
     const imgBuffer = Buffer.from(file.buffer, "utf-8");
@@ -192,23 +302,39 @@ export const updateSuperAdmin = async (req, res, next) => {
       "utf-8"
     );
     const profilePic = `${user.profilePic}`;
+    const updateObject = { [updateField]: updateValue };
     const userupdate = await superAdminModel.updateOne(
       { _id: req.id },
-      { $set: { profilePic: profilePic } }
+      { $set: updateObject },
+      { new: true }
     );
     return res.status(200).send({ data: userupdate, status: "ok" });
   } catch (err) {
-    console.log(err);
     res.status(500).send({ message: err, status: "fail" });
   }
 };
 
 export const deleteSuperAdmin = async (req, res, next) => {
   try {
-    const requestBody = req.body;
-    const { email, password } = requestBody;
+    const { email, password } = req.body;
+
+    const schema = Joi.object({
+      email: Joi.string().required(),
+      password: Joi.string().required(),
+    });
+
+    let data = { email, password };
+    const { error, value } = schema.validate(data);
+    if (error) {
+      return res
+        .status(400)
+        .send({ message: error.details[0].message, status: "fail" });
+    }
+
     const user = await superAdminModel.findById({ _id: req.id });
-    if (!(email == user.email && bcrypt.compare(password, user.password))) {
+    if (
+      !(email == user.email && (await bcrypt.compare(password, user.password)))
+    ) {
       return res
         .status(400)
         .send({ message: "please enter correct password and email" });

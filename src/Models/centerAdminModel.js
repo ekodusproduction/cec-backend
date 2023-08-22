@@ -1,16 +1,18 @@
 import mongoose from "mongoose";
 const Schema = mongoose.Schema;
 
+
 const centerAdminSchema = new Schema(
   {
-    nameHoi: {
+    adminName: {
       type: String,
       required: "center admin name required",
       cast: "{VALUE} is not a String",
+      minlength: 3,
     },
     profilePic: {
       type: String,
-      default: `public/defaultAvatar.jpeg`,
+      default: `public/defaultAvatar.png`,
       cast: "{VALUE} is not a String",
     },
     email: {
@@ -28,28 +30,28 @@ const centerAdminSchema = new Schema(
     },
     isSuperAdmin: { type: Boolean, default: false },
     centers: [{ type: Schema.Types.ObjectId, ref: "centers" }],
-    whatsApp: {
+    mobile: {
       type: Number,
       required: "whatsapp number required",
       validate: {
         validator: (v) => v.toString().length == 10,
         message: "enter 10 digit number",
       },
+      unique:true,
     },
     alternateNumber: {
       type: Number,
       validate: {
         validator: (v) => v.toString().length == 10,
         message: "enter 10 digit number",
-      },
+      }
     },
     address: { type: String, required: "address required" },
-    landmark: { type: String, required: "landmark required" },
-    houseNumber:{type:String, required:"house number required"},
     district: { type: String, required: "district required" },
     pinCode: { type: Number, required: "Number required" },
     state: { type: String, required: "state required" },
     loggedOut: { type: Date },
+    isActive: { type: Boolean, default: true },
     passwordChangedAt: Date,
     passwordResetToken: String,
     passwordResetExpires: Date,
@@ -59,5 +61,15 @@ const centerAdminSchema = new Schema(
   }
 );
 
-const centerAdminModel = mongoose.model("centerAdmins", centerAdminSchema);
+centerAdminSchema.pre(/^find/, function(next) {
+  this.select("-createdAt -updatedAt -__v");
+  next();
+});
+
+const centerAdminModel = mongoose.model(
+  "centerAdmins",
+  centerAdminSchema,
+  "centerAdmin"
+);
+
 export default centerAdminModel;

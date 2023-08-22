@@ -3,11 +3,12 @@ const Schema = mongoose.Schema;
 
 const paymentSchema = new Schema(
   {
-    id: { type: String, required: true },
-    courseId: [{ type: Schema.ObjectId, required: true }],
-    studentId : [{ type: Schema.ObjectId, required: true }],
-    amount: { type: Number, required: true },
-    status: { type: String, required: true },
+    courseId: [{ type: Schema.Types.ObjectId, ref: "courses", required: true }],
+    studentId: [
+      { type: Schema.Types.ObjectId, ref: "students", required: true },
+    ],
+    totalAmount: { type: Number, required: true },
+    paymentStatus: { type: String, required: true },
     order_id: { type: String, required: true },
     invoice_id: { type: String, required: true },
   },
@@ -16,5 +17,6 @@ const paymentSchema = new Schema(
   }
 );
 
-const paymentsModel = mongoose.model("payments", paymentSchema);
+const paymentsModel = mongoose.model("payments", paymentSchema, "payment");
 export default paymentsModel;
+

@@ -1,23 +1,6 @@
 import mongoose from "mongoose";
+import centerModel from "./centerModel.js";
 const Schema = mongoose.Schema;
-
-// const addressSchema = mongoose.Schema({
-//     address: String,
-//     street: String,
-//     district: String,
-//     houseNumber: Number,
-//     pin: Number,
-//     state: String,
-//     country: String,
-// });
-
-// const academicSchema = mongoose.Schema({
-//     qualification: String,
-//     year: String,
-//     university: String,
-//     grade: String,
-//     percentage: Number,
-// });
 
 const studentSchema = new Schema(
   {
@@ -37,7 +20,6 @@ const studentSchema = new Schema(
     },
     rollNumber: {
       type: String,
-      required: "please provide rollNumber",
       minLength: 3,
       maxLength: 20,
       unique: true,
@@ -53,23 +35,29 @@ const studentSchema = new Schema(
       },
     },
     DOB: {
-      type: String,
+      type: Date,
       required: "please provide date of birth",
-      cast: "{VALUE} is not a date",
-      required: "date of birth requierd",
+      validate: {
+        validator: function(value) {
+          const currentYear = new Date().getFullYear();
+          const dobYear = value.getFullYear();
+          const minAllowedYear = 1950;
+          return dobYear >= minAllowedYear && dobYear <= currentYear;
+        },
+        message: "DOB must be within the last 60 years.",
+      },
     },
 
     presentAddress: { type: String, cast: "{VALUE} is not a string" },
-    houseNumberPresent: { type: Number, cast: "{VALUE} is not a number" },
+    statePresent: { type: String, cast: "{VALUE} is not a number" },
     cityPresent: { type: String, cast: "{VALUE} is not a string" },
     pinCodePresent: { type: String, cast: "{VALUE} is not a string" },
 
     permanentAddress: { type: String, cast: "{VALUE} is not a string" },
-    houseNumberPermanent: { type: Number, cast: "{VALUE} is not a number" },
+    statePermanent: { type: String, cast: "{VALUE} is not a number" },
     cityPermanent: { type: String, cast: "{VALUE} is not a string" },
     pinCodePermanent: { type: String, cast: "{VALUE} is not a string" },
 
-    paymentDone: { type: String, default: false },
     fathersName: {
       type: String,
       minLength: 3,
@@ -82,15 +70,13 @@ const studentSchema = new Schema(
       maxLength: 25,
       cast: "{VALUE} is not a string",
     },
-    Gender: {
+    gender: {
       type: String,
-      enum: ["Female", "Male", "other"],
-      required: "please provide gender",
+      enum: ["FEMALE", "MALE", "OTHER"],
       cast: "{VALUE} is not valid",
     },
     email: {
       type: String,
-      required: "please provide email",
       minLength: 11,
       maxLength: 30,
       cast: "{VALUE} is not a string",
@@ -99,33 +85,33 @@ const studentSchema = new Schema(
     bloodGroup: { type: String, cast: "{VALUE} is not a string" },
     caste: {
       type: String,
-      enum: ["open", "obc", "sc", "st"],
+      enum: ["GENERAL", "OBC", "SC", "ST"],
       cast: "{VALUE} is not a valid string",
     },
     BPL: {
       type: String,
-      enum: ["yes", "no"],
+      enum: ["YES", "NO"],
       cast: "{VALUE} is not a valid string",
     },
-    regYear: { type: String, cast: "{VALUE} is not a date" },
-
     stdCode: { type: Number, cast: "{VALUE} is not a number" },
-    course: {
-      type: Schema.Types.ObjectId,
-      ref: "courses",
-      cast: "{VALUE} is not a valid object id",
-    },
-    hasActiveCourse: { type: Boolean, default: false },
+    course: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "course",
+      },
+    ],
+    isProfileComplete: { type: Boolean, default: false },
+    hasActiveCourse: { type: Boolean, default: true },
     emergencyContact: {
       type: Number,
       maxLength: 10,
       cast: "{VALUE} is not a number",
     },
 
-    center: {
-      type: Schema.Types.ObjectId,
-      ref: "courses",
-      required: "please provide center",
+    centerId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "center",
+      required: "please provide centerId",
       cast: "{VALUE} is not a valid object id",
     },
 
@@ -136,14 +122,30 @@ const studentSchema = new Schema(
       cast: "{VALUE} is not a valid string",
     },
     qualification: {
-      type: String,
-      required: "qualification required",
-      cast: "{VALUE} is not a valid string",
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "qualification",
+      cast: "{VALUE} is not a valid object id",
     },
-    year: { type: String, cast: "{VALUE} is not a valid string" },
-    university: { type: String, cast: "{VALUE} is not a valid string" },
+    year: {
+      type: String,
+      validate: {
+        validator: function(value) {
+          const currentYear = new Date().getFullYear();
+          const minAllowedYear = 1950;
+          const parsedYear = parseInt(value);
+          return (
+            !isNaN(parsedYear) &&
+            parsedYear >= minAllowedYear &&
+            parsedYear <= currentYear
+          );
+        },
+        message: "Year must be within the last 60 years.",
+      },
+    },
+    institute: { type: String, cast: "{VALUE} is not a valid string" },
     grade: { type: String, cast: "{VALUE} is not a valid string" },
     percentage: { type: Number, cast: "{VALUE} is not a valid number" },
+    isActive: { type: Boolean, default: true },
   },
   {
     timestamps: true,
@@ -151,10 +153,9 @@ const studentSchema = new Schema(
 );
 
 studentSchema.pre(/^find/, function(next) {
-  // this points to the current query
-  this.find({ isActive: { $ne: false } });
+  this.select("-updatedAt -__v");
   next();
 });
 
-const studentModel = mongoose.model("students", studentSchema);
+const studentModel = mongoose.model("students", studentSchema, "student");
 export default studentModel;

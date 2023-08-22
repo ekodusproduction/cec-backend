@@ -40,5 +40,15 @@ const superAdminSchema = new mongoose.Schema(
   }
 );
 
-const superAdminModel = mongoose.model("superAdmins", superAdminSchema);
+superAdminSchema.pre(/^find/, function(next) {
+  this.select("-createdAt -updatedAt -__v");
+  next();
+});
+
+const superAdminModel = mongoose.model(
+  "superAdmins",
+  superAdminSchema,
+  "superAdmin"
+);
+
 export default superAdminModel;

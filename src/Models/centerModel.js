@@ -21,66 +21,86 @@ const contactFirmSchema = mongoose.Schema({
   },
   email: { type: String, required: "center email required" },
 });
-
+const orderSchema = Schema({
+  courseId: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: "course",
+      required: "course id required",
+      cast: "{VALUE} is not a object id",
+    },
+  ],
+  studentId: {
+    type: Schema.Types.ObjectId,
+    ref: "student",
+    required: "student required",
+    cast: "{VALUE} is not a object id",
+  },
+  centerId: {
+    type: Schema.Types.ObjectId,
+    ref: "center",
+    required: "center id required",
+    cast: "{VALUE} is not a object id",
+  },
+});
 const centerSchema = new Schema(
   {
-    centerId: {
-      type: String,
-      required: "franchise code required",
-      unique: true,
-      cast: "{VALUE} is not a String",
+    headOfInstitute: {
+      type: Schema.Types.ObjectId,
+      ref: "centerAdmin",
+      required: true,
     },
-    headOfInstitute: { type: Schema.Types.ObjectId, ref: "centerAdmins" },
     dateofReg: {
       type: Date,
       required: "franchise date of registration required",
+      validate: {
+        validator: function(value) {
+          const currentYear = new Date().getFullYear();
+          const minAllowedYear = 1950;
+          const parsedYear = parseInt(value);
+          return (
+            !isNaN(parsedYear) &&
+            parsedYear >= minAllowedYear &&
+            parsedYear <= currentYear
+          );
+        },
+        message: "Year must be within the last 60 years.",
+      },
     },
-    // password: {
-    //   type: String,
-    //   required: "center admin password required",
-    //   cast: "{VALUE} is not a String",
-    // },
-
-    firmName: {
+    centerCode: {
+      type: String,
+      maxLength: 3,
+      unique: true,
+      required: "Center code required",
+      validate: {
+        validator: function (value) {
+          return value.length === 3; // Validate that the length is exactly 3 characters
+        },
+        message: "Center code must be exactly 3 characters long.",
+      },
+      cast: "{VALUE} is not a String",
+    },
+    centerName: {
       type: String,
       maxLength: 60,
+      unique: true,
       required: "franchise name required",
       cast: "{VALUE} is not a String",
     },
-    firmType: {
-      type: String,
-      required: "franchise type required",
-      cast: "{VALUE} is not a String",
-    },
-    // typeOfInstitution: {
+    // firmType: {
     //   type: String,
-    //   required: "franchise type of institute required",
+    //   required: "franchise type required",
     //   cast: "{VALUE} is not a String",
     // },
-    courses: {
-      type: [
-        {
-          type: mongoose.Schema.Types.ObjectId,
-          ref: "courses",
-        },
-      ]
-    },
-    categories: {
-      type: [
-        {
-          type: mongoose.Schema.Types.ObjectId,
-          ref: "categories",
-        },
-      ]
-    },
-    //stdCode: { type: Number, required: "stdCode required" },
-    landlineNumber: {
-      type: Number,
-      validate: {
-        validator: (v) => v.toString().length == 10,
-        message: "enter 10 digit number",
-      },
-    },
+
+    // landlineNumber: {
+    //   type: Number,
+    //   validate: {
+    //     validator: (v) => v.toString().length == 10,
+    //     message: "enter 10 digit number",
+    //   },
+    // },
+    totalStudent: { type: Number, default: 0 },
     whatsApp: {
       type: Number,
       required: "center whatsapp required",
@@ -91,27 +111,31 @@ const centerSchema = new Schema(
     },
     alternateNumber: {
       type: Number,
-      required: "center alternate mobile required",
       validate: {
         validator: (v) => v.toString().length == 10,
         message: "enter 10 digit number",
       },
     },
-    email: { type: String, required: "center email required" },
+    email: { type: String, required: "center email required", unique: true },
     address: { type: String, required: "center address required" },
     landmark: { type: String, required: "center lanmark required" },
-    //policeStaion: { type: String, required: "center policeStation required" },
-    //postOffice: { type: String, required: "center postOffice required" },
     district: { type: String, required: "center district required" },
     pinCode: { type: Number, required: "center pincode required" },
     state: { type: String, required: "center state required" },
+    isActive: { type: Boolean, default: true },
+    cart: { type: orderSchema },
+    isSuperAdmin: { type: Boolean, default: false },
   },
   {
     timestamps: true,
   }
 );
 
-const courseModel = mongoose.model("centers", centerSchema);
+centerSchema.pre(/^find/, function(next) {
+  this.select("-createdAt -updatedAt -__v");
+  next();
+});
 
-courseModel.create
-export default courseModel;
+const centerModel = mongoose.model("centers", centerSchema, "center");
+
+export default centerModel;

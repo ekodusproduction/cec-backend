@@ -15,5 +15,10 @@ const categorySchema = new mongoose.Schema(
   }
 );
 
-const categoryModel = mongoose.model("categories", categorySchema);
+categorySchema.pre(/^find/, function(next) {
+  this.select("-createdAt -updatedAt -__v");
+  next();
+});
+
+const categoryModel = mongoose.model("categories", categorySchema, "category");
 export default categoryModel;

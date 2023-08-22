@@ -1,35 +1,70 @@
-import superAdminModel from "../Models/superAdminModel.js";
-import centerModel from "../Models/centerModel.js";
-import centerAdminModel from "../Models/centerAdminModel.js";
-import studentModel from "../Models/studentModel.js";
-import fs from "fs/promises";
-import APIFeatures from "../Utils/apiFeatures.js";
+import Joi from "joi";
 import courseModel from "../Models/courseModel.js";
+import qualificationModel from "../Models/qualificationModel.js";
+import categoryModel from "../Models/courseCategoryModel.js";
 
 export const createCourse = async (req, res, next) => {
   try {
     const {
       courseName,
       courseCode,
-      category,
+      // category,
       duration,
       qualificationType,
       courseFee,
-      courseType,
+      courseDescription,
     } = req.body;
-    const createCourse = {
+
+    const schema = Joi.object({
+      courseName: Joi.string()
+        .min(3)
+        .max(50)
+        .required(),
+      courseCode: Joi.string().required(),
+      // category: Joi.string().required(),
+      duration: Joi.number()
+        .min(1)
+        .required(),
+      qualificationType: Joi.string().required(),
+      courseFee: Joi.number().required(),
+      courseDescription: Joi.string()
+        .min(3)
+        .max(50)
+        .required(),
+    });
+    const courseCodeExist = await courseModel.findOne({ courseCode });
+    if (courseCodeExist) {
+      return res.status(400).send({
+        message: "Course code exist. Please send another course code",
+      });
+    }
+    const courseNameExist = await courseModel.findOne({ courseName });
+    if (courseNameExist) {
+      return res.status(400).send({
+        message: "Course name exist. Please send another course name",
+      });
+    }
+
+    let data = {
       courseName,
       courseCode,
-      category,
+      // category,
       duration,
       qualificationType,
       courseFee,
-      courseType,
+      courseDescription,
     };
-    const course = await courseModel.create(createCourse);
+    const { error, value } = schema.validate(data);
+    if (error) {
+      return res
+        .status(400)
+        .send({ message: error.details[0].message, status: "fail" });
+    }
+
+    const course = await courseModel.create(data);
     const DATA = await courseModel
       .findById(course._id)
-      .populate("qualificationType");
+      .populate({ path: "qualificationType", model: qualificationModel });
 
     return res.status(201).send({
       data: DATA,
@@ -40,9 +75,44 @@ export const createCourse = async (req, res, next) => {
     return res.status(500).send({ message: err.message, status: "fail" });
   }
 };
+
 export const getCourse = async (req, res, next) => {
   try {
-    const courses = await courseModel.find({});
+    const courses = await courseModel
+      .find({})
+      .populate({ path: "qualificationType", model: qualificationModel })
+      .sort({ createdAt: 1 });
+
+    return res.status(200).send({ data: courses, status: "ok" });
+  } catch (err) {
+    return res.status(500).send({ message: err.message, status: "fail" });
+  }
+};
+
+export const filterCourses = async (req, res, next) => {
+  try {
+    const { qualificationId } = req.params;
+    if (!qualificationId) {
+      return res
+        .status(400)
+        .send({ message: "invalid request. please send id" });
+    }
+
+    const qualification = await qualificationModel.findById(qualificationId);
+
+    if (!qualification) {
+      return res
+        .status(404)
+        .send({ message: "Qualification not found.", status: "fail" });
+    }
+    let courses = await courseModel
+      .find({})
+      .populate({ path: "qualificationType", model: qualificationModel });
+
+    courses = courses.filter(
+      (item) => item.qualificationType.value <= qualification.value
+    );
+
     return res.status(200).send({ data: courses, status: "ok" });
   } catch (err) {
     return res.status(500).send({ message: err.message, status: "fail" });
@@ -52,10 +122,40 @@ export const getCourse = async (req, res, next) => {
 export const updateCourse = async (req, res, next) => {
   try {
     const { updateField, updateValue } = req.body;
-    const courseId = req.params;
+    const { courseId } = req.params;
+
+    const schema = Joi.object({
+      courseId: Joi.string()
+        .regex(/^[0-9a-fA-F]{24}$}/)
+        .required(),
+      updateField: Joi.string()
+        .min(3)
+        .required(),
+      updateValue: Joi.string()
+        .min(3)
+        .required(),
+    });
+
+    let data = {
+      updateField,
+      updateValue,
+      courseId,
+    };
+    const { error, value } = schema.validate(data);
+    if (error) {
+      return res
+        .status(400)
+        .send({ message: error.details[0].message, status: "fail" });
+    }
+    if (updateField == "courseFee") {
+      updateValue = Math.trunc(updateValue);
+    }
+
+    const dynamicUpdate = { [updateField]: updateValue };
     const course = await courseModel.findByIdAndUpdate(
-      { _id: courseId.courseId },
-      { $set: { [updateField]: updateValue } , new:true}
+      { _id: courseId },
+      { $set: dynamicUpdate },
+      { new: true }
     );
     return res.status(200).send({ data: course, status: "ok" });
   } catch (err) {
@@ -65,8 +165,13 @@ export const updateCourse = async (req, res, next) => {
 
 export const deleteCourse = async (req, res, next) => {
   try {
-    const requestBody = req.body;
     const courseId = req.params;
+    if (!courseId) {
+      return res.status(400).send({
+        message: "invalid request please provide courseId",
+        status: "fail",
+      });
+    }
     const course = await courseModel.deleteOne({ _id: courseId.courseId });
     return res.status(202).send({ data: course, status: "ok" });
   } catch (err) {
