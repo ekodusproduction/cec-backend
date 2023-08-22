@@ -449,7 +449,7 @@ export const addNewCourse = async (req, res, next) => {
 
 export const updateStudent = async (req, res, next) => {
   try {
-    const updateObj = req.body;
+    let updateObj = req.body;
     const studentId = req.params;
     if (!studentId) {
       return res
@@ -465,6 +465,28 @@ export const updateStudent = async (req, res, next) => {
         .send({ message: "Invalid request . Send update object", status: 400 });
     }
 
+    if (req.files.length > 0) {
+      const projectFolder = `/public/student/${studentId}`;
+      const folder = join(__dirname, `../../${projectFolder}`);
+      for (let i = 0; i < req.files.length; i++) {
+        const file = req.files[i];
+        const buffer = Buffer.from(file.buffer, "utf-8");
+        const fileName = `/${file.fieldname}.${file.mimetype.split("/")[1]}`;
+        const fullName = join(folder, `/${fileName}`);
+        await fs.mkdir(folder, { recursive: true });
+        await fs.writeFile(fullName, buffer, "utf-8");
+        const filePath = projectFolder + fileName;
+
+        const studentUpdate = await studentModel.findByIdAndUpdate(
+          studentId,
+          {
+            [file.fieldname]: filePath,
+          },
+          { new: true }
+        );
+      }
+    }
+    updateObj.isProfileComplete = true;
     const updatedStudent = await studentModel.findByIdAndUpdate(
       studentId,
       { $set: updateObj },
@@ -506,16 +528,16 @@ export const fileUploads = async (req, res, next) => {
         .send({ message: "invalid user id in token. login again" });
     }
 
-    await fs.writeFile(
-      join(
-        __dirname +
-          `/../../public/student/${rollNumber.toString()}${file.fieldname}.${
-            file.mimetype.split("/")[1]
-          }`
-      ),
-      imgBuffer,
-      "utf-8"
-    );
+    // await fs.writeFile(
+    //   join(
+    //     __dirname +
+    //       `/../../public/student/${rollNumber.toString()}${file.fieldname}.${
+    //         file.mimetype.split("/")[1]
+    //       }`
+    //   ),
+    //   imgBuffer,
+    //   "utf-8"
+    // );
 
     const profilePic = `${baseUrl}/public/student/${rollNumber.toString()}${
       file.fieldname
