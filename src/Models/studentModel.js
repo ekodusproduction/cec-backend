@@ -37,8 +37,13 @@ const studentSchema = new Schema(
     DOB: {
       type: Date,
       required: "please provide date of birth",
-      cast: "{VALUE} is not a date",
-      required: "date of birth required",
+      validate: {
+        validator: function(value) {
+          const dobYear = value.getFullYear();
+          return dobYear >= minAllowedYear && dobYear <= currentYear;
+        },
+        message: "DOB must be within the last 60 years.",
+      },
     },
 
     presentAddress: { type: String, cast: "{VALUE} is not a string" },
@@ -86,7 +91,6 @@ const studentSchema = new Schema(
       enum: ["YES", "NO"],
       cast: "{VALUE} is not a valid string",
     },
-    regYear: { type: String, cast: "{VALUE} is not a date" },
     stdCode: { type: Number, cast: "{VALUE} is not a number" },
     course: [
       {
@@ -120,7 +124,20 @@ const studentSchema = new Schema(
       ref: "qualification",
       cast: "{VALUE} is not a valid object id",
     },
-    year: { type: String, cast: "{VALUE} is not a valid string" },
+    year: {
+      type: String,
+      validate: {
+        validator: function(value) {
+          const parsedYear = parseInt(value);
+          return (
+            !isNaN(parsedYear) &&
+            parsedYear >= minAllowedYear &&
+            parsedYear <= currentYear
+          );
+        },
+        message: "Year must be within the last 60 years.",
+      },
+    },
     institute: { type: String, cast: "{VALUE} is not a valid string" },
     grade: { type: String, cast: "{VALUE} is not a valid string" },
     percentage: { type: Number, cast: "{VALUE} is not a valid number" },
