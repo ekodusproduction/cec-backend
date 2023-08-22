@@ -129,6 +129,7 @@ const studentSchema = new Schema(
       type: String,
       validate: {
         validator: function(value) {
+          const minAllowedYear = 1950;
           const parsedYear = parseInt(value);
           return (
             !isNaN(parsedYear) &&
