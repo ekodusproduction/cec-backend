@@ -21,12 +21,17 @@ const generateRollNumber = async (centerId) => {
 
   // Get the current month and year
   const currentDate = new Date();
-  const currentYear = currentDate.getFullYear().toString().slice(-2);
-  const currentMonth = (currentDate.getMonth() + 1).toString().padStart(2, '0');
+  const currentYear = currentDate
+    .getFullYear()
+    .toString()
+    .slice(-2);
+  const currentMonth = (currentDate.getMonth() + 1).toString().padStart(2, "0");
 
-  const centerCodePadded = regCenter.centerCode.toString().padStart(3, '0');
+  const centerCodePadded = regCenter.centerCode.toString().padStart(3, "0");
 
-  const rollNumber = `${(count+1).toString().padStart(3, '0')}${currentMonth}${currentYear}${centerCodePadded}`;
+  const rollNumber = `${(count + 1)
+    .toString()
+    .padStart(3, "0")}${currentMonth}${currentYear}${centerCodePadded}`;
   return rollNumber;
 };
 
@@ -58,8 +63,7 @@ export const studentRegister = async (req, res, next) => {
       lastName: Joi.string()
         .min(3)
         .required(),
-      DOB: Joi.string()
-        .required(),
+      DOB: Joi.string().required(),
       mobile: Joi.number().required(),
       qualification: Joi.string()
         .min(3)
@@ -158,7 +162,9 @@ export const studentRegister = async (req, res, next) => {
       { _id: centerId },
       { $inc: { totalStudent: 1 } }
     );
-    const updateStudent = await studentModel.findByIdAndUpdate(student._id, {$addToSet:{course:courses}})
+    const updateStudent = await studentModel.findByIdAndUpdate(student._id, {
+      $addToSet: { course: courses },
+    });
 
     let text = `Student registered succesfully with CEC. To generate rollnumber please pay for the course`;
     // sendMessage(text, mobile);
@@ -169,135 +175,136 @@ export const studentRegister = async (req, res, next) => {
 };
 
 export const studentRegisterCenter = async (req, res, next) => {
-    try {
-      let {
-        firstName,
-        lastName,
-        DOB,
-        mobile,
-        qualification,
-        pinCodePresent,
-        presentAddress,
-        cityPresent,
-        statePresent,
-        permanentAddress,
-        statePermanent,
-        cityPermanent,
-        pinCodePermanent,
-        courses,
-      } = req.body;
-  
-      let schema = Joi.object({
-        firstName: Joi.string()
-          .min(3)
-          .required(),
-        lastName: Joi.string()
-          .min(3)
-          .required(),
-        DOB: Joi.string()
-          .required(),
-        mobile: Joi.number().required(),
-        qualification: Joi.string()
-          .min(3)
-          .required(),
-        pinCodePresent: Joi.number()
-          .min(100000)
-          .max(999999)
-          .required(),
-        presentAddress: Joi.string()
-          .min(1)
-          .max(100)
-          .required(),
-        permanentAddress: Joi.string()
-          .min(1)
-          .max(100)
-          .required(),
-        cityPresent: Joi.string()
-          .min(3)
-          .required(),
-        statePresent: Joi.string()
-          .min(1)
-          .required(),
-        cityPermanent: Joi.string()
-          .min(3)
-          .required(),
-        statePermanent: Joi.string()
-          .min(1)
-          .required(),
-        pinCodePermanent: Joi.number()
-          .min(100000)
-          .max(999999)
-          .required(),
-        courses: Joi.array().required(),
-      });
-  
-      let data = {
-        firstName,
-        lastName,
-        DOB,
-        mobile,
-        qualification,
-        pinCodePresent,
-        presentAddress,
-        cityPresent,
-        statePresent,
-        permanentAddress,
-        statePermanent,
-        cityPermanent,
-        pinCodePermanent,
-        
-        courses,
-      };
-      let { error, value } = schema.validate(data);
-      if (error) {
-        return res
-          .status(400)
-          .send({ message: error.details[0].message, status: "fail" });
-      }
-  
-      let convertToDate = (DOB) => {
-        let [year, day, month] = DOB.split("-").map(Number);
-        return new Date(year, month - 1, day); // Month is 0-based in JavaScript Date, so subtract 1 from the month value.
-      };
-  
-      DOB = convertToDate(DOB);
-  
-      let center = await centerModel.findById(req.id);
-      const centerId = center._id;
-      if (!center) {
-        return res
-          .status(404)
-          .send({ data: { message: "center not found" }, status: "fail" });
-      }
-      const rollNumber = await generateRollNumber(centerId);
-      const studentData = {
-        firstName,
-        lastName,
-        DOB,
-        mobile,
-        qualification,
-        pinCodePresent,
-        presentAddress,
-        cityPresent,
-        statePresent,
-        permanentAddress,
-        statePermanent,
-        cityPermanent,
-        pinCodePermanent,
-        centerId,
-        rollNumber,
-        course: courses,
-      };
-      let student = await studentModel.create(studentData);
-      const centerUpdate = await centerModel.findByIdAndUpdate(
-        { _id: centerId },
-        { $inc: { totalStudent: 1 } }
-      );
-      const updateStudent = await studentModel.findByIdAndUpdate(student._id, {$addToSet:{course:courses}})
-  
-      let text = `Student registered succesfully with CEC. To generate rollnumber please pay for the course`;
-      // sendMessage(text, mobile);
-      return res.status(200).send({ data: student, status: "ok" });
+  try {
+    let {
+      firstName,
+      lastName,
+      DOB,
+      mobile,
+      qualification,
+      pinCodePresent,
+      presentAddress,
+      cityPresent,
+      statePresent,
+      permanentAddress,
+      statePermanent,
+      cityPermanent,
+      pinCodePermanent,
+      courses,
+    } = req.body;
+
+    let schema = Joi.object({
+      firstName: Joi.string()
+        .min(3)
+        .required(),
+      lastName: Joi.string()
+        .min(3)
+        .required(),
+      DOB: Joi.string().required(),
+      mobile: Joi.number().required(),
+      qualification: Joi.string()
+        .min(3)
+        .required(),
+      pinCodePresent: Joi.number()
+        .min(100000)
+        .max(999999)
+        .required(),
+      presentAddress: Joi.string()
+        .min(1)
+        .max(100)
+        .required(),
+      permanentAddress: Joi.string()
+        .min(1)
+        .max(100)
+        .required(),
+      cityPresent: Joi.string()
+        .min(3)
+        .required(),
+      statePresent: Joi.string()
+        .min(1)
+        .required(),
+      cityPermanent: Joi.string()
+        .min(3)
+        .required(),
+      statePermanent: Joi.string()
+        .min(1)
+        .required(),
+      pinCodePermanent: Joi.number()
+        .min(100000)
+        .max(999999)
+        .required(),
+      courses: Joi.array().required(),
+    });
+
+    let data = {
+      firstName,
+      lastName,
+      DOB,
+      mobile,
+      qualification,
+      pinCodePresent,
+      presentAddress,
+      cityPresent,
+      statePresent,
+      permanentAddress,
+      statePermanent,
+      cityPermanent,
+      pinCodePermanent,
+
+      courses,
+    };
+    let { error, value } = schema.validate(data);
+    if (error) {
+      return res
+        .status(400)
+        .send({ message: error.details[0].message, status: "fail" });
+    }
+
+    let convertToDate = (DOB) => {
+      let [year, day, month] = DOB.split("-").map(Number);
+      return new Date(year, month - 1, day); // Month is 0-based in JavaScript Date, so subtract 1 from the month value.
+    };
+
+    DOB = convertToDate(DOB);
+
+    let center = await centerModel.findById(req.id);
+    const centerId = center._id;
+    if (!center) {
+      return res
+        .status(404)
+        .send({ data: { message: "center not found" }, status: "fail" });
+    }
+    const rollNumber = await generateRollNumber(centerId);
+    const studentData = {
+      firstName,
+      lastName,
+      DOB,
+      mobile,
+      qualification,
+      pinCodePresent,
+      presentAddress,
+      cityPresent,
+      statePresent,
+      permanentAddress,
+      statePermanent,
+      cityPermanent,
+      pinCodePermanent,
+      centerId,
+      rollNumber,
+      course: courses,
+    };
+    let student = await studentModel.create(studentData);
+    const centerUpdate = await centerModel.findByIdAndUpdate(
+      { _id: centerId },
+      { $inc: { totalStudent: 1 } }
+    );
+    const updateStudent = await studentModel.findByIdAndUpdate(student._id, {
+      $addToSet: { course: courses },
+    });
+
+    let text = `Student registered succesfully with CEC. To generate rollnumber please pay for the course`;
+    // sendMessage(text, mobile);
+    return res.status(200).send({ data: student, status: "ok" });
   } catch (err) {
     return res.status(500).send({ message: err.message, status: "fail" });
   }
@@ -496,19 +503,25 @@ export const addNewCourse = async (req, res, next) => {
 export const updateStudent = async (req, res, next) => {
   try {
     let updateObj = req.body;
-    const {rollNumber} = req.params;
+    const { rollNumber } = req.params;
     if (!rollNumber) {
       return res
         .status(400)
-        .send({ message: "Invalid request. Please provide rollNumber.", status: 400 });
+        .send({
+          message: "Invalid request. Please provide rollNumber.",
+          status: 400,
+        });
     }
 
-    const student = await studentModel.findOne({rollNumber});
+    const student = await studentModel.findOne({ rollNumber });
 
     if (!student) {
       return res
         .status(400)
-        .send({ message: "Invalid request. Please provide valid rollnumber.", status: 400 });
+        .send({
+          message: "Invalid request. Please provide valid rollnumber.",
+          status: 400,
+        });
     }
     if (!(Object.keys(updateObj).length > 0)) {
       return res
