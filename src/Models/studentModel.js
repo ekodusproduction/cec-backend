@@ -40,6 +40,7 @@ const studentSchema = new Schema(
       validate: {
         validator: function(value) {
           const dobYear = value.getFullYear();
+          const minAllowedYear = 1950;
           return dobYear >= minAllowedYear && dobYear <= currentYear;
         },
         message: "DOB must be within the last 60 years.",
