@@ -97,7 +97,7 @@ const centerSchema = new Schema(
         message: "enter 10 digit number",
       },
     },
-    email: { type: String, required: "center email required" },
+    email: { type: String, required: "center email required" , unique:true},
     address: { type: String, required: "center address required" },
     landmark: { type: String, required: "center lanmark required" },
     //policeStaion: { type: String, required: "center policeStation required" },
