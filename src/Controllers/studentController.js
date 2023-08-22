@@ -459,7 +459,7 @@ export const updateStudent = async (req, res, next) => {
 
     const student = await studentModel.findById(studentId);
 
-    if (!(Object(updateObj).keys().length > 0)) {
+    if (!(Object.keys(updateObj).length > 0)) {
       return res
         .status(400)
         .send({ message: "Invalid request . Send update object", status: 400 });
