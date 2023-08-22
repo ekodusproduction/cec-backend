@@ -19,7 +19,7 @@ const router = Router();
 router.route("/student").post(verifyToken, studentRegister);
 router.route("/student/center").post(verifyToken, studentRegisterCenter);
 
-router.route("/student/:studentId").put(verifyToken, updateStudent);
+router.route("/student/update/:rollNumber").put(verifyToken, updateStudent);
 
 router
   .route("/student/:studentId")

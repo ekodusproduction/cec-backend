@@ -496,15 +496,20 @@ export const addNewCourse = async (req, res, next) => {
 export const updateStudent = async (req, res, next) => {
   try {
     let updateObj = req.body;
-    const studentId = req.params;
-    if (!studentId) {
+    const rollNumber = req.params;
+    if (!rollNumber) {
       return res
-        .status(404)
-        .send({ message: "Student not found", status: 404 });
+        .status(400)
+        .send({ message: "Invalid request. Please provide rollNumber.", status: 400 });
     }
 
-    const student = await studentModel.findById(studentId);
+    const student = await studentModel.findById({rollNumber});
 
+    if (!student) {
+      return res
+        .status(400)
+        .send({ message: "Invalid request. Please provide valid rollnumber.", status: 400 });
+    }
     if (!(Object.keys(updateObj).length > 0)) {
       return res
         .status(400)
@@ -512,7 +517,7 @@ export const updateStudent = async (req, res, next) => {
     }
 
     if (req.files.length > 0) {
-      const projectFolder = `/public/student/${studentId}`;
+      const projectFolder = `/public/student/${student._id}`;
       const folder = join(__dirname, `../../${projectFolder}`);
       for (let i = 0; i < req.files.length; i++) {
         const file = req.files[i];
@@ -524,7 +529,7 @@ export const updateStudent = async (req, res, next) => {
         const filePath = projectFolder + fileName;
 
         const studentUpdate = await studentModel.findByIdAndUpdate(
-          studentId,
+          student._id,
           {
             [file.fieldname]: filePath,
           },
@@ -534,7 +539,7 @@ export const updateStudent = async (req, res, next) => {
     }
     updateObj.isProfileComplete = true;
     const updatedStudent = await studentModel.findByIdAndUpdate(
-      studentId,
+      student._id,
       { $set: updateObj },
       { new: true }
     );
