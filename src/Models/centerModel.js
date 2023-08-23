@@ -60,7 +60,8 @@ const centerSchema = new Schema(
           const minAllowedYear = 1950;
           return dobYear >= minAllowedYear && dobYear <= currentYear;
         },
-        message: "date of Reg must be greater than 1950 and less than current year.",
+        message:
+          "date of Reg must be greater than 1950 and less than current year.",
       },
     },
     centerCode: {
@@ -115,10 +116,7 @@ const centerSchema = new Schema(
     email: {
       type: String,
       required: "center email required",
-      unique: {
-        value: true,
-        message: "Email address must be unique",
-      },
+      unique: true,
     },
     address: { type: String, required: "center address required" },
     landmark: { type: String, required: "center lanmark required" },

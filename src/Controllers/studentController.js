@@ -54,7 +54,7 @@ export const studentRegister = async (req, res, next) => {
       centerCode,
       courses,
     } = req.body;
-    centerCode = centerCode * 1;
+    
     let schema = Joi.object({
       firstName: Joi.string()
         .min(3)
@@ -129,9 +129,9 @@ export const studentRegister = async (req, res, next) => {
     };
 
     DOB = convertToDate(DOB);
-
+    console.log(centerCode)
     let center = await centerModel.findOne({ centerCode: centerCode });
-    console.log(center)
+    console.log("center")
     const centerId = center._id;
     if (!center) {
       return res
@@ -168,9 +168,9 @@ export const studentRegister = async (req, res, next) => {
 
     let text = `Student registered succesfully with CEC. To generate rollnumber please pay for the course`;
     // sendMessage(text, mobile);
-    return res.status(200).send({ data: student, status: "ok" });
+    return res.status(200).send({ data: student, status: 201});
   } catch (err) {
-    return res.status(500).send({ message: err.message, status: "fail" });
+    return res.status(500).send({ message: err.message, status: 500 });
   }
 };
 
