@@ -61,10 +61,6 @@ const centerAdminSchema = new Schema(
   }
 );
 
-centerAdminSchema.pre(/^find/, function(next) {
-  this.select("-updatedAt -__v");
-  next();
-});
 
 const centerAdminModel = mongoose.model(
   "centerAdmins",
