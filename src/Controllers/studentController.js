@@ -531,6 +531,7 @@ export const updateStudent = async (req, res, next) => {
 
     if (req.files && req.files.length > 0) {
       const projectFolder = `/public/student/${student._id}`;
+      console.log("update files", req.files.fieldname)
       const folder = join(__dirname, `../../${projectFolder}`);
       for (let i = 0; i < req.files.length; i++) {
         const file = req.files[i];
