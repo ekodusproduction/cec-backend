@@ -12,7 +12,6 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const appDir = dirname(`${import.meta.filename}`);
 var baseUrl = `139.59.83.187`;
 
-
 export const createcenterAdmin = async (req, res, next) => {
   try {
     let {
@@ -99,7 +98,10 @@ export const getcenterAdmin = async (req, res, next) => {
 
 export const getAllcenterAdmin = async (req, res, next) => {
   try {
-    const user = await centerAdminModel.find({ isActive: true }).sort({"createdAt":1}).select({"createdAt":1, "email":1, "adminName":1, "mobile":1, "pinCode":1});
+    const user = await centerAdminModel
+      .find({ isActive: true })
+      .sort({ createdAt: 1 })
+      .select({ createdAt: 1, email: 1, adminName: 1, mobile: 1, pinCode: 1 });
     return res.status(200).send({ data: user, status: "ok" });
   } catch (err) {
     res.status(500).send({ message: err.message, status: "fail" });
@@ -108,7 +110,9 @@ export const getAllcenterAdmin = async (req, res, next) => {
 
 export const getAllInactiveCenterAdmin = async (req, res, next) => {
   try {
-    const user = await centerAdminModel.find({ isActive: false }).sort({"createdAt":1});
+    const user = await centerAdminModel
+      .find({ isActive: false })
+      .sort({ createdAt: 1 });
     return res.status(200).send({ data: user, status: "ok" });
   } catch (err) {
     res.status(500).send({ message: err.message, status: "fail" });
@@ -117,32 +121,38 @@ export const getAllInactiveCenterAdmin = async (req, res, next) => {
 
 export const updateCenterAdmin = async (req, res, next) => {
   try {
-      const updateObj = req.body;
-      const { centerAdminId } = req.params;
+    const updateObj = req.body;
+    const { centerAdminId } = req.params;
 
-      if (!centerAdminId) {
-          return res.status(404).json({ message: "Center Admin not found", status: 404 });
-      }
+    if (!centerAdminId) {
+      return res
+        .status(404)
+        .json({ message: "Center Admin not found", status: 404 });
+    }
 
-      const centerAdmin = await centerAdminModel.findById(centerAdminId);
+    const centerAdmin = await centerAdminModel.findById(centerAdminId);
 
-      if (!centerAdmin) {
-          return res.status(404).json({ message: "Center Admin not found", status: 404 });
-      }
+    if (!centerAdmin) {
+      return res
+        .status(404)
+        .json({ message: "Center Admin not found", status: 404 });
+    }
 
-      if (Object.keys(updateObj).length === 0) {
-          return res.status(400).json({ message: "Invalid request. Send update object", status: 400 });
-      }
+    if (Object.keys(updateObj).length === 0) {
+      return res
+        .status(400)
+        .json({ message: "Invalid request. Send update object", status: 400 });
+    }
 
-      const updatedCenterAdmin = await centerAdminModel.findByIdAndUpdate(
-          centerAdminId,
-          { $set: updateObj },
-          { new: true }
-      );
+    const updatedCenterAdmin = await centerAdminModel.findByIdAndUpdate(
+      centerAdminId,
+      { $set: updateObj },
+      { new: true }
+    );
 
-      return res.status(200).json({ data: updatedCenterAdmin, status: "ok" });
+    return res.status(200).json({ data: updatedCenterAdmin, status: "ok" });
   } catch (err) {
-      return res.status(500).json({ message: err.message, status: "fail" });
+    return res.status(500).json({ message: err.message, status: "fail" });
   }
 };
 
