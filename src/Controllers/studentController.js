@@ -505,23 +505,19 @@ export const updateStudent = async (req, res, next) => {
     let updateObj = req.body;
     const { rollNumber } = req.params;
     if (!rollNumber) {
-      return res
-        .status(400)
-        .send({
-          message: "Invalid request. Please provide rollNumber.",
-          status: 400,
-        });
+      return res.status(400).send({
+        message: "Invalid request. Please provide rollNumber.",
+        status: 400,
+      });
     }
 
     const student = await studentModel.findOne({ rollNumber });
 
     if (!student) {
-      return res
-        .status(400)
-        .send({
-          message: "Invalid request. Please provide valid rollnumber.",
-          status: 400,
-        });
+      return res.status(400).send({
+        message: "Invalid request. Please provide valid rollnumber.",
+        status: 400,
+      });
     }
     if (!(Object.keys(updateObj).length > 0)) {
       return res
@@ -531,7 +527,7 @@ export const updateStudent = async (req, res, next) => {
 
     if (req.files && req.files.length > 0) {
       const projectFolder = `/public/student/${student._id}`;
-      console.log("update files", req.files.fieldname)
+      console.log("update files");
       const folder = join(__dirname, `../../${projectFolder}`);
       for (let i = 0; i < req.files.length; i++) {
         const file = req.files[i];
