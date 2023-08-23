@@ -60,7 +60,10 @@ export const loginCenter = async (req, res, next) => {
     if (!centerNameExist) {
       return res
         .status(400)
-        .send({ message: "Wrong center name", status: "fail" });
+        .send({
+          message: "Wrong center name. Please provide correct center name.",
+          status: "fail",
+        });
     }
 
     let centerCodeExist = await centerModel.findOne({
@@ -70,7 +73,10 @@ export const loginCenter = async (req, res, next) => {
     if (!centerCodeExist) {
       return res
         .status(400)
-        .send({ message: "Wrong center code", status: "fail" });
+        .send({
+          message: "Wrong center code. Please provide correct center code",
+          status: "fail",
+        });
     }
 
     if (centerCodeExist.centerName != centerName) {
@@ -112,7 +118,8 @@ export const getAllCenter = async (req, res, next) => {
         path: "headOfInstitute",
         model: centerAdminModel,
         select: "adminName",
-      }).sort({"createdAt":1});
+      })
+      .sort({ createdAt: 1 });
     return res.status(200).send({ data: center, status: "ok" });
   } catch (err) {
     return res.status(500).send({ message: err.message, status: "fail" });
@@ -121,7 +128,9 @@ export const getAllCenter = async (req, res, next) => {
 
 export const getAllInactiveCenter = async (req, res, next) => {
   try {
-    const center = await centerModel.find({ isActive: false }).sort({"createdAt":1});
+    const center = await centerModel
+      .find({ isActive: false })
+      .sort({ createdAt: 1 });
     return res.status(200).send({ data: center, status: "ok" });
   } catch (err) {
     return res.status(500).send({ message: err.message, status: "fail" });
@@ -134,12 +143,17 @@ export const getAllCentersUnderAdmin = async (req, res, next) => {
     if (!centeradminId) {
       return res
         .status(400)
-        .send({ message: "invalid request", status: "fail" });
+        .send({
+          message: "invalid request. Please provide centeradminId.",
+          status: "fail",
+        });
     }
-    const center = await centerModel.find({
-      isActive: true,
-      headOfInstitute: centeradminId,
-    }).sort({"createdAt":1});
+    const center = await centerModel
+      .find({
+        isActive: true,
+        headOfInstitute: centeradminId,
+      })
+      .sort({ createdAt: 1 });
     return res.status(200).send({ data: center, status: "ok" });
   } catch (err) {
     return res.status(500).send({ message: err.message, status: "fail" });
@@ -147,7 +161,6 @@ export const getAllCentersUnderAdmin = async (req, res, next) => {
 };
 export const createcenter = async (req, res, next) => {
   try {
-    
     let {
       centerName,
       dateofReg,
@@ -203,23 +216,22 @@ export const createcenter = async (req, res, next) => {
         .send({ message: error.details[0].message, status: "fail" });
     }
 
-
     if (!mobileValidator(whatsApp)) {
       return res
         .status(400)
-        .send({ message: "Invalid whatsApp number", status: 400 });
+        .send({ message: "Provide valid center number.", status: 400 });
     }
 
     if (!pinCodeValidator(pinCode)) {
       return res.status(400).send({
-        message: "provide valid pincode",
+        message: "Provide valid pincode",
         status: 400,
       });
     }
 
     if (!adminMobile) {
       return res.status(400).send({
-        message: "provide admin loginId/number",
+        message: "Provide admin loginId/number",
         status: 400,
       });
     }
@@ -227,7 +239,7 @@ export const createcenter = async (req, res, next) => {
     if (!mobileValidator(adminMobile)) {
       return res
         .status(400)
-        .send({ message: "Invalid adminMobile number", status: 400 });
+        .send({ message: "Invalid admin mobile number", status: 400 });
     }
 
     const convertToDate = (DOB) => {
@@ -255,9 +267,10 @@ export const createcenter = async (req, res, next) => {
       mobile: adminMobile,
     });
     if (!centerAdmin) {
-      return res.status(400).send({
-        message: "Invalid request. Please provide valid mobile number",
-        status: 400,
+      return res.status(404).send({
+        message:
+          "Cnteradmin not found. Please provide valid centerAdmin mobile number",
+        status: 404,
       });
     }
     // data["centerId"] = `${(count + 1).toString().padStart(3, "0")}`;
@@ -282,13 +295,23 @@ export const updateCenter = async (req, res, next) => {
     const { centerId } = req.params;
 
     if (!centerId) {
-      return res.status(404).json({ message: "Center not found", status: 404 });
+      return res
+        .status(400)
+        .json({
+          message: "Invalid request. Please provide valid centerId.",
+          status: 404,
+        });
     }
 
     const center = await centerModel.findById(centerId);
 
     if (!center) {
-      return res.status(404).json({ message: "Center not found", status: 404 });
+      return res
+        .status(404)
+        .json({
+          message: "Center not found.  Please provide valid centerId",
+          status: 404,
+        });
     }
 
     if (Object.keys(updateObj).length === 0) {
@@ -333,7 +356,7 @@ export const deletecenter = async (req, res, next) => {
       !(email == user.email && (await bcrypt.compare(password, user.password)))
     ) {
       return res.status(400).send({
-        message: "please enter correct password or email",
+        message: "Please enter correct password or email",
         status: "ok",
       });
     }
@@ -467,12 +490,13 @@ export const changePassword = async (req, res, next) => {
     if (error) {
       return res
         .status(400)
-        .send({ message: error.details[0].message, status: "fail" });
+        .send({ message: error.details[0].message, status: 400 });
     }
     if (newPassword != confirmPassword) {
       return res.status(400).send({
         message:
           "Invalid request. Confirm password and new password should be same.",
+        status: 400,
       });
     }
 
@@ -482,9 +506,9 @@ export const changePassword = async (req, res, next) => {
       { password: encryptedPassword },
       { new: true }
     );
-    console.log(centerAdmin)
-    return res.status(200).send({ data: centerAdmin, status: "ok" });
+    console.log(centerAdmin);
+    return res.status(200).send({ data: centerAdmin, status: 200 });
   } catch (err) {
-    res.status(500).send({ message: err.message, status: "fail" });
+    res.status(500).send({ message: err.message, status: 500 });
   }
 };

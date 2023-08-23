@@ -54,7 +54,6 @@ export const studentRegister = async (req, res, next) => {
       centerCode,
       courses,
     } = req.body;
-    console.log(req.body);
     centerCode = centerCode * 1;
     let schema = Joi.object({
       firstName: Joi.string()
@@ -132,6 +131,7 @@ export const studentRegister = async (req, res, next) => {
     DOB = convertToDate(DOB);
 
     let center = await centerModel.findOne({ centerCode: centerCode });
+    console.log(center)
     const centerId = center._id;
     if (!center) {
       return res

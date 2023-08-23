@@ -56,15 +56,11 @@ const centerSchema = new Schema(
       validate: {
         validator: function(value) {
           const currentYear = new Date().getFullYear();
+          const dobYear = value.getFullYear();
           const minAllowedYear = 1950;
-          const parsedYear = parseInt(value);
-          return (
-            !isNaN(parsedYear) &&
-            parsedYear >= minAllowedYear &&
-            parsedYear <= currentYear
-          );
+          return dobYear >= minAllowedYear && dobYear <= currentYear;
         },
-        message: "Year must be within the last 60 years.",
+        message: "dateofReg must be within the last 60 years.",
       },
     },
     centerCode: {
