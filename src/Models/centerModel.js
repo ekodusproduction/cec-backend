@@ -81,7 +81,7 @@ const centerSchema = new Schema(
       type: String,
       maxLength: 60,
       unique: true,
-      required: "franchise name required",
+      required: "center name required",
       cast: "{VALUE} is not a String",
     },
     // firmType: {

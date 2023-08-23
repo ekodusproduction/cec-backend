@@ -58,12 +58,10 @@ export const loginCenter = async (req, res, next) => {
     });
 
     if (!centerNameExist) {
-      return res
-        .status(400)
-        .send({
-          message: "Wrong center name. Please provide correct center name.",
-          status: "fail",
-        });
+      return res.status(400).send({
+        message: "Wrong center name. Please provide correct center name.",
+        status: "fail",
+      });
     }
 
     let centerCodeExist = await centerModel.findOne({
@@ -71,12 +69,10 @@ export const loginCenter = async (req, res, next) => {
     });
 
     if (!centerCodeExist) {
-      return res
-        .status(400)
-        .send({
-          message: "Wrong center code. Please provide correct center code",
-          status: "fail",
-        });
+      return res.status(400).send({
+        message: "Wrong center code. Please provide correct center code",
+        status: "fail",
+      });
     }
 
     if (centerCodeExist.centerName != centerName) {
@@ -141,12 +137,10 @@ export const getAllCentersUnderAdmin = async (req, res, next) => {
   try {
     const { centeradminId } = req.params;
     if (!centeradminId) {
-      return res
-        .status(400)
-        .send({
-          message: "invalid request. Please provide centeradminId.",
-          status: "fail",
-        });
+      return res.status(400).send({
+        message: "invalid request. Please provide centeradminId.",
+        status: "fail",
+      });
     }
     const center = await centerModel
       .find({
@@ -207,8 +201,8 @@ export const createcenter = async (req, res, next) => {
       adminMobile,
       centerCode,
     };
-
-    data.centerName = centerName.toUpperCase();
+    centerName = centerName.toUpperCase();
+    data.centerName = centerName
     const { error, value } = schema.validate(data);
     if (error) {
       return res
@@ -253,10 +247,11 @@ export const createcenter = async (req, res, next) => {
         status: 400,
       });
     }
+
     const centerEmailExist = await centerModel.findOne({ email });
     if (centerEmailExist) {
       return res.status(400).send({
-        message: "center Code exist. Please provide another email.",
+        message: "center email exist. Please provide another email.",
         status: 400,
       });
     }
@@ -268,6 +263,7 @@ export const createcenter = async (req, res, next) => {
         status: 400,
       });
     }
+
     data.dateofReg = convertToDate(dateofReg);
     // const count = await centerModel.countDocuments();
     const centerAdmin = await centerAdminModel.findOne({
@@ -302,23 +298,19 @@ export const updateCenter = async (req, res, next) => {
     const { centerId } = req.params;
 
     if (!centerId) {
-      return res
-        .status(400)
-        .json({
-          message: "Invalid request. Please provide valid centerId.",
-          status: 404,
-        });
+      return res.status(400).json({
+        message: "Invalid request. Please provide valid centerId.",
+        status: 404,
+      });
     }
 
     const center = await centerModel.findById(centerId);
 
     if (!center) {
-      return res
-        .status(404)
-        .json({
-          message: "Center not found.  Please provide valid centerId",
-          status: 404,
-        });
+      return res.status(404).json({
+        message: "Center not found.  Please provide valid centerId",
+        status: 404,
+      });
     }
 
     if (Object.keys(updateObj).length === 0) {
