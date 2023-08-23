@@ -7,21 +7,21 @@ const studentSchema = new Schema(
     firstName: {
       type: String,
       required: "please provide firstName",
-      minLength: 3,
-      maxLength: 25,
+      minLength: [3, "First name should be at least 3 characters long"],
+      maxLength: [25, "First name cannot exceed 25 characters"],
       cast: "{VALUE} is not a string",
     },
     lastName: {
       type: String,
       required: "please provide lastName",
-      minLength: 3,
-      maxLength: 25,
+      minLength: [3, "Last name should be at least 3 characters long"],
+      maxLength: [25, "Last name cannot exceed 25 characters"],
       cast: "{VALUE} is not a string",
     },
     rollNumber: {
       type: String,
-      minLength: 3,
-      maxLength: 20,
+      minLength: [3, "Roll number should be at least 3 characters long"],
+      maxLength: [20, "Roll number cannot exceed 20 characters"],
       unique: true,
       cast: "{VALUE} is not a string",
     },
@@ -44,7 +44,7 @@ const studentSchema = new Schema(
           const minAllowedYear = 1950;
           return dobYear >= minAllowedYear && dobYear <= currentYear;
         },
-        message: "DOB must be within the last 60 years.",
+        message: "DOB must be between 1950 and current year.",
       },
     },
 
@@ -139,7 +139,7 @@ const studentSchema = new Schema(
             parsedYear <= currentYear
           );
         },
-        message: "Year must be within the last 60 years.",
+        message: "DOB must be between 1950 and current year.",
       },
     },
     institute: { type: String, cast: "{VALUE} is not a valid string" },

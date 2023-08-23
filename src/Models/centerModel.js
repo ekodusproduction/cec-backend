@@ -60,7 +60,7 @@ const centerSchema = new Schema(
           const minAllowedYear = 1950;
           return dobYear >= minAllowedYear && dobYear <= currentYear;
         },
-        message: "dateofReg must be within the last 60 years.",
+        message: "date of Reg must be greater than 1950 and less than current year.",
       },
     },
     centerCode: {

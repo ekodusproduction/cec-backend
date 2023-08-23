@@ -62,7 +62,7 @@ const centerAdminSchema = new Schema(
 );
 
 centerAdminSchema.pre(/^find/, function(next) {
-  this.select("-createdAt -updatedAt -__v");
+  this.select("-updatedAt -__v");
   next();
 });
 
