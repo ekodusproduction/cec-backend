@@ -253,6 +253,13 @@ export const createcenter = async (req, res, next) => {
         status: 400,
       });
     }
+    const centerEmailExist = await centerModel.findOne({ email });
+    if (centerEmailExist) {
+      return res.status(400).send({
+        message: "center Code exist. Please provide another email.",
+        status: 400,
+      });
+    }
 
     const centerNameExist = await centerModel.findOne({ centerName });
     if (centerNameExist) {
