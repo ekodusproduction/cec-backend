@@ -69,7 +69,7 @@ const centerSchema = new Schema(
       unique: true,
       required: "Center code required",
       validate: {
-        validator: function (value) {
+        validator: function(value) {
           return value.length === 3; // Validate that the length is exactly 3 characters
         },
         message: "Center code must be exactly 3 characters long.",
@@ -112,7 +112,14 @@ const centerSchema = new Schema(
         message: "enter 10 digit number",
       },
     },
-    email: { type: String, required: "center email required", unique: true },
+    email: {
+      type: String,
+      required: "center email required",
+      unique: {
+        value: true,
+        message: "Email address must be unique",
+      },
+    },
     address: { type: String, required: "center address required" },
     landmark: { type: String, required: "center lanmark required" },
     district: { type: String, required: "center district required" },
