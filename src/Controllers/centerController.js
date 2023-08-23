@@ -239,7 +239,7 @@ export const createcenter = async (req, res, next) => {
     if (!mobileValidator(adminMobile)) {
       return res
         .status(400)
-        .send({ message: "Invalid admin mobile number", status: 400 });
+        .send({ message: "Invalid registration mobile number", status: 400 });
     }
 
     const convertToDate = (DOB) => {
@@ -269,7 +269,7 @@ export const createcenter = async (req, res, next) => {
     if (!centerAdmin) {
       return res.status(404).send({
         message:
-          "Cnteradmin not found. Please provide valid centerAdmin mobile number",
+          "Centeradmin not found. Please provide valid centerAdmin mobile number",
         status: 404,
       });
     }
