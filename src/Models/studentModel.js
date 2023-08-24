@@ -159,6 +159,7 @@ studentSchema.pre(/^find/, function(next) {
 
 
 studentSchema.index({ createdAt: 1, centerId: 1 });
+studentSchema.index({ rollNumber: 1 });
 
 mongoose.connection.syncIndexes()
   .then(() => {
