@@ -112,7 +112,7 @@ export const getHomeSuper = async (req, res, next) => {
     const oneMonthAgo = new Date();
     oneMonthAgo.setMonth(oneMonthAgo.getMonth() - 1);
 
-    const studentsCountLastMonth = await studentModel.countDocuments({
+    const studentsCountLastMonth = await studentModel.find({
       createdAt: { $gte: oneMonthAgo },
     });
 
