@@ -32,7 +32,7 @@ export const upload = multer({ dest: "public/" });
 app.use(cors());
 app.options("*", cors());
 
-app.use(helmet());
+// app.use(helmet());
 app.set("trust proxy", true);
 
 const limiter = rateLimit({
