@@ -5,6 +5,36 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const appDir = dirname(`${import.meta.filename}`);
 
 import studentModel from "../Models/studentModel.js";
+const getRegisteredPerMonth = async (model, centerId = null) => {
+  try {
+    const currentDate = new Date();
+    const oneYearAgo = new Date();
+    oneYearAgo.setFullYear(currentDate.getFullYear() - 1);
+
+    const pipeline = [
+      {
+        $match: {
+          createdAt: { $gte: oneYearAgo },
+          ...(centerId && { centerId }), // Add centerId condition if provided
+        },
+      },
+      {
+        $group: {
+          _id: {
+            year: { $year: "$createdAt" },
+            month: { $month: "$createdAt" },
+          },
+          count: { $sum: 1 },
+        },
+      },
+    ];
+
+    const results = await model.aggregate(pipeline);
+    return results;
+  } catch (error) {
+    throw error;
+  }
+};
 
 export const getHomeCenter = async (req, res, next) => {
   try {
