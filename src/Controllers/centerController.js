@@ -272,7 +272,7 @@ export const createcenter = async (req, res, next) => {
     if (!centerAdmin) {
       return res.status(404).send({
         message:
-          "Centeradmin not found. Please provide valid centerAdmin mobile number",
+          "Invalid centeradmin registration number. Please provide valid centeradmin registration number",
         status: 404,
       });
     }
