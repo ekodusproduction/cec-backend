@@ -4,6 +4,7 @@ import courseModel from "../Models/courseModel.js";
 
 import { dirname } from "path";
 import { fileURLToPath } from "url";
+import { isLength } from "lodash";
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const appDir = dirname(`${import.meta.filename}`);
 
@@ -20,7 +21,7 @@ const getRegisteredPerMonthCenter = async (model, centerId = null) => {
     const pipeline = [
       {
         $match: {
-          $and: [{createdAt: { $gte: oneYearAgo }}, {centerId: centerId}],
+          $and: [{ createdAt: { $gte: oneYearAgo } }, { centerId: centerId }],
         },
       },
       {
@@ -78,7 +79,9 @@ const getRegisteredPerMonth = async (model, centerId = null) => {
 export const getHomeCenter = async (req, res, next) => {
   try {
     const centerId = req.id; // Assuming centerId is in the request parameters
-    const oneMonthAgo = new Date();
+    let currentDate = new Date();
+    let oneMonthAgo = new Date(currentDate); // Clone the current date
+
     oneMonthAgo.setMonth(oneMonthAgo.getMonth() - 1);
 
     const studentsCountLastMonth = await studentModel.countDocuments({
@@ -86,18 +89,26 @@ export const getHomeCenter = async (req, res, next) => {
       createdAt: { $gte: oneMonthAgo },
     });
 
-    const totalStudents = await studentModel.countDocuments({ centerId });
+    const month = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
+    const studentPerMonth = await Promise.all(month.map(async (item) => {
+      const clonedDate = new Date(currentDate); // Clone the current date
+      clonedDate.setMonth(clonedDate.getMonth() - item);
 
-    const studentsRegisteredPerMonth = await getRegisteredPerMonthCenter(
-      studentModel,
-      centerId
-    );
+      const student = await studentModel.countDocuments({
+        centerId,
+        createdAt: { $gte: clonedDate, $lt: oneMonthAgo }, // Use clonedDate here
+      });
+
+      return student;
+    }));
+
+    const totalStudents = await studentModel.countDocuments({ centerId });
 
     return res.status(200).send({
       data: {
         newStudentsLastMonth: studentsCountLastMonth,
         totalStudents,
-        studentsRegisteredPerMonth,
+        studentsRegisteredPerMonth: studentPerMonth,
       },
       status: "ok",
     });
