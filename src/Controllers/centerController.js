@@ -171,7 +171,7 @@ export const createcenter = async (req, res, next) => {
     } = req.body;
     const schema = Joi.object({
       centerName: Joi.string().required(),
-      centerCode: Joi.number().required(),
+      centerCode: Joi.string().required(),
       dateofReg: Joi.string().required(),
       address: Joi.string().required(),
       landmark: Joi.string().required(),
@@ -222,6 +222,13 @@ export const createcenter = async (req, res, next) => {
         status: 400,
       });
     }
+    if (centerCode.length != 3) {
+      return res.status(400).send({
+        message: "Center code must be 3 letters long.",
+        status: 400,
+      });
+    }
+
 
     if (!adminMobile) {
       return res.status(400).send({
@@ -270,10 +277,10 @@ export const createcenter = async (req, res, next) => {
       mobile: adminMobile,
     });
     if (!centerAdmin) {
-      return res.status(404).send({
+      return res.status(400).send({
         message:
           "Invalid centeradmin registration number. Please provide valid centeradmin registration number",
-        status: 404,
+        status: 400,
       });
     }
     // data["centerId"] = `${(count + 1).toString().padStart(3, "0")}`;
@@ -288,7 +295,7 @@ export const createcenter = async (req, res, next) => {
 
     return res.status(201).send({ data: center, status: 201 });
   } catch (err) {
-    return res.status(500).send({ message: err, status: "fail" });
+    await handleErrors(err, req, res, next)
   }
 };
 
