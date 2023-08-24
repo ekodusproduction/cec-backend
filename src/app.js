@@ -33,7 +33,7 @@ app.use(cors());
 app.options("*", cors());
 
 app.use(helmet());
-// app.set("trust proxy", true);
+app.set("trust proxy", true);
 
 const limiter = rateLimit({
   max: 1000,
