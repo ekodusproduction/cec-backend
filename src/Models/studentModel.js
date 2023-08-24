@@ -157,5 +157,16 @@ studentSchema.pre(/^find/, function(next) {
   next();
 });
 
+
+studentSchema.index({ createdAt: 1, centerId: 1 });
+
+mongoose.connection.syncIndexes()
+  .then(() => {
+    console.log("Indexes synchronized successfully.");
+  })
+  .catch((error) => {
+    console.error("Error synchronizing indexes:", error);
+  });
+
 const studentModel = mongoose.model("students", studentSchema, "student");
 export default studentModel;
