@@ -133,12 +133,13 @@ export const studentRegister = async (req, res, next) => {
     console.log(centerCode)
     let center = await centerModel.findOne({ centerCode: centerCode });
     console.log("center")
-    const centerId = center._id;
     if (!center) {
       return res
         .status(404)
         .send({ data: { message: "center not found" }, status: "fail" });
-    }
+    }    
+    const centerId = center._id;
+
     const rollNumber = await generateRollNumber(centerId);
     const studentData = {
       firstName,
