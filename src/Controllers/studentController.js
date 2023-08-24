@@ -9,6 +9,7 @@ import { sendMessage } from "../Airtel/airtel.js";
 import courseModel from "../Models/courseModel.js";
 import qualificationModel from "../Models/qualificationModel.js";
 import superAdminModel from "../Models/superAdminModel.js";
+import { handleErrors } from "../Utils/errorHandler.js";
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const appDir = dirname(`${import.meta.filename}`);
 const baseUrl = `139.59.83.187`;
@@ -54,7 +55,7 @@ export const studentRegister = async (req, res, next) => {
       centerCode,
       courses,
     } = req.body;
-    
+
     let schema = Joi.object({
       firstName: Joi.string()
         .min(3)
@@ -557,7 +558,7 @@ export const updateStudent = async (req, res, next) => {
 
     return res.status(200).send({ data: updatedStudent, status: "ok" });
   } catch (err) {
-    return res.status(500).send({ message: err.message, status: "fail" });
+    await handleErrors(err, req, res, next)
   }
 };
 
