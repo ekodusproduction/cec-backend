@@ -188,13 +188,14 @@ export const getHomeSuper = async (req, res, next) => {
       "December",
     ];
 
+    const currentDate = new Date(); // Initialize currentDate here
+
     const studentPerMonth = await Promise.all(
       month.map(async (item) => {
         const clonedDate = new Date(currentDate); // Clone the current date
         clonedDate.setMonth(clonedDate.getMonth() - item);
 
         const studentsThisMonth = await studentModel.countDocuments({
-          centerId,
           createdAt: {
             $gte: getOneMonthAgo(clonedDate),
             $lt: getNextMonth(clonedDate),
@@ -207,8 +208,6 @@ export const getHomeSuper = async (req, res, next) => {
         };
       })
     );
-
-
 
     const studentsRegisteredPerMonth = await getRegisteredPerMonth(
       studentModel
