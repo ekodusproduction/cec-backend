@@ -172,6 +172,44 @@ export const getHomeSuper = async (req, res, next) => {
       createdAt: { $gte: oneMonthAgo },
     });
 
+    const month = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
+    const monthLabels = [
+      "January",
+      "February",
+      "March",
+      "April",
+      "May",
+      "June",
+      "July",
+      "August",
+      "September",
+      "October",
+      "November",
+      "December",
+    ];
+
+    const studentPerMonth = await Promise.all(
+      month.map(async (item) => {
+        const clonedDate = new Date(currentDate); // Clone the current date
+        clonedDate.setMonth(clonedDate.getMonth() - item);
+
+        const studentsThisMonth = await studentModel.countDocuments({
+          centerId,
+          createdAt: {
+            $gte: getOneMonthAgo(clonedDate),
+            $lt: getNextMonth(clonedDate),
+          },
+        });
+
+        return {
+          month: monthLabels[clonedDate.getMonth()],
+          students: studentsThisMonth,
+        };
+      })
+    );
+
+
+
     const studentsRegisteredPerMonth = await getRegisteredPerMonth(
       studentModel
     );
