@@ -4,7 +4,6 @@ import courseModel from "../Models/courseModel.js";
 
 import { dirname } from "path";
 import { fileURLToPath } from "url";
-import { isLength } from "lodash";
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const appDir = dirname(`${import.meta.filename}`);
 
