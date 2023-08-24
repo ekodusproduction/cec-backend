@@ -74,32 +74,65 @@ const getRegisteredPerMonth = async (model, centerId = null) => {
     throw error;
   }
 };
+function getOneMonthAgo(date) {
+  const newDate = new Date(date);
+  newDate.setMonth(newDate.getMonth() - 1);
+  newDate.setDate(1); // Set day to the 1st
+  return newDate;
+}
+
+// Helper function to get the start of the next month
+function getNextMonth(date) {
+  const newDate = new Date(date);
+  newDate.setMonth(newDate.getMonth() + 1);
+  newDate.setDate(1); // Set day to the 1st
+  return newDate;
+}
 
 export const getHomeCenter = async (req, res, next) => {
   try {
     const centerId = req.id; // Assuming centerId is in the request parameters
     let currentDate = new Date();
-    let oneMonthAgo = new Date(currentDate); // Clone the current date
-
-    oneMonthAgo.setMonth(oneMonthAgo.getMonth() - 1);
 
     const studentsCountLastMonth = await studentModel.countDocuments({
       centerId,
-      createdAt: { $gte: oneMonthAgo },
+      createdAt: { $gte: getOneMonthAgo(currentDate) },
     });
-
     const month = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
-    const studentPerMonth = await Promise.all(month.map(async (item) => {
-      const clonedDate = new Date(currentDate); // Clone the current date
-      clonedDate.setMonth(clonedDate.getMonth() - item);
+    const monthLabels = [
+      "January",
+      "February",
+      "March",
+      "April",
+      "May",
+      "June",
+      "July",
+      "August",
+      "September",
+      "October",
+      "November",
+      "December",
+    ];
 
-      const student = await studentModel.countDocuments({
-        centerId,
-        createdAt: { $gte: clonedDate, $lt: oneMonthAgo }, // Use clonedDate here
-      });
+    const studentPerMonth = await Promise.all(
+      month.map(async (item) => {
+        const clonedDate = new Date(currentDate); // Clone the current date
+        clonedDate.setMonth(clonedDate.getMonth() - item);
 
-      return student;
-    }));
+        const studentsThisMonth = await studentModel.countDocuments({
+          centerId,
+          createdAt: {
+            $gte: getOneMonthAgo(clonedDate),
+            $lt: getNextMonth(clonedDate),
+          },
+        });
+
+        return {
+          month: monthLabels[clonedDate.getMonth()],
+          students: studentsThisMonth,
+        };
+      })
+    );
 
     const totalStudents = await studentModel.countDocuments({ centerId });
 
