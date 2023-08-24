@@ -245,7 +245,7 @@ export const createcenter = async (req, res, next) => {
     }
 
     const convertToDate = (DOB) => {
-      const [year, day, month] = DOB.split("-").map(Number);
+      const [year,  month, day] = DOB.split("-").map(Number);
       return new Date(year, month - 1, day); // Month is 0-based in JavaScript Date, so subtract 1 from the month value.
     };
     const centerCodeExist = await centerModel.findOne({ centerCode });
