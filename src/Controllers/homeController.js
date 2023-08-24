@@ -1,10 +1,45 @@
 import centerModel from "../Models/centerModel.js";
+import studentModel from "../Models/studentModel.js";
+import courseModel from "../Models/courseModel.js";
+
 import { dirname } from "path";
 import { fileURLToPath } from "url";
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const appDir = dirname(`${import.meta.filename}`);
 
-import studentModel from "../Models/studentModel.js";
+const getRegisteredPerMonthCenter = async (model, centerId = null) => {
+  try {
+    console.log(centerId);
+    const currentDate = new Date();
+    const oneYearAgo = new Date();
+    oneYearAgo.setFullYear(currentDate.getFullYear() - 1);
+
+    const oneMonthAgo = new Date(); // Define oneMonthAgo here
+    oneMonthAgo.setMonth(currentDate.getMonth() - 1);
+
+    const pipeline = [
+      {
+        $match: {
+          $and: [{createdAt: { $gte: oneYearAgo }}, {centerId: centerId}],
+        },
+      },
+      {
+        $group: {
+          _id: {
+            year: { $year: "$createdAt" },
+            month: { $month: "$createdAt" },
+          },
+          count: { $sum: 1 },
+        },
+      },
+    ];
+
+    const results = await model.aggregate(pipeline);
+    return results;
+  } catch (error) {
+    throw error;
+  }
+};
 
 const getRegisteredPerMonth = async (model, centerId = null) => {
   try {
@@ -12,18 +47,28 @@ const getRegisteredPerMonth = async (model, centerId = null) => {
     const oneYearAgo = new Date();
     oneYearAgo.setFullYear(currentDate.getFullYear() - 1);
 
-    console.log("oneYearAgo:", oneYearAgo);
-    console.log("oneMonthAgo:", oneMonthAgo);
+    const oneMonthAgo = new Date(); // Define oneMonthAgo here
+    oneMonthAgo.setMonth(currentDate.getMonth() - 1);
 
     const pipeline = [
-      // ... your existing pipeline stages
+      {
+        $match: {
+          createdAt: { $gte: oneYearAgo },
+          ...(centerId && { centerId }), // Add centerId condition if provided
+        },
+      },
+      {
+        $group: {
+          _id: {
+            year: { $year: "$createdAt" },
+            month: { $month: "$createdAt" },
+          },
+          count: { $sum: 1 },
+        },
+      },
     ];
 
-    console.log("Aggregation Pipeline:", JSON.stringify(pipeline));
-
     const results = await model.aggregate(pipeline);
-    console.log("Aggregation Results:", results);
-
     return results;
   } catch (error) {
     throw error;
@@ -33,7 +78,6 @@ const getRegisteredPerMonth = async (model, centerId = null) => {
 export const getHomeCenter = async (req, res, next) => {
   try {
     const centerId = req.id; // Assuming centerId is in the request parameters
-
     const oneMonthAgo = new Date();
     oneMonthAgo.setMonth(oneMonthAgo.getMonth() - 1);
 
@@ -44,7 +88,7 @@ export const getHomeCenter = async (req, res, next) => {
 
     const totalStudents = await studentModel.countDocuments({ centerId });
 
-    const studentsRegisteredPerMonth = await getRegisteredPerMonth(
+    const studentsRegisteredPerMonth = await getRegisteredPerMonthCenter(
       studentModel,
       centerId
     );

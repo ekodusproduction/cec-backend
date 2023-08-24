@@ -169,6 +169,7 @@ export const studentRegister = async (req, res, next) => {
       centerId,
       rollNumber,
       course: courses,
+      centerCode,
     };
     let student = await studentModel.create(studentData);
     const centerUpdate = await centerModel.findByIdAndUpdate(
