@@ -279,7 +279,7 @@ export const createcenter = async (req, res, next) => {
     if (!centerAdmin) {
       return res.status(400).send({
         message:
-          "Invalid centeradmin registration number. Please provide valid centeradmin registration number",
+          "Centeradmin registration number is not valid. Provide a valid number",
         status: 400,
       });
     }
@@ -334,7 +334,7 @@ export const updateCenter = async (req, res, next) => {
 
     return res.status(200).json({ data: updatedCenter, status: 200 });
   } catch (err) {
-    return res.status(500).json({ message: err.message, status: 500 });
+    await handleErrors(err, req, res, next)
   }
 };
 
@@ -374,7 +374,7 @@ export const deletecenter = async (req, res, next) => {
 
     return res.status(200).send({ data: userdeleted, status: "ok" });
   } catch (err) {
-    return res.status(500).send({ message: err.message, status: "fail" });
+    await handleErrors(err, req, res, next)
   }
 };
 
@@ -420,7 +420,7 @@ export const addToCart = async (req, res, next) => {
 
     return res.status(200).send({ data: center, status: "ok" });
   } catch (err) {
-    res.status(500).send({ message: err.message, status: "fail" });
+    await handleErrors(err, req, res, next)
   }
 };
 
@@ -446,7 +446,7 @@ export const getCart = async (req, res, next) => {
 
     return res.status(200).send({ data: center.cart, status: "ok" });
   } catch (err) {
-    res.status(500).send({ message: err.message, status: "fail" });
+    await handleErrors(err, req, res, next)
   }
 };
 
@@ -474,7 +474,7 @@ export const deleteCart = async (req, res, next) => {
 
     return res.status(200).send({ data: center, status: "ok" });
   } catch (err) {
-    res.status(500).send({ message: err.message, status: "fail" });
+    await handleErrors(err, req, res, next)
   }
 };
 
@@ -515,6 +515,6 @@ export const changePassword = async (req, res, next) => {
     console.log(centerAdmin);
     return res.status(200).send({ data: centerAdmin, status: 200 });
   } catch (err) {
-    res.status(500).send({ message: err.message, status: 500 });
+    await handleErrors(err, req, res, next)
   }
 };
