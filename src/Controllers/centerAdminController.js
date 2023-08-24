@@ -84,7 +84,7 @@ export const createcenterAdmin = async (req, res, next) => {
     // sendMessage(text, mobile);
     return res.status(200).send({ data: user, status: "ok" });
   } catch (err) {
-    await handleErrors(err, req, res, next)
+    await handleErrors(err, req, res, next);
   }
 };
 
@@ -153,7 +153,7 @@ export const updateCenterAdmin = async (req, res, next) => {
 
     return res.status(200).json({ data: updatedCenterAdmin, status: "ok" });
   } catch (err) {
-    await handleErrors(err, req, res, next)
+    await handleErrors(err, req, res, next);
   }
 };
 

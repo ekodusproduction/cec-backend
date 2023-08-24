@@ -155,20 +155,22 @@ export const getHomeSuper = async (req, res, next) => {
     const oneMonthAgo = new Date();
     oneMonthAgo.setMonth(oneMonthAgo.getMonth() - 1);
 
-    const studentsCountLastMonth = await studentModel.find({
+    const studentsCountLastMonth = await studentModel.countDocuments({
       createdAt: { $gte: oneMonthAgo },
     });
+
+    const fourNewStudentsLastMonth = await studentModel.find({
+      createdAt: { $gte: oneMonthAgo },
+    }).limit(4);
+
 
     const totalCenters = await centerModel.countDocuments();
     const totalStudents = await studentModel.countDocuments();
 
-    const newCoursesLastMonth = await courseModel.find({
-      createdAt: { $gte: oneMonthAgo },
-    });
 
     const totalCourses = await courseModel.countDocuments();
 
-    const newCentersLastMonth = await centerModel.find({
+    const newCentersLastMonth = await centerModel.countDocuments({
       createdAt: { $gte: oneMonthAgo },
     });
 
@@ -209,21 +211,15 @@ export const getHomeSuper = async (req, res, next) => {
       })
     );
 
-    const studentsRegisteredPerMonth = await getRegisteredPerMonth(
-      studentModel
-    );
-    const centersRegisteredPerMonth = await getRegisteredPerMonth(centerModel);
 
     return res.status(200).send({
       data: {
-        newStudentsLastMonth: studentsCountLastMonth,
+        fourNewStudentsLastMonth: fourNewStudentsLastMonth,
         totalCenters,
         totalStudents,
-        newCoursesLastMonth,
         totalCourses,
-        newCentersLastMonth,
-        studentsRegisteredPerMonth,
-        centersRegisteredPerMonth,
+        totalNewStudentLastMonth:studentsCountLastMonth,
+        studentsRegisteredPerMonth: studentPerMonth,
       },
       status: "ok",
     });
