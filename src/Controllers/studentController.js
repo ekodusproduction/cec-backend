@@ -10,6 +10,7 @@ import courseModel from "../Models/courseModel.js";
 import qualificationModel from "../Models/qualificationModel.js";
 import superAdminModel from "../Models/superAdminModel.js";
 import { handleErrors } from "../Utils/errorHandler.js";
+import { isValidFieldName, isValidFileType } from "../Utils/validator.js";
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const appDir = dirname(`${import.meta.filename}`);
 const baseUrl = `139.59.83.187`;
@@ -96,7 +97,7 @@ export const studentRegister = async (req, res, next) => {
         .min(100000)
         .max(999999)
         .required(),
-      centerCode: Joi.number().required(),
+      centerCode: Joi.string().required(),
       courses: Joi.array().required(),
     });
 
@@ -130,16 +131,26 @@ export const studentRegister = async (req, res, next) => {
     };
 
     DOB = convertToDate(DOB);
-    console.log(centerCode)
+    console.log(centerCode);
     let center = await centerModel.findOne({ centerCode: centerCode });
-    console.log("center")
+    console.log("center");
     if (!center) {
       return res
         .status(404)
-        .send({ data: { message: "center not found" }, status: "fail" });
-    }    
+        .send({
+          data: { message: "Center not found for given centerCode." },
+          status: 404,
+        });
+    }
     const centerId = center._id;
-
+    if (centerCode.length != 3) {
+      return res
+        .status(400)
+        .send({
+          data: { message: "Center code should be 3 letters long" },
+          status: 400,
+        });
+    }
     const rollNumber = await generateRollNumber(centerId);
     const studentData = {
       firstName,
@@ -170,7 +181,7 @@ export const studentRegister = async (req, res, next) => {
 
     let text = `Student registered succesfully with CEC. To generate rollnumber please pay for the course`;
     // sendMessage(text, mobile);
-    return res.status(200).send({ data: student, status: 201});
+    return res.status(200).send({ data: student, status: 201 });
   } catch (err) {
     return res.status(500).send({ message: err.message, status: 500 });
   }
@@ -529,10 +540,23 @@ export const updateStudent = async (req, res, next) => {
 
     if (req.files && req.files.length > 0) {
       const projectFolder = `/public/student/${student._id}`;
-      console.log("update files");
       const folder = join(__dirname, `../../${projectFolder}`);
       for (let i = 0; i < req.files.length; i++) {
         const file = req.files[i];
+        
+      const fieldNames = ["addressProof", "idProof", "academicCertificates"];
+      const fileTypes = ["png", "jpg", "jpeg", "webp"];
+        if(!isValidFieldName(file.fieldname, fieldNames)){
+          return res
+          .status(400)
+          .send({ message: "Invalid file. Please send valid file", status: 400 });
+        }
+
+        if(!isValidFileType(file, fileTypes)){
+          return res
+          .status(400)
+          .send({ message: 'Invalid file format. Please send file in "png", "jpg", "jpeg", "webp" format', status: 400 });
+        }
         const buffer = Buffer.from(file.buffer, "utf-8");
         const fileName = `/${file.fieldname}.${file.mimetype.split("/")[1]}`;
         const fullName = join(folder, `/${fileName}`);
@@ -559,7 +583,7 @@ export const updateStudent = async (req, res, next) => {
 
     return res.status(200).send({ data: updatedStudent, status: "ok" });
   } catch (err) {
-    await handleErrors(err, req, res, next)
+    await handleErrors(err, req, res, next);
   }
 };
 
