@@ -407,6 +407,7 @@ export const getallInactiveStudent = async (req, res, next) => {
 export const getStudentByRoll = async (req, res, next) => {
   try {
     let { rollNumber } = req.params;
+    
     rollNumber = rollNumber.toString();
     if (!rollNumber) {
       return res.status(400).send({
@@ -444,6 +445,7 @@ export const getStudentByRoll = async (req, res, next) => {
         .populate({ path: "course", model: courseModel })
         .populate({ path: "qualification", model: qualificationModel });
     }
+    console.log(student)
     if (!student) {
       return res
         .status(200)
