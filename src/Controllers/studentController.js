@@ -445,7 +445,6 @@ export const getStudentByRoll = async (req, res, next) => {
         .populate({ path: "course", model: courseModel })
         .populate({ path: "qualification", model: qualificationModel });
     }
-    console.log(student)
     if (!student) {
       return res
         .status(200)
