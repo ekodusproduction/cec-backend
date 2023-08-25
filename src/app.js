@@ -33,7 +33,7 @@ app.use(cors());
 app.options("*", cors());
 
 // app.use(helmet());
-app.set("trust proxy", true);
+// app.set("trust proxy", true);
 
 const limiter = rateLimit({
   max: 1000,
@@ -42,15 +42,17 @@ const limiter = rateLimit({
   keyGenerator: (req) =>
     req.headers["x-forwarded-for"] || req.connection.remoteAddress,
 });
-app.use("/api", limiter);
 
+
+app.use("/api", limiter);
+app.use("/public", express.static(path.join(__dirname, "../public")));
 app.use(express.json({ limit: "10kb" }));
 app.use(express.urlencoded({ extended: true, limit: "10kb" }));
 app.use(mongoSanitize());
 app.use(xss());
 app.use(compression());
 
-app.use("/public", express.static(path.join(__dirname, "../public")));
+
 
 app.use((req, res, next) => {
   req.requestTime = new Date().toISOString();
