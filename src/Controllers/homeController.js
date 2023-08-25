@@ -163,9 +163,9 @@ export const getHomeSuper = async (req, res, next) => {
       .find({
         createdAt: { $gte: oneMonthAgo },
       })
-      .limit(4)
       .populate({ path: "centerId", model: centerModel })
-      .populate({ path: "course", model: courseModel });
+      .populate({ path: "course", model: courseModel })
+      .limit(4);
 
     const totalCenters = await centerModel.countDocuments();
     const totalStudents = await studentModel.countDocuments();
