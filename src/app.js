@@ -43,9 +43,9 @@ const limiter = rateLimit({
     req.headers["x-forwarded-for"] || req.connection.remoteAddress,
 });
 
-
-app.use("/api", limiter);
 app.use("/public", express.static(path.join(__dirname, "../public")));
+app.use("/api", limiter);
+
 app.use(express.json({ limit: "10kb" }));
 app.use(express.urlencoded({ extended: true, limit: "10kb" }));
 app.use(mongoSanitize());
