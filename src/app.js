@@ -27,8 +27,6 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(multer().any());
 
-export const upload = multer({ dest: "public/" });
-
 app.use(cors());
 app.options("*", cors());
 
@@ -45,20 +43,16 @@ const limiter = rateLimit({
 
 app.use("/public", express.static(path.join(__dirname, "../public")));
 app.use("/api", limiter);
-
 app.use(express.json({ limit: "10kb" }));
 app.use(express.urlencoded({ extended: true, limit: "10kb" }));
 app.use(mongoSanitize());
 app.use(xss());
 app.use(compression());
 
-
-
 app.use((req, res, next) => {
   req.requestTime = new Date().toISOString();
   next();
 });
-
 
 app.use("/api", courseRoutes);
 app.use("/api", categoryRoutes);
@@ -74,4 +68,5 @@ app.all("*", (req, res, next) => {
     .status(404)
     .send({ message: `Can't find ${req.originalUrl} on this server!` });
 });
+
 export default app;
