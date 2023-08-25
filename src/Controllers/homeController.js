@@ -162,7 +162,7 @@ export const getHomeSuper = async (req, res, next) => {
     const fourNewStudentsLastMonth = await studentModel
       .find({
         createdAt: { $gte: oneMonthAgo },
-      }).sort({createdAt:1})
+      }).sort({createdAt:-1})
       .populate({ path: "centerId", model: centerModel })
       .populate({ path: "course", model: courseModel })
       .limit(4);
