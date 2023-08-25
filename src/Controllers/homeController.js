@@ -159,14 +159,16 @@ export const getHomeSuper = async (req, res, next) => {
       createdAt: { $gte: oneMonthAgo },
     });
 
-    const fourNewStudentsLastMonth = await studentModel.find({
-      createdAt: { $gte: oneMonthAgo },
-    }).limit(4);
-
+    const fourNewStudentsLastMonth = await studentModel
+      .find({
+        createdAt: { $gte: oneMonthAgo },
+      })
+      .limit(4)
+      .populate({ path: "centerId", model: centerModel })
+      .populate({ path: "course", model: courseModel });
 
     const totalCenters = await centerModel.countDocuments();
     const totalStudents = await studentModel.countDocuments();
-
 
     const totalCourses = await courseModel.countDocuments();
 
@@ -211,14 +213,13 @@ export const getHomeSuper = async (req, res, next) => {
       })
     );
 
-
     return res.status(200).send({
       data: {
         fourNewStudentsLastMonth: fourNewStudentsLastMonth,
         totalCenters,
         totalStudents,
         totalCourses,
-        totalNewStudentLastMonth:studentsCountLastMonth,
+        totalNewStudentLastMonth: studentsCountLastMonth,
         studentsRegisteredPerMonth: studentPerMonth,
       },
       status: "ok",
