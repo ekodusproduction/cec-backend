@@ -225,11 +225,11 @@ export const studentRegisterCenter = async (req, res, next) => {
         .required(),
       presentAddress: Joi.string()
         .min(1)
-        .max(100)
+        .max(150)
         .required(),
       permanentAddress: Joi.string()
         .min(1)
-        .max(100)
+        .max(150)
         .required(),
       cityPresent: Joi.string()
         .min(3)
