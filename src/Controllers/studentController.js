@@ -547,7 +547,7 @@ export const updateStudent = async (req, res, next) => {
         const file = req.files[i];
         
       const fieldNames = ["addressProof", "idProof", "academicCertificates"];
-      const fileTypes = ["png", "jpg", "jpeg", "webp"];
+      const fileTypes = ["png", "jpg", "jpeg", "pdf"];
         if(!isValidFieldName(file.fieldname, fieldNames)){
           return res
           .status(400)
@@ -557,7 +557,7 @@ export const updateStudent = async (req, res, next) => {
         if(!isValidFileType(file, fileTypes)){
           return res
           .status(400)
-          .send({ message: 'Invalid file format. Please send file in "png", "jpg", "jpeg", "webp" format', status: 400 });
+          .send({ message: 'Invalid file format. Please send file in "png", "jpg", "jpeg", "pdf" format', status: 400 });
         }
         const buffer = Buffer.from(file.buffer, "utf-8");
         const fileName = `/${file.fieldname}.${file.mimetype.split("/")[1]}`;
