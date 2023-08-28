@@ -123,7 +123,7 @@ export const loginSuperAdmin = async (req, res, next) => {
     const user = await superAdminModel.findOne({ mobile: whatsApp });
     if (user == null) {
       return res.status(400).send({
-        data: { message: "whatsApp doesnt exist. Please register" },
+        message: "user doesnt exist. Please register" ,
         status: "fail",
       });
     }
@@ -131,7 +131,7 @@ export const loginSuperAdmin = async (req, res, next) => {
     const isPasswordCorrect = await bcrypt.compare(password, user.password);
     if (!isPasswordCorrect) {
       return res.status(400).send({
-        data: { message: "Incorrect password. Please try again" },
+      message: "Incorrect password. Please try again" ,
         status: "fail",
       });
     }
