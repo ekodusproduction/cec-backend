@@ -12,15 +12,23 @@ const jwtSecretKey =  process.env.JWT_SECRET ;
 
 export const verifyToken = async (req, res, next) => {
   try {
-    const token = req.headers.authorization.split(" ");
-    console.log("hi")
+    const token = req.headers.authorization.split(" ")[1];
+    if (!token) {
+      return res.status(401).json({ message: "Token not provided." });
+    }
 
-    const isvalid = await jsonwebtoken.verify(token[1], jwtSecretKey);
+    const decodedToken = jsonwebtoken.decode(token);
+    if (decodedToken.exp <= Date.now() / 1000) {
+      return res.status(401).json({ message: "Token has expired." });
+    }
 
-    req.id = isvalid.id;
+    const isValid = await jsonwebtoken.verify(token, jwtSecretKey);
+
+    req.id = isValid.id;
     next();
   } catch (err) {
     console.log(err);
-    return res.redirect("/api/superadmin/login");
+    return res.status(401).json({ message: "Session is invalid or has expired. Please login again" });
   }
 };
+
