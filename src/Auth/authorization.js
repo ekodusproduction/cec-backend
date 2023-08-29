@@ -12,9 +12,13 @@ const jwtSecretKey =  process.env.JWT_SECRET ;
 
 export const verifyToken = async (req, res, next) => {
   try {
-    const token = req.headers.authorization.split(" ")[1];
-    if (!token) {
+    const Bearer_Token = req.headers.authorization.split(" ");
+    if(Bearer_Token.length != 2){
       return res.status(401).json({ message: "Token not provided." });
+    }
+    const token = Bearer_Token[1];
+    if (!token) {
+      return res.status(401).json({ message: "Token not valid." });
     }
 
     const decodedToken = jsonwebtoken.decode(token);
