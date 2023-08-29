@@ -546,7 +546,7 @@ export const updateStudent = async (req, res, next) => {
       const folder = join(__dirname, `../../${projectFolder}`);
       for (let i = 0; i < req.files.length; i++) {
         const file = req.files[i];
-        if(file.size > 50000){
+        if(file.size > 5242880){
           console.log( "file name ", file.fieldname, " size ", file.size)
           return res.status(400).send({message:`File size limit exceeded. Please add ${file.fieldname} file below 5Mb.`})
         }
