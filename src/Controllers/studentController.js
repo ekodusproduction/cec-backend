@@ -541,11 +541,14 @@ export const updateStudent = async (req, res, next) => {
     }
 
     if (req.files && req.files.length > 0) {
+      
       const projectFolder = `/public/student/${student._id}`;
       const folder = join(__dirname, `../../${projectFolder}`);
       for (let i = 0; i < req.files.length; i++) {
         const file = req.files[i];
-        
+        if(file.size > 50000){
+          return res.status(400).send({message:`File size limit exceeded. Please add ${file.fieldname} file below 5Mb.`})
+        }
       const fieldNames = ["addressProof", "idProof", "academicCertificates"];
       const fileTypes = ["png", "jpg", "jpeg", "pdf"];
         if(!isValidFieldName(file.fieldname, fieldNames)){
