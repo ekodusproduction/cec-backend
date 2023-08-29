@@ -157,24 +157,26 @@ export const getHomeSuper = async (req, res, next) => {
 
     const studentsCountLastMonth = await studentModel.countDocuments({
       createdAt: { $gte: oneMonthAgo },
-    }).lean();
+    });
 
     const fourNewStudentsLastMonth = await studentModel
       .find({
         createdAt: { $gte: oneMonthAgo },
-      }).sort({createdAt:-1})
+      })
+      .lean()
+      .sort({ createdAt: -1 })
       .populate({ path: "centerId", model: centerModel })
       .populate({ path: "course", model: courseModel })
-      .limit(4).lean();
+      .limit(4);
 
-    const totalCenters = await centerModel.countDocuments().lean();
-    const totalStudents = await studentModel.countDocuments().lean();
+    const totalCenters = await centerModel.countDocuments();
+    const totalStudents = await studentModel.countDocuments();
 
-    const totalCourses = await courseModel.countDocuments().lean();
+    const totalCourses = await courseModel.countDocuments();
 
     const newCentersLastMonth = await centerModel.countDocuments({
       createdAt: { $gte: oneMonthAgo },
-    }).lean();
+    });
 
     const month = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
     const monthLabels = [
