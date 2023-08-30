@@ -24,7 +24,7 @@ export const verifyToken = async (req, res, next) => {
     }
 
     const decodedToken = jsonwebtoken.decode(token);
-    if (decodedToken.expiresIn <= Date.now() / 1000) {
+    if (decodedToken.expiresIn <= Date.now() ) {
       return res
         .status(401)
         .send({ message: "Token has expired.", status: 401 });
