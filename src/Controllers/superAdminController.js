@@ -120,7 +120,7 @@ export const loginSuperAdmin = async (req, res, next) => {
         .send({ message: error.details[0].message, status: "fail" });
     }
 
-    const user = await superAdminModel.findOne({ mobile: whatsApp });
+    const user = await superAdminModel.findOne({ mobile: whatsApp }).lean();
     if (user == null) {
       return res.status(400).send({
         message: "user doesnt exist. Please register" ,
