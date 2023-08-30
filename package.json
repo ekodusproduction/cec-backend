@@ -1,7 +1,7 @@
 {
   "name": "backend-cec",
   "version": "1.0.0",
-  "description": "��#\u0000 \u0000c\u0000e\u0000c\u0000-\u0000b\u0000a\u0000c\u0000k\u0000e\u0000n\u0000d\u0000\r\u0000 \u0000#\u0000 \u0000c\u0000e\u0000c\u0000-\u0000b\u0000a\u0000c\u0000k\u0000e\u0000n\u0000d\u0000\r\u0000 \u0000",
+  "description": "cec project",
   "main": "index.js",
   "type": "module",
   "scripts": {
@@ -27,7 +27,6 @@
     "jsonwebtoken": "^9.0.1",
     "lodash": "^4.17.21",
     "mkdirp": "^3.0.1",
-    "mongodb": "^5.7.0",
     "mongoose": "^7.3.4",
     "multer": "^1.4.5-lts.1",
     "request": "^2.88.2",
