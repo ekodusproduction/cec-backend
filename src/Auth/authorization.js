@@ -12,7 +12,7 @@ const jwtSecretKey = process.env.JWT_SECRET;
 
 export const verifyToken = async (req, res, next) => {
   try {
-    console.log(req.headers.authorization)
+    console.log("authorization",req.headers.authorization)
     const Bearer_Token = req.headers.authorization.split(" ");
     if (Bearer_Token.length != 2) {
       return res
