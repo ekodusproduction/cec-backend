@@ -5,6 +5,7 @@ import {
   getSuperAdmin,
   loginSuperAdmin,
   updateSuperAdmin,
+  dummy
 } from "../Controllers/superAdminController.js";
 import { verifyToken } from "../Auth/authorization.js";
 import multer from "multer";
@@ -18,7 +19,9 @@ router
   .get(verifyToken, isSuperAdmin, getSuperAdmin)
   .put(verifyToken, isSuperAdmin, updateSuperAdmin)
   .delete(verifyToken, isSuperAdmin, deleteSuperAdmin);
-  
+
+router.route("/dummy").get(dummy);
+
 router.route("/superadmin/login").post(loginSuperAdmin);
 
 

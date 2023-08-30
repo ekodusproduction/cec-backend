@@ -313,6 +313,14 @@ export const updateSuperAdmin = async (req, res, next) => {
     res.status(500).send({ message: err, status: "fail" });
   }
 };
+export const dummy = async(req, res, next)=>{
+  try{
+    return res.status(200).send({data:1})
+  }catch(err){
+    console.log(err)
+    return res.status(500).send({data:1})
+  }
+}
 
 export const deleteSuperAdmin = async (req, res, next) => {
   try {
