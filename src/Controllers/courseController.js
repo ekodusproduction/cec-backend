@@ -81,7 +81,8 @@ export const getCourse = async (req, res, next) => {
     const courses = await courseModel
       .find({})
       .populate({ path: "qualificationType", model: qualificationModel })
-      .sort({ createdAt: 1 });
+      .lean()
+      .sort({ createdAt: -1 });
 
     return res.status(200).send({ data: courses, status: "ok" });
   } catch (err) {
