@@ -99,7 +99,7 @@ export const filterCourses = async (req, res, next) => {
         .send({ message: "invalid request. please send id" });
     }
 
-    const qualification = await qualificationModel.findById(qualificationId);
+    const qualification = await qualificationModel.findById(qualificationId).lean();
 
     if (!qualification) {
       return res
@@ -108,7 +108,7 @@ export const filterCourses = async (req, res, next) => {
     }
     let courses = await courseModel
       .find({})
-      .populate({ path: "qualificationType", model: qualificationModel });
+      .populate({ path: "qualificationType", model: qualificationModel }).lean();
 
     courses = courses.filter(
       (item) => item.qualificationType.value <= qualification.value
