@@ -40,7 +40,7 @@ const limiter = rateLimit({
   keyGenerator: (req) =>
     req.headers["x-forwarded-for"] || req.connection.remoteAddress,
 });
-
+console.log("hi  request")
 app.use("/public", express.static(path.join(__dirname, "../public")));
 app.use("/api", limiter);
 app.use(express.json({ limit: "10kb" }));
