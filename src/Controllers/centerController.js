@@ -214,7 +214,7 @@ export const createcenter = async (req, res, next) => {
     if (!mobileValidator(whatsApp)) {
       return res
         .status(400)
-        .send({ message: "Provide valid centerAdmin whatsApp number.", status: 400 });
+        .send({ message: "Provide valid center whatsApp number.", status: 400 });
     }
 
     if (!pinCodeValidator(pinCode)) {
