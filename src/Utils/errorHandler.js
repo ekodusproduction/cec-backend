@@ -8,5 +8,6 @@ export const handleErrors= async(err, req, res, next)=>{
           status: 'fail',
         });
       }
+      console.log(err.message)
       return res.status(500).send({message:"Internal server errors. Something went wrong.", err:err.message, status:500})
 }
