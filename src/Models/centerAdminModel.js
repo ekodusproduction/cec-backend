@@ -17,7 +17,7 @@ const centerAdminSchema = new Schema(
     },
     email: {
       type: String,
-      minLength: 11,
+      minLength: 6,
       maxLength: 40,
       required: "center admin email required",
       cast: "{VALUE} is not a String",
