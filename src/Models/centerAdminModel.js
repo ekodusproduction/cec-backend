@@ -1,7 +1,6 @@
 import mongoose from "mongoose";
 const Schema = mongoose.Schema;
 
-
 const centerAdminSchema = new Schema(
   {
     adminName: {
@@ -32,19 +31,19 @@ const centerAdminSchema = new Schema(
     centers: [{ type: Schema.Types.ObjectId, ref: "centers" }],
     mobile: {
       type: Number,
+      unique: true,
       required: "whatsapp number required",
       validate: {
         validator: (v) => v.toString().length == 10,
         message: "enter 10 digit number",
       },
-      unique:true,
     },
     alternateNumber: {
       type: Number,
       validate: {
         validator: (v) => v.toString().length == 10,
         message: "enter 10 digit number",
-      }
+      },
     },
     address: { type: String, required: "address required" },
     district: { type: String, required: "district required" },
