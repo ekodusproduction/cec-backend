@@ -15,8 +15,7 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const appDir = dirname(`${import.meta.filename}`);
 const baseUrl = `139.59.83.187`;
 
-const generateRollNumber = async (centerId) => {
-  const regCenter = await centerModel.findById(centerId);
+const generateRollNumber = async (centerId, centerCode) => {
   const count = await studentModel.countDocuments({
     centerId: centerId,
   });
@@ -29,7 +28,7 @@ const generateRollNumber = async (centerId) => {
     .slice(-2);
   const currentMonth = (currentDate.getMonth() + 1).toString().padStart(2, "0");
 
-  const centerCodePadded = regCenter.centerCode.toString().padStart(3, "0");
+  const centerCodePadded = centerCode.toString().padStart(3, "0");
 
   const rollNumber = `${(count + 1)
     .toString()
@@ -125,13 +124,14 @@ export const studentRegister = async (req, res, next) => {
       });
     }
     const centerId = center._id;
+    data.centerId = centerId;
     if (centerCode.length != 3) {
       return res.status(400).send({
         data: { message: "Center code should be 3 letters long" },
         status: 400,
       });
     }
-    const rollNumber = await generateRollNumber(centerId);
+    const rollNumber = await generateRollNumber(centerId, center.centerCode);
 
     let student = await studentModel.create(data);
     const centerUpdate = await centerModel.findByIdAndUpdate(
@@ -221,13 +221,14 @@ export const studentRegisterCenter = async (req, res, next) => {
     DOB = convertToDate(DOB);
 
     let center = await centerModel.findById(req.id);
-    const centerId = center._id;
+
     if (!center) {
       return res
         .status(404)
         .send({ data: { message: "center not found" }, status: "fail" });
     }
-    const rollNumber = await generateRollNumber(centerId);
+    const centerId = center._id;
+    const rollNumber = await generateRollNumber(centerId, center.centerCode);
     const studentData = {
       firstName,
       lastName,
