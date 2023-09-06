@@ -45,9 +45,9 @@ const orderSchema = Schema({
 });
 const centerSchema = new Schema(
   {
-    headOfInstitute: {
-      type: Schema.Types.ObjectId,
-      ref: "centerAdmin",
+    directorName: {
+      type: String,
+      minlength:3,
       required: true,
     },
     dateofReg: {
