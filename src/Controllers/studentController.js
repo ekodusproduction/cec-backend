@@ -479,6 +479,7 @@ export const updateStudent = async (req, res, next) => {
         status: 400,
       });
     }
+
     if (!(Object.keys(updateObj).length > 0)) {
       return res
         .status(400)
