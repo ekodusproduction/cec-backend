@@ -16,7 +16,7 @@ const appDir = dirname(`${import.meta.filename}`);
 const baseUrl = `139.59.83.187`;
 
 const generateRollNumber = async (centerId, centerCode) => {
-  const count = await studentModel.countDocuments({
+  let count = await studentModel.countDocuments({
     centerId: centerId,
   });
 
@@ -29,10 +29,11 @@ const generateRollNumber = async (centerId, centerCode) => {
   const currentMonth = (currentDate.getMonth() + 1).toString().padStart(2, "0");
 
   const centerCodePadded = centerCode.toString().padStart(3, "0");
-
-  const rollNumber = `${(count + 1)
-    .toString()
-    .padStart(3, "0")}${currentMonth}${currentYear}${centerCodePadded}`;
+  count = count + 1;
+  if (count <= 99) {
+    count = count.toString().padStart(3);
+  }
+  const rollNumber = `${currentYear}${currentMonth}${centerCodePadded}-${count}`;
   return rollNumber;
 };
 
@@ -132,7 +133,7 @@ export const studentRegister = async (req, res, next) => {
       });
     }
     const rollNumber = await generateRollNumber(centerId, center.centerCode);
-    data.rollNumber = rollNumber
+    data.rollNumber = rollNumber;
     let student = await studentModel.create(data);
     const centerUpdate = await centerModel.findByIdAndUpdate(
       { _id: centerId },
