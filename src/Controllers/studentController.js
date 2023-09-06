@@ -469,6 +469,13 @@ export const updateStudent = async (req, res, next) => {
         status: 400,
       });
     }
+
+    if (updateObj.rollNumber) {
+      return res.status(400).send({
+        message: "Invalid request. This route is not for rollNumber change.",
+        status: 400,
+      });
+    }
     if (!(Object.keys(updateObj).length > 0)) {
       return res
         .status(400)
