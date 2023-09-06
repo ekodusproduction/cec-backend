@@ -53,10 +53,10 @@ const studentSchema = new Schema(
     cityPresent: { type: String, cast: "{VALUE} is not a string" },
     pinCodePresent: { type: String, cast: "{VALUE} is not a string" },
 
-    permanentAddress: { type: String, cast: "{VALUE} is not a string" },
-    statePermanent: { type: String, cast: "{VALUE} is not a number" },
-    cityPermanent: { type: String, cast: "{VALUE} is not a string" },
-    pinCodePermanent: { type: String, cast: "{VALUE} is not a string" },
+    // permanentAddress: { type: String, cast: "{VALUE} is not a string" },
+    // statePermanent: { type: String, cast: "{VALUE} is not a number" },
+    // cityPermanent: { type: String, cast: "{VALUE} is not a string" },
+    // pinCodePermanent: { type: String, cast: "{VALUE} is not a string" },
 
     fathersName: {
       type: String,
