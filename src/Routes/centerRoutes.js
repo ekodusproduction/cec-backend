@@ -36,7 +36,7 @@ router.route("/center").post(verifyToken, isSuperAdmin, createcenter);
 router.route("/center").delete(verifyToken, isSuperAdmin, deletecenter);
 router
   .route("/center/login/changepassword")
-  .put(verifyToken, isSuperAdmin, changePassword);
+  .post(verifyToken, isSuperAdmin, changePassword);
 
 const centerRoutes = router;
 export default centerRoutes;
