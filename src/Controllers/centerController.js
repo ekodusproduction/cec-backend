@@ -82,12 +82,9 @@ export const loginCenter = async (req, res, next) => {
       });
     }
 
-    const centerAdmin = await centerAdminModel.findById(
-      centerCodeExist.headOfInstitute
-    );
     const isPasswordCorrect = await bcrypt.compare(
       password,
-      centerAdmin.password
+      centerCodeExist.password
     );
     if (!isPasswordCorrect) {
       return res.status(400).send({
@@ -238,11 +235,6 @@ export const createcenter = async (req, res, next) => {
       });
     }
 
-    if (!mobileValidator(adminMobile)) {
-      return res
-        .status(400)
-        .send({ message: "Invalid registration mobile number", status: 400 });
-    }
     // const encryptedPassword = await bcrypt.hash(password, 10);
     // data.password = encryptedPassword;
     const convertToDate = (DOB) => {
