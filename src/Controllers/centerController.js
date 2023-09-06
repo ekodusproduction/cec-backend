@@ -492,10 +492,9 @@ export const changePassword = async (req, res, next) => {
       });
     }
 
-    const encryptedPassword = await bcrypt.hash(newPassword, 10);
     const newCenter = await centerModel.findByIdAndUpdate(
       centerId,
-      { password: encryptedPassword },
+      { password: newPassword },
       { new: true }
     );
     return res
