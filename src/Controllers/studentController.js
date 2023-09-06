@@ -31,9 +31,10 @@ const generateRollNumber = async (centerId, centerCode) => {
   const centerCodePadded = centerCode.toString().padStart(3, "0");
   count = count + 1;
   if (count <= 99) {
-    count = count.toString().padStart(3);
+    count = count.toString().padStart(3, "0");
   }
   const rollNumber = `${currentYear}${currentMonth}${centerCodePadded}-${count}`;
+  console.log(rollNumber)
   return rollNumber;
 };
 
