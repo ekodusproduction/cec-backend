@@ -84,11 +84,11 @@ const centerSchema = new Schema(
       required: "center name required",
       cast: "{VALUE} is not a String",
     },
-    // firmType: {
-    //   type: String,
-    //   required: "franchise type required",
-    //   cast: "{VALUE} is not a String",
-    // },
+    password: {
+      type: String,
+      required: "Password required",
+      cast: "{VALUE} is not a String",
+    },
 
     // landlineNumber: {
     //   type: Number,
