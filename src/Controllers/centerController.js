@@ -82,16 +82,16 @@ export const loginCenter = async (req, res, next) => {
       });
     }
 
-    const isPasswordCorrect = await bcrypt.compare(
-      password,
-      centerCodeExist.password
-    );
-    if (!isPasswordCorrect) {
-      return res.status(400).send({
-        message: "Incorrect password",
-        status: 400,
-      });
-    }
+    // const isPasswordCorrect = await bcrypt.compare(
+    //   password,
+    //   centerCodeExist.password
+    // );
+    // if (!isPasswordCorrect) {
+    //   return res.status(400).send({
+    //     message: "Incorrect password",
+    //     status: 400,
+    //   });
+    // }
 
     const token = generateToken(centerCodeExist._id);
     return res
