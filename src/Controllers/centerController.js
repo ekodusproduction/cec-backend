@@ -104,10 +104,22 @@ export const loginCenter = async (req, res, next) => {
 
 export const getAllCenter = async (req, res, next) => {
   try {
+    let page = req.query.page * 1 || 1;
+    let limit = req.query.limit * 1 || 20;
+    const skip = (page - 1) * limit;
+    const sort = req.query.sort || "-createdAt";
     const center = await centerModel
       .find({ isActive: true })
-      .select({ centerCode: 1, centerName: 1, dateofReg: 1, totalStudent: 1 })
-      .sort({ createdAt: 1 });
+      .select({
+        centerCode: 1,
+        directorName: 1,
+        centerName: 1,
+        dateofReg: 1,
+        totalStudent: 1,
+      })
+      .sort({ createdAt: 1 })
+      .limit(limit)
+      .skip(skip);
     return res.status(200).send({ data: center, status: "ok" });
   } catch (err) {
     return res.status(500).send({ message: err.message, status: "fail" });
