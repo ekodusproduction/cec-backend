@@ -17,7 +17,7 @@ import { fileURLToPath } from "url";
 import path from "path";
 import courseRoutes from "./Routes/courseRoutes.js";
 import qualificationRoutes from "./Routes/qualificationRotes.js";
-import centerAdminRoutes from "./Routes/centerAdminRoutes.js";
+// import centerAdminRoutes from "./Routes/centerAdminRoutes.js";
 import paymentsRoutes from "./Routes/paymentsRoutes.js";
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const __filename = fileURLToPath(import.meta.url);
@@ -61,7 +61,7 @@ app.use("/api", paymentsRoutes);
 app.use("/api", homeRoutes);
 app.use("/api", centerRoutes);
 app.use("/api", superAdminRoutes);
-app.use("/api", centerAdminRoutes);
+// app.use("/api", centerAdminRoutes);
 app.use("/api", studentRoutes);
 app.all("*", (req, res, next) => {
   return res

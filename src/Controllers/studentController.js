@@ -49,10 +49,6 @@ export const studentRegister = async (req, res, next) => {
       presentAddress,
       cityPresent,
       statePresent,
-      permanentAddress,
-      statePermanent,
-      cityPermanent,
-      pinCodePermanent,
       centerCode,
       courses,
     } = req.body;
@@ -77,30 +73,21 @@ export const studentRegister = async (req, res, next) => {
         .min(1)
         .max(150)
         .required(),
-      permanentAddress: Joi.string()
-        .min(1)
-        .max(150)
-        .required(),
+
       cityPresent: Joi.string()
         .min(3)
         .required(),
       statePresent: Joi.string()
         .min(1)
         .required(),
-      cityPermanent: Joi.string()
-        .min(3)
-        .required(),
-      statePermanent: Joi.string()
-        .min(1)
-        .required(),
-      pinCodePermanent: Joi.number()
-        .min(100000)
-        .max(999999)
-        .required(),
+
       centerCode: Joi.string().required(),
       courses: Joi.array().required(),
     });
-
+    // permanentAddress,
+    // statePermanent,
+    // cityPermanent,
+    // pinCodePermanent,
     let data = {
       firstName,
       lastName,
@@ -111,10 +98,7 @@ export const studentRegister = async (req, res, next) => {
       presentAddress,
       cityPresent,
       statePresent,
-      permanentAddress,
-      statePermanent,
-      cityPermanent,
-      pinCodePermanent,
+
       centerCode,
       courses,
     };
@@ -135,43 +119,21 @@ export const studentRegister = async (req, res, next) => {
     let center = await centerModel.findOne({ centerCode: centerCode });
     console.log("center");
     if (!center) {
-      return res
-        .status(404)
-        .send({
-          message: "Invalid center code." ,
-          status: 404,
-        });
+      return res.status(404).send({
+        message: "Invalid center code.",
+        status: 404,
+      });
     }
     const centerId = center._id;
     if (centerCode.length != 3) {
-      return res
-        .status(400)
-        .send({
-          data: { message: "Center code should be 3 letters long" },
-          status: 400,
-        });
+      return res.status(400).send({
+        data: { message: "Center code should be 3 letters long" },
+        status: 400,
+      });
     }
     const rollNumber = await generateRollNumber(centerId);
-    const studentData = {
-      firstName,
-      lastName,
-      DOB,
-      mobile,
-      qualification,
-      pinCodePresent,
-      presentAddress,
-      cityPresent,
-      statePresent,
-      permanentAddress,
-      statePermanent,
-      cityPermanent,
-      pinCodePermanent,
-      centerId,
-      rollNumber,
-      course: courses,
-      centerCode,
-    };
-    let student = await studentModel.create(studentData);
+
+    let student = await studentModel.create(data);
     const centerUpdate = await centerModel.findByIdAndUpdate(
       { _id: centerId },
       { $inc: { totalStudent: 1 } }
@@ -200,10 +162,6 @@ export const studentRegisterCenter = async (req, res, next) => {
       presentAddress,
       cityPresent,
       statePresent,
-      permanentAddress,
-      statePermanent,
-      cityPermanent,
-      pinCodePermanent,
       courses,
     } = req.body;
 
@@ -227,25 +185,11 @@ export const studentRegisterCenter = async (req, res, next) => {
         .min(1)
         .max(150)
         .required(),
-      permanentAddress: Joi.string()
-        .min(1)
-        .max(150)
-        .required(),
       cityPresent: Joi.string()
         .min(3)
         .required(),
       statePresent: Joi.string()
         .min(1)
-        .required(),
-      cityPermanent: Joi.string()
-        .min(3)
-        .required(),
-      statePermanent: Joi.string()
-        .min(1)
-        .required(),
-      pinCodePermanent: Joi.number()
-        .min(100000)
-        .max(999999)
         .required(),
       courses: Joi.array().required(),
     });
@@ -260,11 +204,6 @@ export const studentRegisterCenter = async (req, res, next) => {
       presentAddress,
       cityPresent,
       statePresent,
-      permanentAddress,
-      statePermanent,
-      cityPermanent,
-      pinCodePermanent,
-
       courses,
     };
     let { error, value } = schema.validate(data);
@@ -299,10 +238,6 @@ export const studentRegisterCenter = async (req, res, next) => {
       presentAddress,
       cityPresent,
       statePresent,
-      permanentAddress,
-      statePermanent,
-      cityPermanent,
-      pinCodePermanent,
       centerId,
       rollNumber,
       course: courses,
@@ -407,7 +342,7 @@ export const getallInactiveStudent = async (req, res, next) => {
 export const getStudentByRoll = async (req, res, next) => {
   try {
     let { rollNumber } = req.params;
-    
+
     rollNumber = rollNumber.toString();
     if (!rollNumber) {
       return res.status(400).send({
@@ -541,27 +476,31 @@ export const updateStudent = async (req, res, next) => {
     }
 
     if (req.files && req.files.length > 0) {
-      
       const projectFolder = `/public/student/${student._id}`;
       const folder = join(__dirname, `../../${projectFolder}`);
       for (let i = 0; i < req.files.length; i++) {
         const file = req.files[i];
-        if(file.size > 5242880){
-          console.log( "file name ", file.fieldname, " size ", file.size)
-          return res.status(400).send({message:`File size limit exceeded. Please add ${file.fieldname} file below 5Mb.`})
+        if (file.size > 5242880) {
+          console.log("file name ", file.fieldname, " size ", file.size);
+          return res.status(400).send({
+            message: `File size limit exceeded. Please add ${file.fieldname} file below 5Mb.`,
+          });
         }
-      const fieldNames = ["addressProof", "idProof", "academicCertificates"];
-      const fileTypes = ["png", "jpg", "jpeg", "pdf"];
-        if(!isValidFieldName(file.fieldname, fieldNames)){
-          return res
-          .status(400)
-          .send({ message: "Invalid file. Please send valid file", status: 400 });
+        const fieldNames = ["addressProof", "idProof", "academicCertificates"];
+        const fileTypes = ["png", "jpg", "jpeg", "pdf"];
+        if (!isValidFieldName(file.fieldname, fieldNames)) {
+          return res.status(400).send({
+            message: "Invalid file. Please send valid file",
+            status: 400,
+          });
         }
 
-        if(!isValidFileType(file, fileTypes)){
-          return res
-          .status(400)
-          .send({ message: 'Invalid file format. Please send file in "png", "jpg", "jpeg", "pdf" format', status: 400 });
+        if (!isValidFileType(file, fileTypes)) {
+          return res.status(400).send({
+            message:
+              'Invalid file format. Please send file in "png", "jpg", "jpeg", "pdf" format',
+            status: 400,
+          });
         }
         const buffer = Buffer.from(file.buffer, "utf-8");
         const fileName = `/${file.fieldname}.${file.mimetype.split("/")[1]}`;

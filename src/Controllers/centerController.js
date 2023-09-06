@@ -1,6 +1,6 @@
 import superAdminModel from "../Models/superAdminModel.js";
 import centerModel from "../Models/centerModel.js";
-import centerAdminModel from "../Models/centerAdminModel.js";
+// import centerAdminModel from "../Models/centerAdminModel.js";
 import bcrypt from "bcrypt";
 import Joi from "joi";
 import { dirname } from "path";
@@ -27,9 +27,7 @@ export const getCenter = async (req, res, next) => {
         .send({ message: error.details[0].message, status: "fail" });
     }
 
-    const center = await centerModel
-      .findById(centerId)
-      .populate({ path: "headOfInstitute", model: centerAdminModel });
+    const center = await centerModel.findById(centerId);
 
     return res.status(200).send({ data: center, status: "ok" });
   } catch (err) {
@@ -111,11 +109,6 @@ export const getAllCenter = async (req, res, next) => {
     const center = await centerModel
       .find({ isActive: true })
       .select({ centerCode: 1, centerName: 1, dateofReg: 1, totalStudent: 1 })
-      .populate({
-        path: "headOfInstitute",
-        model: centerAdminModel,
-        select: "adminName",
-      })
       .sort({ createdAt: 1 });
     return res.status(200).send({ data: center, status: "ok" });
   } catch (err) {
@@ -154,6 +147,7 @@ export const getAllCentersUnderAdmin = async (req, res, next) => {
     return res.status(500).send({ message: err.message, status: "fail" });
   }
 };
+
 export const createcenter = async (req, res, next) => {
   try {
     let {
@@ -167,8 +161,9 @@ export const createcenter = async (req, res, next) => {
       alternateNumber,
       whatsApp,
       email,
-      adminMobile,
+      directorName,
       centerCode,
+      password,
     } = req.body;
     const schema = Joi.object({
       centerName: Joi.string().required(),
@@ -182,7 +177,8 @@ export const createcenter = async (req, res, next) => {
       alternateNumber: Joi.number(),
       whatsApp: Joi.number().required(),
       email: Joi.string().required(),
-      adminMobile: Joi.number().required(),
+      directorName: Joi.string().required(),
+      password: Joi.string().required(),
     });
     if (alternateNumber == "") {
       alternateNumber = whatsApp;
@@ -199,11 +195,11 @@ export const createcenter = async (req, res, next) => {
       alternateNumber,
       whatsApp,
       email,
-      adminMobile,
+      directorName,
       centerCode,
     };
     centerName = centerName.toUpperCase();
-    data.centerName = centerName
+    data.centerName = centerName;
     const { error, value } = schema.validate(data);
     if (error) {
       return res
@@ -212,9 +208,10 @@ export const createcenter = async (req, res, next) => {
     }
 
     if (!mobileValidator(whatsApp)) {
-      return res
-        .status(400)
-        .send({ message: "Provide valid center whatsApp number.", status: 400 });
+      return res.status(400).send({
+        message: "Provide valid center whatsApp number.",
+        status: 400,
+      });
     }
 
     if (!pinCodeValidator(pinCode)) {
@@ -230,10 +227,9 @@ export const createcenter = async (req, res, next) => {
       });
     }
 
-
-    if (!adminMobile) {
+    if (password.length < 7) {
       return res.status(400).send({
-        message: "Provide admin loginId/number",
+        message: "Password length should be greater than 7.",
         status: 400,
       });
     }
@@ -245,7 +241,7 @@ export const createcenter = async (req, res, next) => {
     }
 
     const convertToDate = (DOB) => {
-      const [year,  month, day] = DOB.split("-").map(Number);
+      const [year, month, day] = DOB.split("-").map(Number);
       return new Date(year, month - 1, day); // Month is 0-based in JavaScript Date, so subtract 1 from the month value.
     };
     const centerCodeExist = await centerModel.findOne({ centerCode });
@@ -273,30 +269,10 @@ export const createcenter = async (req, res, next) => {
     }
 
     data.dateofReg = convertToDate(dateofReg);
-    // const count = await centerModel.countDocuments();
-    const centerAdmin = await centerAdminModel.findOne({
-      mobile: adminMobile,
-    });
-    if (!centerAdmin) {
-      return res.status(400).send({
-        message:
-          "Centeradmin registration number is not valid. Provide a valid number",
-        status: 400,
-      });
-    }
-    // data["centerId"] = `${(count + 1).toString().padStart(3, "0")}`;
-    data["headOfInstitute"] = centerAdmin._id;
     const center = await centerModel.create(data);
-    const user = await centerAdminModel.findOneAndUpdate(
-      {
-        mobile: adminMobile,
-      },
-      { $addToSet: { centers: center._id } }
-    );
-
     return res.status(201).send({ data: center, status: 201 });
   } catch (err) {
-    await handleErrors(err, req, res, next)
+    await handleErrors(err, req, res, next);
   }
 };
 
@@ -335,7 +311,7 @@ export const updateCenter = async (req, res, next) => {
 
     return res.status(200).json({ data: updatedCenter, status: 200 });
   } catch (err) {
-    await handleErrors(err, req, res, next)
+    await handleErrors(err, req, res, next);
   }
 };
 
@@ -375,7 +351,7 @@ export const deletecenter = async (req, res, next) => {
 
     return res.status(200).send({ data: userdeleted, status: "ok" });
   } catch (err) {
-    await handleErrors(err, req, res, next)
+    await handleErrors(err, req, res, next);
   }
 };
 
@@ -421,7 +397,7 @@ export const addToCart = async (req, res, next) => {
 
     return res.status(200).send({ data: center, status: "ok" });
   } catch (err) {
-    await handleErrors(err, req, res, next)
+    await handleErrors(err, req, res, next);
   }
 };
 
@@ -447,7 +423,7 @@ export const getCart = async (req, res, next) => {
 
     return res.status(200).send({ data: center.cart, status: "ok" });
   } catch (err) {
-    await handleErrors(err, req, res, next)
+    await handleErrors(err, req, res, next);
   }
 };
 
@@ -475,7 +451,7 @@ export const deleteCart = async (req, res, next) => {
 
     return res.status(200).send({ data: center, status: "ok" });
   } catch (err) {
-    await handleErrors(err, req, res, next)
+    await handleErrors(err, req, res, next);
   }
 };
 
@@ -516,6 +492,6 @@ export const changePassword = async (req, res, next) => {
     console.log(centerAdmin);
     return res.status(200).send({ data: centerAdmin, status: 200 });
   } catch (err) {
-    await handleErrors(err, req, res, next)
+    await handleErrors(err, req, res, next);
   }
 };

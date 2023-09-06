@@ -1,5 +1,5 @@
 import superAdminModel from "../Models/superAdminModel.js";
-import centerAdminModel from "../Models/centerAdminModel.js";
+// import centerAdminModel from "../Models/centerAdminModel.js";
 import bcrypt from "bcrypt";
 import fs from "fs/promises";
 import { dirname, join } from "path";
