@@ -132,7 +132,7 @@ export const studentRegister = async (req, res, next) => {
       });
     }
     const rollNumber = await generateRollNumber(centerId, center.centerCode);
-
+    data.rollNumber = rollNumber
     let student = await studentModel.create(data);
     const centerUpdate = await centerModel.findByIdAndUpdate(
       { _id: centerId },
