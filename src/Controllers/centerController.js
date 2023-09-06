@@ -5,6 +5,7 @@ import bcrypt from "bcrypt";
 import Joi from "joi";
 import { dirname } from "path";
 import { fileURLToPath } from "url";
+
 import { generateToken } from "../Auth/generateJwt.js";
 import { handleErrors } from "../Utils/errorHandler.js";
 import { pinCodeValidator, mobileValidator } from "../Utils/validator.js";
@@ -177,7 +178,9 @@ export const createcenter = async (req, res, next) => {
       alternateNumber: Joi.number(),
       whatsApp: Joi.number().required(),
       email: Joi.string().required(),
-      directorName: Joi.string().required(),
+      directorName: Joi.string()
+        .min(3)
+        .required(),
       password: Joi.string().required(),
     });
     if (alternateNumber == "") {
@@ -197,6 +200,7 @@ export const createcenter = async (req, res, next) => {
       email,
       directorName,
       centerCode,
+      password,
     };
     centerName = centerName.toUpperCase();
     data.centerName = centerName;
@@ -239,7 +243,8 @@ export const createcenter = async (req, res, next) => {
         .status(400)
         .send({ message: "Invalid registration mobile number", status: 400 });
     }
-
+    // const encryptedPassword = await bcrypt.hash(password, 10);
+    // data.password = encryptedPassword;
     const convertToDate = (DOB) => {
       const [year, month, day] = DOB.split("-").map(Number);
       return new Date(year, month - 1, day); // Month is 0-based in JavaScript Date, so subtract 1 from the month value.
@@ -457,9 +462,9 @@ export const deleteCart = async (req, res, next) => {
 
 export const changePassword = async (req, res, next) => {
   try {
-    const { centerAdminId, newPassword, confirmPassword } = req.body;
+    const { centerName, newPassword, confirmPassword } = req.body;
     const schema = Joi.object({
-      centerAdminId: Joi.string().required(),
+      centerName: Joi.string().required(),
       newPassword: Joi.string()
         .min(8)
         .required(),
@@ -468,7 +473,7 @@ export const changePassword = async (req, res, next) => {
         .required(),
     });
 
-    let data = { centerAdminId, newPassword, confirmPassword };
+    let data = { centerName, newPassword, confirmPassword };
     const { error, value } = schema.validate(data);
     if (error) {
       return res
@@ -484,13 +489,15 @@ export const changePassword = async (req, res, next) => {
     }
 
     const encryptedPassword = await bcrypt.hash(newPassword, 10);
-    const centerAdmin = await centerAdminModel.findByIdAndUpdate(
-      centerAdminId,
+    const newCenter = await centerModel.findByIdAndUpdate(
+      centerName,
       { password: encryptedPassword },
       { new: true }
     );
-    console.log(centerAdmin);
-    return res.status(200).send({ data: centerAdmin, status: 200 });
+    console.log(newCenter);
+    return res
+      .status(200)
+      .send({ message: "Passwords changed successfully.", status: 200 });
   } catch (err) {
     await handleErrors(err, req, res, next);
   }
