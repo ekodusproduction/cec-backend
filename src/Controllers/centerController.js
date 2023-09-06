@@ -51,7 +51,7 @@ export const loginCenter = async (req, res, next) => {
     if (error) {
       return res
         .status(400)
-        .send({ message: error.details[0].message, status: "fail" });
+        .send({ message: error.details[0].message, status: 400 });
     }
     const centerNameExist = await centerModel.findOne({
       centerName: centerName,
@@ -60,7 +60,7 @@ export const loginCenter = async (req, res, next) => {
     if (!centerNameExist) {
       return res.status(400).send({
         message: "Wrong center name. Please provide correct center name.",
-        status: "fail",
+        status: 400,
       });
     }
 
@@ -71,14 +71,14 @@ export const loginCenter = async (req, res, next) => {
     if (!centerCodeExist) {
       return res.status(400).send({
         message: "Wrong center code. Please provide correct center code",
-        status: "fail",
+        status: 400,
       });
     }
 
     if (centerCodeExist.centerName != centerName) {
       return res.status(400).send({
         message: "center code doesnt belong to center name",
-        status: "fail",
+        status: 400,
       });
     }
 
@@ -89,16 +89,16 @@ export const loginCenter = async (req, res, next) => {
     if (!isPasswordCorrect) {
       return res.status(400).send({
         message: "Incorrect password",
-        status: "fail",
+        status: 400,
       });
     }
 
     const token = generateToken(centerCodeExist._id);
     return res
       .status(200)
-      .send({ data: centerCodeExist, token: token, status: "ok" });
+      .send({ data: centerCodeExist, token: token, status: 200 });
   } catch (err) {
-    return res.status(500).send({ message: err.message, status: "fail" });
+    return res.status(500).send({ message: err.message, status: 500 });
   }
 };
 
@@ -120,7 +120,7 @@ export const getAllCenter = async (req, res, next) => {
       .sort({ createdAt: 1 })
       .limit(limit)
       .skip(skip);
-    return res.status(200).send({ data: center, status: "ok" });
+    return res.status(200).send({ data: center, status: 200 });
   } catch (err) {
     return res.status(500).send({ message: err.message, status: "fail" });
   }
